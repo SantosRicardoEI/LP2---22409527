@@ -282,3 +282,13 @@ Usa texto verde brilhante sobre fundo escuro.
 ![Tema Dark](src/images/neon_terminal.gif)
 
 ---
+
+---
+
+### 🎲 Atualização do Dado
+
+As imagens do dado foram atualizadas.  
+O novo dado apresenta um design mais moderno.
+
+📸 *Animação do Dado:*  
+![Dado Animado](src/images/dice.gif)
