@@ -11,6 +11,10 @@
 - [🧭 Classes Utilitárias do Fluxo de Jogo](#-classes-utilitárias-do-fluxo-de-jogo)
 - [🧠 Núcleo Lógico do Jogo](#-núcleo-lógico-do-jogo-core)
 - [🎨 Sistema de Temas e Customização](#-sistema-de-temas-uitheme)
+    - [🖥️ Ecrã Inicial](#️-ecrã-inicial)
+    - [🎨 Temas Disponíveis](#-temas-disponíveis)
+    - [🎲 Atualização do Dado](#-atualização-do-dado)
+- [🤖 Utilização de Modelos de Linguagem (LLMs)](#-utilização-de-modelos-de-linguagem-llms)
 
 ---
 
@@ -292,3 +296,15 @@ O novo dado apresenta um design mais moderno.
 
 📸 *Animação do Dado:*  
 ![Dado Animado](src/images/dice.gif)
+
+---
+
+## 🤖 Utilização de Modelos de Linguagem (LLMs)
+
+Durante o desenvolvimento do projeto foi utilizado o **ChatGPT (OpenAI)** como ferramenta de apoio técnico e linguístico.
+
+**Concretamente, o modelo foi utilizado para:**
+- Reformular e melhorar a redação de mensagens de erro e registos de log, tornando-as mais claras e formais;
+- Auxiliar na estruturação e revisão linguística deste documento (`README.md`), garantindo uma escrita mais coesa e correta;
+- Apoiar na escolha de **paletas de cores** para os diferentes temas visuais;
+- Sugerir **nomes e descrições** adequados para os temas criados.
