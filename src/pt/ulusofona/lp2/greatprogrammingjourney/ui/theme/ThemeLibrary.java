@@ -6,11 +6,6 @@ import java.util.Map;
 
 public final class ThemeLibrary {
 
-    public static final String PLAYER_BLUE_IMAGE = "playerBlueImage";
-    public static final String PLAYER_BROWN_IMAGE = "playerBrownImage";
-    public static final String PLAYER_PURPLE_IMAGE = "playerPurpleImage";
-    public static final String PLAYER_GREEN_IMAGE = "playerGreenImage";
-
     public static final String SLOT_NUMBER_COLOR = "slotNumberColor";
     public static final String SLOT_NUMBER_FONT_SIZE = "slotNumberFontSize";
     public static final String SLOT_BACKGROUND_COLOR = "slotBackgroundColor";
@@ -63,6 +58,7 @@ public final class ThemeLibrary {
         m.put(ThemeType.NEON, neonTheme());
         m.put(ThemeType.DESERT, desertTheme());
         m.put(ThemeType.NEON_TERMINAL, neonTerminalTheme());
+        m.put(ThemeType.NIGHT_HACKER, nightHackerTheme());
         THEMES = Map.copyOf(m);
     }
 
@@ -113,10 +109,6 @@ public final class ThemeLibrary {
         m.put(CELL_SPACING, "4");
         m.put(GRID_BACKGROUND_COLOR, BLACK);
         m.put(TOOLBAR_BACKGROUND, GRAY_BG);
-        m.put(PLAYER_BLUE_IMAGE,"playerBlue.png");
-        m.put(PLAYER_BROWN_IMAGE,"playerBrown.png");
-        m.put(PLAYER_GREEN_IMAGE,"playerGreen.png");
-        m.put(PLAYER_PURPLE_IMAGE,"playerPurple.png");
         return m;
     }
 
@@ -128,10 +120,6 @@ public final class ThemeLibrary {
         m.put(CELL_SPACING, "4");
         m.put(GRID_BACKGROUND_COLOR, BLACK);
         m.put(TOOLBAR_BACKGROUND, RETRO_BG);
-        m.put(PLAYER_BLUE_IMAGE,"playerBlue.png");
-        m.put(PLAYER_BROWN_IMAGE,"playerBrown.png");
-        m.put(PLAYER_GREEN_IMAGE,"playerGreen.png");
-        m.put(PLAYER_PURPLE_IMAGE,"playerPurple.png");
         return m;
     }
 
@@ -143,10 +131,6 @@ public final class ThemeLibrary {
         m.put(CELL_SPACING, "3");
         m.put(GRID_BACKGROUND_COLOR, OCEAN_LIGHT);
         m.put(TOOLBAR_BACKGROUND, OCEAN_DARK);
-        m.put(PLAYER_BLUE_IMAGE,"playerBlue.png");
-        m.put(PLAYER_BROWN_IMAGE,"playerBrown.png");
-        m.put(PLAYER_GREEN_IMAGE,"playerGreen.png");
-        m.put(PLAYER_PURPLE_IMAGE,"playerPurple.png");
         return m;
     }
 
@@ -158,14 +142,9 @@ public final class ThemeLibrary {
         m.put(CELL_SPACING, "4");
         m.put(GRID_BACKGROUND_COLOR, BLACK);
         m.put(TOOLBAR_BACKGROUND, "#222222");
-        m.put(PLAYER_BLUE_IMAGE,"playerBlue.png");
-        m.put(PLAYER_BROWN_IMAGE,"playerBrown.png");
-        m.put(PLAYER_GREEN_IMAGE,"playerGreen.png");
-        m.put(PLAYER_PURPLE_IMAGE,"playerPurple.png");
         return m;
     }
 
-    // Teste de players aqui!!!!
     private static HashMap<String, String> desertTheme() {
         HashMap<String, String> m = new HashMap<>();
         m.put(SLOT_NUMBER_COLOR, DESERT_BROWN);
@@ -174,10 +153,6 @@ public final class ThemeLibrary {
         m.put(CELL_SPACING, "3");
         m.put(GRID_BACKGROUND_COLOR, DESERT_GOLD);
         m.put(TOOLBAR_BACKGROUND, DESERT_RED);
-        m.put(PLAYER_BLUE_IMAGE,"skinA.png");
-        m.put(PLAYER_BROWN_IMAGE,"skinA.png");
-        m.put(PLAYER_GREEN_IMAGE,"skinA.png");
-        m.put(PLAYER_PURPLE_IMAGE,"skinA.png");
         return m;
     }
 
@@ -189,10 +164,18 @@ public final class ThemeLibrary {
         m.put(CELL_SPACING, "4");
         m.put(GRID_BACKGROUND_COLOR, BLACK);
         m.put(TOOLBAR_BACKGROUND, TERMINAL_DARK2);
-        m.put(PLAYER_BLUE_IMAGE,"playerBlue.png");
-        m.put(PLAYER_BROWN_IMAGE,"playerBrown.png");
-        m.put(PLAYER_GREEN_IMAGE,"playerGreen.png");
-        m.put(PLAYER_PURPLE_IMAGE,"playerPurple.png");
+        return m;
+    }
+
+    // ThemeLibrary.java
+    private static HashMap<String, String> nightHackerTheme() {
+        HashMap<String, String> m = new HashMap<>();
+        m.put(SLOT_NUMBER_COLOR, "#00F3FF");
+        m.put(SLOT_NUMBER_FONT_SIZE, "15");
+        m.put(SLOT_BACKGROUND_COLOR, "#111827");
+        m.put(CELL_SPACING, "4");
+        m.put(GRID_BACKGROUND_COLOR, "#0B0F14");
+        m.put(TOOLBAR_BACKGROUND, "#0A0F1A");
         return m;
     }
 }

@@ -18,7 +18,7 @@ public class GameConfig {
     public static final TurnOrder TURN_ORDER = TurnOrder.ASCENDING;
     public static final boolean ENABLE_BOUNCE = true;
 
-    public static final ThemeType THEME = ThemeType.DESERT;
+    public static final ThemeType THEME = ThemeType.NEON_TERMINAL;
 
     public static final boolean DEBUG_MODE = true;
     public static final String RESET = "\u001B[0m";

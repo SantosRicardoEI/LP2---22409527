@@ -8,5 +8,6 @@ public enum ThemeType {
     DESERT,
     NEON,
     OCEAN,
-    NEON_TERMINAL
+    NEON_TERMINAL,
+    NIGHT_HACKER
 }
