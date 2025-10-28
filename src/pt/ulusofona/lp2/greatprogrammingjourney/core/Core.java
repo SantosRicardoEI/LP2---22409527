@@ -32,6 +32,7 @@ public class Core {
     // ==================================== API Methods ================================================================
 
     public boolean createInitialBoard(String[][] playerInfo, int worldSize) {
+
         ValidationResult playersOk = InputValidator.validatePlayerInfo(playerInfo);
         if (!playersOk.isValid()) {
             LOG.error("createInitialBoard: " + playersOk.getMessage());

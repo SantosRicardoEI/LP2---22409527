@@ -14,6 +14,7 @@ public class Board {
 
     // ============================== State ============================================================================
     private Slot[] slots;
+
     private static final GameLogger LOG = new GameLogger(Board.class);
 
     // ============================== Constructor ======================================================================
