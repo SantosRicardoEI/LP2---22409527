@@ -24,7 +24,7 @@ Diagrama UML representando as quatro classes principais do sistema: `Board`, `Sl
 Mostra as relações diretas entre os elementos centrais do modelo e a forma como se interligam para suportar o funcionamento do jogo.
 
 📊 *Diagrama UML:*  
-![Diagrama UML](src/images/uml.png)
+![Diagrama UML](src/images/uml.jpg)
 
 ---
 
