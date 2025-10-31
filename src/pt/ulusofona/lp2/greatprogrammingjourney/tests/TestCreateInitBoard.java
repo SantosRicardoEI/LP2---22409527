@@ -40,6 +40,7 @@ class TestCreateInitBoard {
         return new String[][]{
                 {"1", "Dev One", "Java", "UNKNOWN"},
                 {"2", "Dev Two", "Python", "BLUE"}
+
         };
     }
 

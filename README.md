@@ -7,10 +7,20 @@
 
 ## Índice
 - [🧱 Diagrama UML Geral do Projeto](#-diagrama-uml-geral-do-projeto)
-- [🧩 Estrutura do Modelo de Jogo](#-estrutura-do-modelo-de-jogo)
-- [🧭 Classes Utilitárias do Fluxo de Jogo](#-classes-utilitárias-do-fluxo-de-jogo)
-- [🧠 Núcleo Lógico do Jogo](#-núcleo-lógico-do-jogo-core)
-- [🎨 Sistema de Temas e Customização](#-sistema-de-temas-uitheme)
+- [🎮 Estrutura do Projeto](#-estrutura-geral-do-projeto)
+  - [🧩 Estrutura do Modelo de Jogo](#-estrutura-do-modelo-de-jogo)
+    - [🗺️ Board](#️-board)
+    - [🧱 Slot](#-slot)
+    - [🧑‍💻 Player](#-player)
+  - [🧭 Classes Utilitárias do Fluxo de Jogo](#-classes-utilitárias-do-fluxo-de-jogo)
+    - [📦 Move e MoveHistory](#-modelmove--move--movehistory)
+  - [🧠 Núcleo Lógico do Jogo (`core`)](#-núcleo-lógico-do-jogo-core)
+    - [🧩 Core](#-classe-core)
+    - [🔁 TurnManager](#-classe-turnmanager)
+    - [🧩 GameManager](#-classe-gamemanager)
+    - [⚙️ GameConfig](#️-gameconfig--ponto-único-de-configuração)
+    - [📝 GameLogger](#-gamelogger--logging-consistente-e-legível)
+  - [🎨 Sistema de Temas e Customização (`ui.theme`)](#-sistema-de-temas-uitheme)
     - [🖥️ Ecrã Inicial](#️-ecrã-inicial)
     - [🎨 Temas Disponíveis](#-temas-disponíveis)
     - [🎲 Atualização do Dado](#-atualização-do-dado)
@@ -20,7 +30,7 @@
 
 ## 🧱 Diagrama UML Geral do Projeto
 
-Diagrama UML representando as quatro classes principais do sistema: `Board`, `Slot`, `Player` e `Core (GameManager)`.  
+Diagrama UML com a representação das quatro classes principais do sistema: `Board`, `Slot`, `Player` e `Core (GameManager)`.  
 Mostra as relações diretas entre os elementos centrais do modelo e a forma como se interligam para suportar o funcionamento do jogo.
 
 📊 *Diagrama UML:*  
@@ -38,7 +48,7 @@ Mostra as relações diretas entre os elementos centrais do modelo e a forma com
 
 ### 🗺️ Board
 **O que representa**  
-Tabuleiro principal, composto por casas (`Slot`) onde os jogadores se posicionam e se movimentam.
+Tabuleiro principal, composto por casas (`Slot`) que os jogadores ocupam.
 
 **Porque da necessidade**  
 Modela o estado físico do jogo: dimensão, posições e casa final. Sem o `Board`, a gestão espacial ficaria dispersa.
@@ -46,8 +56,6 @@ Modela o estado físico do jogo: dimensão, posições e casa final. Sem o `Boar
 **Função no código**
 - Cria casas (`Slot`);
 - Posiciona e move jogadores;
-- Determina vencedor ao atingir a casa final;
-- Valida operações com `InputValidator`/`ValidationResult`;
 - Expõe estado do tabuleiro (posições e jogadores).
 
 **Limites de responsabilidade**
@@ -68,8 +76,6 @@ Encapsula regras de ocupação e validação por casa, evitando poluição da l�
 - Mantém lista de jogadores na casa;
 - Verifica capacidade e duplicados (`isFull`, `hasPlayer`);
 - Adiciona/remove com validação (`addPlayer`, `removePlayer`);
-- Fornece info formatada (`getInfo`);
-- Regista operações via `GameLogger`.
 
 **Interação com o exterior**
 - Apenas o `Board` interage com `Slot`.
@@ -83,7 +89,7 @@ Encapsula regras de ocupação e validação por casa, evitando poluição da l�
 
 ### 🧑‍💻 Player
 **O que representa**  
-Entidade de jogador: `id`, `nome`, linguagens e cor associada.
+Entidade de jogador: `id`, `nome`, `linguagens`, `cor` associada e `estado`.
 
 **Porque da necessidade**  
 Permite distinguir participantes, manter estado e características por jogador.
@@ -91,7 +97,6 @@ Permite distinguir participantes, manter estado e características por jogador.
 **Função no código**
 - Guarda dados fundamentais: `id`, `nome`, `linguagens`, `cor`, `estado`;
 - Getters controlados e lista ordenada de linguagens (`getSortedLangs`);
-- Encapsulamento com imutabilidade parcial.
 
 **Limites de responsabilidade**
 - Não trata de regras, movimento ou tabuleiro.
@@ -106,7 +111,7 @@ Permite distinguir participantes, manter estado e características por jogador.
 Registo cronológico das jogadas. `Move` descreve uma jogada; `MoveHistory` gere a coleção.
 
 **Porque da necessidade**  
-Persistir jogadas para análise, depuração, reconstrução e replay.
+Persistir jogadas para análise, depuração, reconstrução, replay e contagem de turnos.
 
 **Função no código**
 - `Move` (imutável): `playerId`, `from`, `to`, `die`, `turn`;
@@ -127,7 +132,7 @@ Persistir jogadas para análise, depuração, reconstrução e replay.
 
 ### 🧩 Classe `Core`
 **O que representa**  
-Gestor central do jogo (equivalente ao *GameManager*). Orquestra tabuleiro, jogadores, regras, histórico e temas. Expõe a API pública usada pela UI.
+Gestor central do jogo (o "real" *GameManager*). Orquestra tabuleiro, jogadores, regras, histórico e temas. Expõe a API pública usada pela UI.
 
 **Porque da necessidade**  
 Evita acoplamento entre módulos e centraliza o ciclo do jogo com validação consistente.
@@ -177,11 +182,113 @@ Padroniza rotação de turnos (ascendente/descendente) e evita duplicação de l
 - Primeiro jogador (`getFirstPlayerId`);
 - Próximo jogador (`getNextPlayerId`);
 - Suporta `TurnOrder` (`ASCENDING`, `DESCENDING`);
-- Emite logs de fluxo (`GameLogger`).
 
 **Relação com `Core`**
 - `Core` delega início e avanço de turnos ao `TurnManager`.
 - `TurnManager` não conhece tabuleiro nem regras; apenas processa IDs/listas.
+
+---
+
+### 🧩 Classe `GameManager`
+
+**O que representa**  
+Interface de ligação entre o exterior (UI, testes, etc.) e o núcleo lógico (`Core`).  
+Funciona apenas como *wrapper* para expor os métodos públicos de `Core`.
+
+**Porque da necessidade**  
+Os testes para o projeto esperam encontrar a classe `GameManager` diretamente na pasta `src`.  
+Para manter uma arquitetura limpa, o verdadeiro gestor do jogo (`Core`) foi colocado no package lógico correto (`core`), 
+ficando o `GameManager` na raiz apenas como ponto de acesso.
+
+**Função no código**
+- Instancia internamente um objeto `Core`;
+- Redireciona todas as chamadas para esse objeto;
+- Não implementa qualquer lógica própria.
+
+---
+
+### ⚙️ `GameConfig` — ponto único de configuração
+
+**O que é**  
+Classe imutável com constantes que definem regras, tamanho do mundo, ordem de turnos, tema e opções de logging.  
+Tem construtor privado e só expõe `public static final`.
+
+**Porque interessa**  
+Permite escalar e alterar o comportamento sem tocar na lógica.  
+Um único ficheiro controla validações, tabuleiro, UI e logs.
+
+**Onde é usada**
+- `GameRules` → limites de jogadores e dados, fórmula do tamanho mínimo do mundo (`BOARD_SIZE_MULTIPLIER`);
+- `Board`/`Slot` → capacidade por casa (`SLOT_SIZE`), posição inicial, *bounce* no fim (`ENABLE_BOUNCE`);
+- `Core` → ordem de turnos (`TURN_ORDER`);
+- `ThemeLibrary`/`Credits` → tema ativo (`THEME`);
+- `GameLogger` → cores ANSI e `DEBUG_MODE`.
+
+**Principais alavancas**
+- `MIN_PLAYERS` / `MAX_PLAYERS`, `MIN_DICE` / `MAX_DICE`
+- `BOARD_SIZE_MULTIPLIER`, `SLOT_SIZE`, `BOARD_OFFSET`, `INITIAL_POSITION`
+- `TURN_ORDER` (`ASCENDING` / `DESCENDING`)
+- `ENABLE_BOUNCE` (chegar ao fim e “voltar para trás” ou parar na última casa)
+- `THEME` (tema global)
+- `DEBUG_MODE` + cores ANSI para logs
+
+**Impacto prático**
+- Mudar o equilíbrio do jogo altera-se em 1 sítio.
+- Regras e validações ficam coerentes.
+- Facilita testes e variantes sem *if*s espalhados.
+
+**Exemplos rápidos**
+- Desativar *bounce*:
+  ```java
+  public static final boolean ENABLE_BOUNCE = false;
+  ```
+- Forçar 6 jogadores:
+  ```java
+  public static final int MAX_PLAYERS = 6;
+  ```
+- Ordem inversa:
+  ```java
+  public static final TurnOrder TURN_ORDER = TurnOrder.DESCENDING;
+  ```
+- Trocar tema:
+  ```java
+  public static final ThemeType THEME = ThemeType.OCEAN;
+  ```
+
+---
+
+### 📝 `GameLogger` — logging consistente e legível
+
+**O que é**  
+Logger leve para consola. Identifica a classe de origem e colore por nível usando `GameConfig`.
+
+**Níveis suportados**
+- `info(String msg)`
+- `warn(String msg)`
+- `error(String msg)`
+- `error(String msg, Throwable t)` com *stack trace*
+
+**Formato**
+```
+[INFO]  [Core] createInitialBoard: board created and initialized — starting game...
+[WARN]  [TurnManager] getNextPlayerId: unsupported order type DESCENDING
+[ERROR] [Board] createInitialBoard: startBoard() failed
+```
+
+Cores: `INFO_COLOR`, `WARNING_COLOR`, `ERROR_COLOR` e `RESET` vindas de `GameConfig`.
+
+**Onde é usado**  
+`Core`, `Board`, `Slot`, `TurnManager`, `MoveHistory`, `PlayerParser`, `PlayerColor`, `PlayerState`.  
+Garante mensagens uniformes em todo o projeto.
+
+**Porque interessa**
+- Ajuda a depurar sem *breakpoints*;
+- Destaca problemas reais (`error`) vs. situações não críticas (`warn`);
+- Centraliza estilo e cores num único sítio (`GameConfig`).
+
+**Ajustes típicos**
+- Silenciar/estilizar por ambiente via `DEBUG_MODE` e cores em `GameConfig`;
+- Padronizar mensagens de validação para leitura mais rápida nos testes.
 
 ---
 
@@ -212,7 +319,7 @@ Converte valores HEX para `Color` e fornece utilitários:
 
 ### 🖥️ Ecrã Inicial
 
-Novo **logótipo** adicionado, em total harmonia com o tema padrão **Night_Hacker**.  
+Novo **logótipo** adicionado, de acordo com o tema padrão **Night_Hacker**.  
 Apresenta um visual mais moderno, noturno e ligado ao universo da programação.
 
 📸 *Screenshot:*  
@@ -239,7 +346,7 @@ Tema padrão escuro, focado em contraste e legibilidade.
 ---
 
 #### 🌕 LIGHT
-Tema claro, simples e limpo, pensado para máxima visibilidade.
+Tema original, Claro, simples e limpo.
 
 📸 *Screenshot:*  
 ![Tema Dark](src/images/light.gif)
