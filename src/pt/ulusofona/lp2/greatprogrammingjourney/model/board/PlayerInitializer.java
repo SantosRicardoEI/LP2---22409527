@@ -33,7 +33,7 @@ final class PlayerInitializer {
         LOG.info("populate: starting board population with " + playerInfo.length + " players");
 
         for (String[] info : playerInfo) {
-            Player p = PlayerParser.createPlayerFromInput(info, board.getPlayers());
+            Player p = PlayerParser.createFromInput(info, board.getPlayers());
 
             ValidationResult playerOk = InputValidator.validatePlayerNotNull(p);
             if (!playerOk.isValid()) {

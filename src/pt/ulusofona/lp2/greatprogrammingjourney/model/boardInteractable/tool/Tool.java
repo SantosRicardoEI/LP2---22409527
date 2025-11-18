@@ -1,17 +1,15 @@
-package pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable;
+package pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.tool;
 
-import pt.ulusofona.lp2.greatprogrammingjourney.model.player.Player;
+import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.Interactable;
+import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.InteractableType;
 
-public abstract class Tool extends BoardInteractable {
+public abstract class Tool extends Interactable {
 
-    public Tool(int id, String name, int interactionCode) {
-        super(id, name, interactionCode,InteractableType.TOOL);
+    protected Tool(ToolSubType type) {
+        super(type.getId(), type.getName(), InteractableType.TOOL ,type.getIcon());
     }
 
-    @Override
-    public final void interact(Player player) {
-        use(player);
+    public final String pickupMessage() {
+        return "Jogador agarrou " + name;
     }
-
-    public abstract void use(Player player);
 }

@@ -5,7 +5,10 @@ import pt.ulusofona.lp2.greatprogrammingjourney.ui.theme.ThemeType;
 
 public class GameConfig {
 
-    private GameConfig() {}
+    private GameConfig() {
+    }
+
+    public static final int PLAYER_STARTING_LIVES = 3;
 
     public static final int MIN_PLAYERS = 2;
     public static final int MAX_PLAYERS = 4;
@@ -17,6 +20,9 @@ public class GameConfig {
     public static final int INITIAL_POSITION = 1;
     public static final TurnOrder TURN_ORDER = TurnOrder.ASCENDING;
     public static final boolean ENABLE_BOUNCE = true;
+
+
+    public static final int COMPLIATION_ERROR_BAN_DURATION = 1;
 
     public static final ThemeType THEME = ThemeType.NIGHT_HACKER;
 

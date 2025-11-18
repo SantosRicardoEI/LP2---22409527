@@ -1,6 +1,7 @@
 package pt.ulusofona.lp2.greatprogrammingjourney.model.board;
 
 import pt.ulusofona.lp2.greatprogrammingjourney.config.GameConfig;
+import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.Interactable;
 import pt.ulusofona.lp2.greatprogrammingjourney.model.player.Player;
 import pt.ulusofona.lp2.greatprogrammingjourney.utils.GameLogger;
 import pt.ulusofona.lp2.greatprogrammingjourney.validator.InputValidator;
@@ -14,12 +15,15 @@ final class Slot {
     // ============================== State ============================================================================
     private final int number;
     private final List<Player> players = new ArrayList<>(GameConfig.SLOT_SIZE);
+    private Interactable interactable;
+
     private static final GameLogger LOG = new GameLogger(Slot.class);
 
     // ============================== Constructor ======================================================================
 
     Slot(int slotNumber) {
         this.number = slotNumber;
+        this.interactable = null;
     }
 
     // ============================== Getters ==========================================================================
@@ -30,6 +34,10 @@ final class Slot {
 
     List<Player> getPlayers() {
         return java.util.Collections.unmodifiableList(players);
+    }
+
+    Interactable getInteractable() {
+        return this.interactable;
     }
 
     // ============================== Public API =======================================================================
@@ -57,6 +65,9 @@ final class Slot {
         return true;
     }
 
+    public void setInteractable(Interactable interactable) {
+        this.interactable = interactable;
+    }
 
     void removePlayer(Player player) {
         var playerOk = InputValidator.validatePlayerNotNull(player);
@@ -85,16 +96,30 @@ final class Slot {
 
 
     String[] getInfo() {
-        if (players.isEmpty()) {
-            return new String[]{""};
-        }
-        StringBuilder sb = new StringBuilder();
+
+        String[] result = new String[3];
+
+        StringBuilder pl = new StringBuilder();
         for (int i = 0; i < players.size(); i++) {
             if (i > 0) {
-                sb.append(',');
+                pl.append(',');
             }
-            sb.append(players.get(i).getId());
+            pl.append(players.get(i).getId());
         }
-        return new String[]{sb.toString()};
+
+
+        String interType = "";
+        String description = "";
+
+        if (getInteractable() != null) {
+            interType += getInteractable().getInteractableType().toString().charAt(0);
+            description += getInteractable().getDescription();
+        }
+
+        result[0] = pl.toString();
+        result[1] = description;
+        result[2] =  interType;
+
+        return result;
     }
 }

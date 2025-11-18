@@ -1,17 +1,15 @@
 package pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable;
 
-import pt.ulusofona.lp2.greatprogrammingjourney.model.player.Player;
-
 import java.util.Objects;
 
-public abstract class BoardInteractable {
+public abstract class Interactable {
 
     protected final int id;
     protected final String name;
     protected final InteractableType interactableType;
     protected final String png;
 
-    public BoardInteractable(int id, String name, InteractableType type,String png) {
+    public Interactable(int id, String name, InteractableType type, String png) {
         this.id = id;
         this.name = name;
         this.interactableType = type;
@@ -23,7 +21,7 @@ public abstract class BoardInteractable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof BoardInteractable that)) {
+        if (!(o instanceof Interactable that)) {
             return false;
         }
         return id == that.id && interactableType == that.interactableType;

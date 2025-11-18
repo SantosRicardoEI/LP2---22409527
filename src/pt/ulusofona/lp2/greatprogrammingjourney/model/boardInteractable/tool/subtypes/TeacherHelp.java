@@ -1,6 +1,7 @@
-package pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.tool;
+package pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.tool.subtypes;
 
-import pt.ulusofona.lp2.greatprogrammingjourney.model.player.Player;
+import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.tool.Tool;
+import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.tool.ToolSubType;
 
 public class TeacherHelp extends Tool {
 
@@ -8,8 +9,4 @@ public class TeacherHelp extends Tool {
         super(ToolSubType.TEACHER_HELP);
     }
 
-    @Override
-    public void use(Player player) {
-        // lógica da ferramenta
-    }
 }

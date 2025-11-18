@@ -1,6 +1,7 @@
 package pt.ulusofona.lp2.greatprogrammingjourney.validator;
 
 import pt.ulusofona.lp2.greatprogrammingjourney.model.board.Board;
+import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.Interactable;
 import pt.ulusofona.lp2.greatprogrammingjourney.model.player.Player;
 
 import java.util.List;
@@ -13,12 +14,23 @@ public final class InputValidator {
         return (p == null) ? ValidationResult.fail("player is null") : ValidationResult.ok();
     }
 
+    public static ValidationResult validateInteractableNotNull(Interactable interactable) {
+        return (interactable == null) ? ValidationResult.fail("interactable is null") : ValidationResult.ok();
+    }
+
     public static ValidationResult validatePlayerInfo(String[][] players) {
         if (players == null) {
             return ValidationResult.fail("playerInfo is null");
         }
         if (players.length == 0) {
             return ValidationResult.fail("playerInfo is empty");
+        }
+        return ValidationResult.ok();
+    }
+
+    public static ValidationResult validateInteractableInfo(String[][] abyssesAndTools) {
+        if (abyssesAndTools == null) {
+            return ValidationResult.fail("abyssAndTools is null");
         }
         return ValidationResult.ok();
     }
@@ -70,8 +82,8 @@ public final class InputValidator {
         if (info == null) {
             return ValidationResult.fail("info array is null");
         }
-        if (info.length != 4) {
-            return ValidationResult.fail("invalid info length — expected 4 fields, got " + (info == null ? "null" : info.length));
+        if (info.length != 4 && info.length != 3) {
+            return ValidationResult.fail("invalid info length — expected 4 or 3 fields, got " + (info == null ? "null" : info.length));
         }
         return ValidationResult.ok();
     }

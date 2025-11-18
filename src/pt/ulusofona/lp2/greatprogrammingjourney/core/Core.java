@@ -1,7 +1,16 @@
 package pt.ulusofona.lp2.greatprogrammingjourney.core;
 
+import pt.ulusofona.lp2.greatprogrammingjourney.InvalidFileException;
 import pt.ulusofona.lp2.greatprogrammingjourney.gamerules.GameRules;
 import pt.ulusofona.lp2.greatprogrammingjourney.model.board.Board;
+import pt.ulusofona.lp2.greatprogrammingjourney.model.board.InteractableInitializer;
+import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.Interactable;
+import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.InteractableType;
+import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.abyss.Abyss;
+import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.abyss.AbyssContext;
+import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.abyss.GameAbyssContext;
+import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.tool.Tool;
+import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.tool.ToolSubType;
 import pt.ulusofona.lp2.greatprogrammingjourney.model.move.MoveHistory;
 import pt.ulusofona.lp2.greatprogrammingjourney.model.player.Player;
 import pt.ulusofona.lp2.greatprogrammingjourney.ui.Credits;
@@ -13,6 +22,8 @@ import pt.ulusofona.lp2.greatprogrammingjourney.validator.InputValidator;
 import pt.ulusofona.lp2.greatprogrammingjourney.validator.ValidationResult;
 
 import javax.swing.*;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +43,13 @@ public class Core {
     // ==================================== API Methods ================================================================
 
     public boolean createInitialBoard(String[][] playerInfo, int worldSize) {
+        return createInitialBoard(playerInfo, worldSize, new String[0][0]);
+    }
+
+    public boolean createInitialBoard(String[][] playerInfo, int worldSize, String[][] abyssAndTools) {
+
+        System.out.println("=== PLAYER INPUT ===");
+        print2DArray(playerInfo);
 
         ValidationResult playersOk = InputValidator.validatePlayerInfo(playerInfo);
         if (!playersOk.isValid()) {
@@ -51,7 +69,7 @@ public class Core {
             return false;
         }
 
-        if (!startBoard(playerInfo, worldSize)) {
+        if (!startBoard(playerInfo, abyssAndTools, worldSize)) {
             LOG.error("createInitialBoard: startBoard() failed");
             return false;
         }
@@ -69,7 +87,16 @@ public class Core {
         if (!InputValidator.validatePosition(nrSquare, boardSize()).isValid()) {
             return null;
         }
-        return (nrSquare == boardSize()) ? "glory.png" : null;
+
+        if (board.getIntercatableOfSlot(nrSquare) != null) {
+            return board.getIntercatableOfSlot(nrSquare).getPng();
+        }
+
+        if (nrSquare == boardSize()) {
+            return "glory.png";
+        }
+
+        return "";
     }
 
     public String[] getProgrammerInfo(int id) {
@@ -86,7 +113,7 @@ public class Core {
                 player.getName(),
                 String.join(";", player.getLanguages()),
                 player.getColorAsStr(),
-                String.valueOf(playerPosition(player))
+                String.valueOf(playerPosition(player)),
         };
     }
 
@@ -148,11 +175,16 @@ public class Core {
         }
 
         Player p = player(currentPlayerId);
+        int newPos = board.movePlayerBySteps(p, nrSpaces);
         int oldPos = playerPosition(p);
-        int newPos = board.movePlayer(p, nrSpaces);
+        if (p.isStuck()) {
+            LOG.info("moveCurrentPlayer: player " + p.getName() + " is stuck and cannot move this turn");
+            moveHistory.addRecord(p.getId(), oldPos, oldPos, nrSpaces);
+            return true;
+        }
+
 
         moveHistory.addRecord(p.getId(), oldPos, newPos, nrSpaces);
-        advanceTurn();
         return true;
     }
 
@@ -187,7 +219,7 @@ public class Core {
         }
 
         ArrayList<String[]> defeatedInfo = new ArrayList<>();
-        for (Player p : players()) {
+        for (Player p : allPlayers()) {
             if (p.getId() != winner.getId()) {
                 int pos = playerPosition(p);
                 defeatedInfo.add(new String[]{p.getName(), String.valueOf(pos)});
@@ -229,13 +261,23 @@ public class Core {
         return board.getPlayerPosition(p);
     }
 
-    private boolean startBoard(String[][] playerInfo, int worldSize) {
+    private boolean startBoard(String[][] playerInfo, String[][] interactableInfo, int worldSize) {
         board = new Board(worldSize);
-        return board.initializePlayers(playerInfo);
+        return board.initializePlayers(playerInfo) && InteractableInitializer.placeInteractables(board, interactableInfo);
     }
 
-    private List<Player> players() {
+    private List<Player> allPlayers() {
         return board.getPlayers();
+    }
+
+    private List<Player> activePlayers() {
+        List<Player> activePlayers = new ArrayList<>();
+        for (Player p : allPlayers()) {
+            if (p.isAlive()) {
+                activePlayers.add(p);
+            }
+        }
+        return activePlayers;
     }
 
     private int boardSize() {
@@ -246,12 +288,122 @@ public class Core {
     }
 
     private void setFirstPlayer() {
-        currentPlayerId = TurnManager.getFirstPlayerId(players(), TURN_ORDER);
+        currentPlayerId = TurnManager.getFirstPlayerId(allPlayers(), TURN_ORDER);
     }
 
     private void advanceTurn() {
-        currentPlayerId = TurnManager.getNextPlayerId(players(), currentPlayerId, TURN_ORDER);
+        currentPlayerId = TurnManager.getNextPlayerId(activePlayers(), currentPlayerId, TURN_ORDER);
     }
 
+    // ======================================================= Parte II ================================================
 
+    /*
+    O metodo getProgrammersInfo() deve devolver uma string formatada com informação sobre
+    as ferramentas de todos os jogadores vivos. A string deve seguir o formato:
+    "<Nome1> : <Ferramentas1> | <Nome2> : <Ferramentas2> | ...".
+    Apenas jogadores vivos (isAlive = true) são incluídos. Se não houver jogadores vivos,
+    retorna uma string vazia.
+     */
+    public String getProgrammersInfo() {
+        StringBuilder sb = new StringBuilder();
+        boolean firstPlayer = true;
+
+        for (Player p : board.getPlayers()) {
+            if (!p.isAlive()) {
+                continue;
+            }
+
+            if (!firstPlayer) {
+                sb.append(" | ");
+            }
+            firstPlayer = false;
+
+            sb.append(p.getName()).append(" : ");
+
+            if (p.getTools().isEmpty()) {
+                sb.append("No tools");
+            } else {
+                boolean firstTool = true;
+                for (Tool t : p.getTools()) {
+                    if (!firstTool) {
+                        sb.append(", ");
+                    }
+                    firstTool = false;
+                    sb.append(t.getName());
+                }
+            }
+        }
+        return sb.toString();
+    }
+
+    public String reactToAbyssOrTool() {
+
+        AbyssContext ctx = new GameAbyssContext(board, moveHistory);
+
+        Player lastPlayer = board.getPlayer(getCurrentPlayerId());
+        int pos = board.getPlayerPosition(lastPlayer);
+        advanceTurn();
+
+        if (!InputValidator.validateBoardInitialized(board).isValid()) {
+            LOG.error("reactToAbyssOrTool: board not initialized");
+            return null;
+        }
+
+        Interactable interactable = board.getIntercatableOfSlot(pos);
+        if (interactable == null) {
+            return null;
+        }
+
+        if (interactable.getInteractableType() == InteractableType.TOOL) {
+            Tool tool = (Tool) interactable;
+            lastPlayer.addTool(tool);
+            LOG.info("reactToAbyssOrTool: " + "TOOL PICKUP! " + lastPlayer.getName() + " GOT " + tool.getName());
+            return tool.pickupMessage();
+
+        } else if (interactable.getInteractableType() == InteractableType.ABYSS) {
+            Abyss abyss = (Abyss) interactable;
+            Tool counterTool = ToolSubType.createTool(abyss.getCounter());
+
+            if (lastPlayer.hasTool(counterTool)) {
+                LOG.info("reactToAbyssOrTool: TOOL USED! " + lastPlayer.getName() + " USED " +
+                        counterTool.getName() + " TO COUNTER " +
+                        abyss.getName());
+                return abyss.counteredMessage("tool id " + counterTool.getId());
+            } else {
+                LOG.info("reactToAbyssOrTool: ABYSS APLIED! " + lastPlayer.getName() + " WAS AFFECTED BY " + abyss.getName());
+                abyss.affectPlayer(lastPlayer, ctx);
+                return abyss.abyssFallMessage();
+            }
+        }
+
+        LOG.warn("reactToAbyssOrTool: unknown interactable type=" + interactable.getInteractableType());
+        return null;
+    }
+
+    public void loadGame(File file) throws InvalidFileException, FileNotFoundException {
+    }
+
+    public boolean saveGame(File file) {
+        return false;
+    }
+
+    private void print2DArray(String[][] arr) {
+        if (arr == null) {
+            System.out.println("null");
+            return;
+        }
+
+        for (String[] line : arr) {
+            if (line == null) {
+                System.out.println("null");
+                continue;
+            }
+
+            for (int i = 0; i < line.length; i++) {
+                System.out.print(line[i]);
+                if (i < line.length - 1) System.out.print(" ");
+            }
+            System.out.println();
+        }
+    }
 }

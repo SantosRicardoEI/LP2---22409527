@@ -1,17 +1,29 @@
-package pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable;
+package pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.abyss;
 
+import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.Interactable;
+import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.InteractableType;
+import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.tool.ToolSubType;
 import pt.ulusofona.lp2.greatprogrammingjourney.model.player.Player;
 
-public abstract class Abyss extends BoardInteractable {
+public abstract class Abyss extends Interactable {
 
-    public Abyss(int id, String name, int interactionCode) {
-        super(id, name, interactionCode, InteractableType.ABYSS);
+    private final ToolSubType counter;
+
+    protected Abyss(AbyssSubType subType) {
+        super(subType.getId(), subType.getName(), InteractableType.ABYSS ,subType.getImage());
+        this.counter = subType.getCounter();
     }
 
-    @Override
-    public final void interact(Player player) {
-        affectPlayer(player);
+    public ToolSubType getCounter() {
+        return counter;
     }
 
-    public abstract void affectPlayer(Player player);
+    public final String counteredMessage(String counterName) {
+        return name + " anulado por " + counterName;
+    }
+
+    public abstract String abyssFallMessage();
+
+    public abstract void affectPlayer(Player player, AbyssContext ctx);
+
 }

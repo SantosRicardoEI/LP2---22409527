@@ -3,6 +3,8 @@ package pt.ulusofona.lp2.greatprogrammingjourney;
 import pt.ulusofona.lp2.greatprogrammingjourney.core.Core;
 
 import javax.swing.*;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -56,5 +58,27 @@ public class GameManager {
 
     public HashMap<String, String> customizeBoard() {
         return core.customizeBoard();
+    }
+
+    // ======================================================= Parte II ================================================
+
+    public boolean createInitialBoard(String[][] playerInfo, int worldSize, String[][] abyssesAndTools) {
+        return core.createInitialBoard(playerInfo,worldSize,abyssesAndTools);
+    }
+
+    public String getProgrammersInfo() {
+        return core.getProgrammersInfo();
+    }
+
+    public String reactToAbyssOrTool() {
+        return core.reactToAbyssOrTool();
+    }
+
+    public void loadGame(File file) throws InvalidFileException, FileNotFoundException {
+        core.loadGame(file);
+    }
+
+    public boolean saveGame(File file) {
+        return core.saveGame(file);
     }
 }

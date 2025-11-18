@@ -1,15 +1,11 @@
-package pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.tool;
+package pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.tool.subtypes;
 
-import pt.ulusofona.lp2.greatprogrammingjourney.model.player.Player;
+import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.tool.Tool;
+import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.tool.ToolSubType;
 
 public class UnitTests extends Tool {
 
     public UnitTests() {
         super(ToolSubType.UNIT_TESTS);
-    }
-
-    @Override
-    public void use(Player player) {
-        // lógica da ferramenta
     }
 }

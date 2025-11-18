@@ -4,7 +4,8 @@ import pt.ulusofona.lp2.greatprogrammingjourney.utils.GameLogger;
 
 public enum PlayerState {
     IN_GAME,
-    DEFEATED;
+    DEFEATED,
+    STUCK;
 
     private static final GameLogger LOG = new GameLogger(PlayerState.class);
 
@@ -31,6 +32,7 @@ public enum PlayerState {
         return switch (this) {
             case IN_GAME -> "Em Jogo";
             case DEFEATED -> "Derrotado";
+            case STUCK -> "Preso";
         };
     }
 }

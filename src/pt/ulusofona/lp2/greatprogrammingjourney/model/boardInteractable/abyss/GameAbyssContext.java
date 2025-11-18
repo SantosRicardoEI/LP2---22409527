@@ -8,13 +8,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AbyssContextImpl implements AbyssContext {
+public class GameAbyssContext implements AbyssContext {
 
     private final Board board;
     private final MoveHistory history;
     private final Map<Player, Boolean> stuck = new HashMap<>();
 
-    public AbyssContextImpl(Board board, MoveHistory moveHistory) {
+    public GameAbyssContext(Board board, MoveHistory moveHistory) {
         this.board = board;
         this.history = moveHistory;
     }

@@ -1,5 +1,8 @@
-package pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.abyss;
+package pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.abyss.subtypes;
 
+import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.abyss.Abyss;
+import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.abyss.AbyssContext;
+import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.abyss.AbyssSubType;
 import pt.ulusofona.lp2.greatprogrammingjourney.model.player.Player;
 
 public class SecondaryEffects extends Abyss {

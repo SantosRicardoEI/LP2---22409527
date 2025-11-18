@@ -1,5 +1,6 @@
 package pt.ulusofona.lp2.greatprogrammingjourney.model.board;
 
+import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.Interactable;
 import pt.ulusofona.lp2.greatprogrammingjourney.model.player.Player;
 import pt.ulusofona.lp2.greatprogrammingjourney.utils.GameLogger;
 import pt.ulusofona.lp2.greatprogrammingjourney.validator.InputValidator;
@@ -71,6 +72,10 @@ public class Board {
         return null;
     }
 
+    public List<Player> getPlayersAt(int slot) {
+        return slots[slot].getPlayers();
+    }
+
     public int getPlayerPosition(Player player) {
         ValidationResult playerOk = InputValidator.validatePlayerNotNull(player);
         if (!playerOk.isValid()) {
@@ -96,7 +101,7 @@ public class Board {
         return slots[getSize()].getPlayer(0);
     }
 
-    public int movePlayer(Player player, int steps) {
+    public int movePlayerBySteps(Player player, int steps) {
         ValidationResult boardOk = InputValidator.validateBoardInitialized(this);
         if (!boardOk.isValid()) {
             LOG.error("movePlayer: " + boardOk.getMessage());
@@ -122,6 +127,12 @@ public class Board {
             LOG.info("movePlayer: bounce to " + newPos);
         }
         return newPos;
+    }
+
+    public void movePlayerTo(Player p, int newPos) {
+        int current = getPlayerPosition(p);
+        int delta = newPos - current;
+        movePlayerBySteps(p, delta);
     }
 
     // ============================== Helper Methods ===================================================================
@@ -195,5 +206,21 @@ public class Board {
         }
 
         return Math.max(1, target);
+    }
+
+    public boolean placeInteractable(Interactable interactable, int pos) {
+        ValidationResult slotOk = InputValidator.validateSlot(pos, getSize());
+        if (!slotOk.isValid()) {
+            LOG.error("placeInteractable: " + slotOk.getMessage());
+            return false;
+        }
+
+        slots[pos].setInteractable(interactable);
+        return true;
+    }
+
+
+    public Interactable getIntercatableOfSlot(int slotNumber) {
+        return slots[slotNumber].getInteractable();
     }
 }
