@@ -2,7 +2,6 @@ package pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.abyss;
 
 import pt.ulusofona.lp2.greatprogrammingjourney.model.board.Board;
 import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.Interactable;
-import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.InteractableType;
 import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.tool.ToolSubType;
 import pt.ulusofona.lp2.greatprogrammingjourney.model.player.Player;
 
@@ -11,7 +10,7 @@ public abstract class Abyss extends Interactable {
     private final ToolSubType counter;
 
     protected Abyss(AbyssSubType subType) {
-        super(subType.getId(), subType.getName(), InteractableType.ABYSS ,subType.getImage());
+        super(subType.getId(), subType.getName(),subType.getImage());
         this.counter = subType.getCounter();
     }
 
@@ -35,4 +34,8 @@ public abstract class Abyss extends Interactable {
 
     public abstract void affectPlayer(Player player, Board board);
 
+    @Override
+    public String toString() {
+        return "A";
+    }
 }

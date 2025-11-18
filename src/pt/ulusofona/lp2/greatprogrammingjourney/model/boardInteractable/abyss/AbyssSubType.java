@@ -1,7 +1,6 @@
 package pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.abyss;
 
 import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.abyss.subtypes.*;
-import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.abyss.subtypes.Exception;
 import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.tool.ToolSubType;
 
 public enum AbyssSubType {
@@ -19,6 +18,8 @@ public enum AbyssSubType {
 
     private final int id;
     private final String name;
+    // private final String effectMessage;
+    // private final String saveMessage;
     private final ToolSubType counter;
     private final String image;
 
@@ -81,7 +82,7 @@ public enum AbyssSubType {
                 return new Crash();
 
             case EXCEPTION:
-                return new Exception();
+                return new ExceptionA();
 
             case SEGMENTATION_FAULT:
                 return new SegmentationFault();

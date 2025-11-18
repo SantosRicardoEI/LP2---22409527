@@ -5,9 +5,9 @@ import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.abyss.Ab
 import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.abyss.AbyssSubType;
 import pt.ulusofona.lp2.greatprogrammingjourney.model.player.Player;
 
-public class Exception extends Abyss {
+public class ExceptionA extends Abyss {
 
-    public Exception() {
+    public ExceptionA() {
         super(AbyssSubType.EXCEPTION);
     }
 

@@ -9,13 +9,11 @@ public abstract class Interactable {
 
     protected final int id;
     protected final String name;
-    protected final InteractableType interactableType;
     protected final String png;
 
-    public Interactable(int id, String name, InteractableType type, String png) {
+    public Interactable(int id, String name, String png) {
         this.id = id;
         this.name = name;
-        this.interactableType = type;
         this.png = png;
     }
 
@@ -34,12 +32,12 @@ public abstract class Interactable {
         }
 
         Interactable that = (Interactable) o;
-        return id == that.id && interactableType == that.interactableType;
+        return id == that.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, interactableType);
+        return Objects.hash(id);
     }
 
     public int getId() {
@@ -50,17 +48,7 @@ public abstract class Interactable {
         return name;
     }
 
-    public InteractableType getInteractableType() {
-        return interactableType;
-    }
-
-
     public  String getPng() {
         return png;
-    }
-
-    @Override
-    public String toString() {
-        return interactableType + " " + name;
     }
 }

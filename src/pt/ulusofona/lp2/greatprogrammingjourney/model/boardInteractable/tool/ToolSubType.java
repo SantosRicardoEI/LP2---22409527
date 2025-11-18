@@ -4,21 +4,21 @@ import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.tool.sub
 
 public enum ToolSubType {
 
-    INHERITANCE(0, "Inheritance", "inheritance.png"),
-    FUNCTIONAL_PROGRAMMING(1, "Functional Programming", "functional.png"),
-    UNIT_TESTS(2, "Unit Tests", "unit-tests.png"),
-    EXCEPTION_HANDLING(3, "Exception Handling", "exception.png"),
+    INHERITANCE(0, "Herança", "inheritance.png"),
+    FUNCTIONAL_PROGRAMMING(1, "Programação Funcional", "functional.png"),
+    UNIT_TESTS(2, "Testes Unitários", "unit-tests.png"),
+    EXCEPTION_HANDLING(3, "Tratamento de Excepções", "exception.png"),
     IDE(4, "IDE", "IDE.png"),
-    TEACHER_HELP(5, "Teacher Help", "ajuda-professor.png");
+    TEACHER_HELP(5, "Ajuda do Professor", "ajuda-professor.png");
 
     private final int id;
     private final String name;
-    private final String icon;
+    private final String image;
 
     ToolSubType(int id, String name, String icon) {
         this.id = id;
         this.name = name;
-        this.icon = icon;
+        this.image = icon;
     }
 
     public int getId() {
@@ -29,8 +29,8 @@ public enum ToolSubType {
         return name;
     }
 
-    public String getIcon() {
-        return icon;
+    public String getImage() {
+        return image;
     }
 
     public static ToolSubType fromId(int id) {

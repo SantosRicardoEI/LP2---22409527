@@ -112,7 +112,7 @@ final class Slot {
         String name = "";
 
         if (getInteractable() != null) {
-            interType += getInteractable().getInteractableType().toString().charAt(0) + ":" + getInteractable().getId();
+            interType += getInteractable() + ":" + getInteractable().getId();
             name += getInteractable().getName();
         }
 

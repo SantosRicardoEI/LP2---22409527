@@ -5,10 +5,6 @@ import pt.ulusofona.lp2.greatprogrammingjourney.gamerules.GameRules;
 import pt.ulusofona.lp2.greatprogrammingjourney.model.board.Board;
 import pt.ulusofona.lp2.greatprogrammingjourney.model.board.InteractableInitializer;
 import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.Interactable;
-import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.InteractableType;
-import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.abyss.Abyss;
-import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.tool.Tool;
-import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.tool.ToolSubType;
 import pt.ulusofona.lp2.greatprogrammingjourney.model.move.MoveHistory;
 import pt.ulusofona.lp2.greatprogrammingjourney.model.player.Player;
 import pt.ulusofona.lp2.greatprogrammingjourney.ui.Credits;
@@ -128,28 +124,6 @@ public class Core {
         String langsStr = String.join("; ", p.getSortedLangs());
 
         return id + " | " + name + " | " + pos + " | " + tools + " | " + langsStr + " | " + state;
-    }
-
-    public String getProgrammersInfo() {
-        StringBuilder sb = new StringBuilder();
-
-        boolean first = true;
-        for (Player p : board.getPlayers()) {
-            if (!p.isAlive()) {
-                continue;
-            }
-
-            String playerString = p.getName() + " : " + p.getToolsAsStr();
-
-            if (first) {
-                sb.append(playerString);
-                first = false;
-            } else {
-                sb.append(" | " + playerString);
-            }
-
-        }
-        return sb.toString();
     }
 
     public String[] getSlotInfo(int position) {
@@ -314,6 +288,27 @@ public class Core {
 
     // ======================================================= Parte II ================================================
 
+    public String getProgrammersInfo() {
+        StringBuilder sb = new StringBuilder();
+
+        boolean first = true;
+        for (Player p : board.getPlayers()) {
+            if (!p.isAlive()) {
+                continue;
+            }
+
+            String playerString = p.getName() + " : " + p.getToolsAsStr();
+
+            if (first) {
+                sb.append(playerString);
+                first = false;
+            } else {
+                sb.append(" | " + playerString);
+            }
+
+        }
+        return sb.toString();
+    }
 
     public String reactToAbyssOrTool() {
 
