@@ -1,4 +1,4 @@
 package pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.abyss;
 
-public class SegmentationFault {
+public interface AbyssContext {
 }

@@ -2,14 +2,14 @@ package pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.tool;
 
 import pt.ulusofona.lp2.greatprogrammingjourney.model.player.Player;
 
-public class ExceptionHandling extends Tool{
+public class IDE extends Tool {
 
-    public ExceptionHandling(int id, String name) {
-        super(3, "Tratamento de Excepções");
+    public IDE() {
+        super(ToolSubType.IDE);
     }
 
     @Override
     public void use(Player player) {
-
+        // lógica da ferramenta
     }
 }
