@@ -17,7 +17,6 @@ import pt.ulusofona.lp2.greatprogrammingjourney.ui.Credits;
 import pt.ulusofona.lp2.greatprogrammingjourney.ui.theme.ThemeLibrary;
 import pt.ulusofona.lp2.greatprogrammingjourney.utils.GameLogger;
 import pt.ulusofona.lp2.greatprogrammingjourney.utils.ResultsBuilder;
-import pt.ulusofona.lp2.greatprogrammingjourney.utils.StringUtils;
 import pt.ulusofona.lp2.greatprogrammingjourney.validator.InputValidator;
 import pt.ulusofona.lp2.greatprogrammingjourney.validator.ValidationResult;
 
@@ -47,9 +46,6 @@ public class Core {
     }
 
     public boolean createInitialBoard(String[][] playerInfo, int worldSize, String[][] abyssAndTools) {
-
-        System.out.println("=== PLAYER INPUT ===");
-        print2DArray(playerInfo);
 
         ValidationResult playersOk = InputValidator.validatePlayerInfo(playerInfo);
         if (!playersOk.isValid()) {
@@ -107,7 +103,7 @@ public class Core {
             return null;
         }
 
-        Player player = player(id); // seguro aqui
+        Player player = player(id);
         return new String[]{
                 String.valueOf(player.getId()),
                 player.getName(),
@@ -126,13 +122,36 @@ public class Core {
         }
 
         Player p = player(id);
-        return StringUtils.formatProgrammerInfoStr(
-                p.getId(),
-                p.getName(),
-                playerPosition(p),
-                p.getSortedLangs(),
-                p.getState().toString()
-        );
+
+        String name = p.getName();
+        String pos = playerPosition(p) + "";
+        String tools = p.getToolsAsStr();
+        String state = p.getState() + "";
+        String langsStr = String.join("; ", p.getSortedLangs());
+
+        return id + " | " + name + " | " + pos + " | " + tools + " | " + langsStr + " | " + state;
+    }
+
+    public String getProgrammersInfo() {
+        StringBuilder sb = new StringBuilder();
+
+        boolean first = true;
+        for (Player p : board.getPlayers()) {
+            if (!p.isAlive()) {
+                continue;
+            }
+
+            String playerString = p.getName() + " : " + p.getToolsAsStr();
+
+            if (first) {
+                sb.append(playerString);
+                first = false;
+            } else {
+                sb.append(" | " + playerString);
+            }
+
+        }
+        return sb.toString();
     }
 
     public String[] getSlotInfo(int position) {
@@ -297,44 +316,6 @@ public class Core {
 
     // ======================================================= Parte II ================================================
 
-    /*
-    O metodo getProgrammersInfo() deve devolver uma string formatada com informação sobre
-    as ferramentas de todos os jogadores vivos. A string deve seguir o formato:
-    "<Nome1> : <Ferramentas1> | <Nome2> : <Ferramentas2> | ...".
-    Apenas jogadores vivos (isAlive = true) são incluídos. Se não houver jogadores vivos,
-    retorna uma string vazia.
-     */
-    public String getProgrammersInfo() {
-        StringBuilder sb = new StringBuilder();
-        boolean firstPlayer = true;
-
-        for (Player p : board.getPlayers()) {
-            if (!p.isAlive()) {
-                continue;
-            }
-
-            if (!firstPlayer) {
-                sb.append(" | ");
-            }
-            firstPlayer = false;
-
-            sb.append(p.getName()).append(" : ");
-
-            if (p.getTools().isEmpty()) {
-                sb.append("No tools");
-            } else {
-                boolean firstTool = true;
-                for (Tool t : p.getTools()) {
-                    if (!firstTool) {
-                        sb.append(", ");
-                    }
-                    firstTool = false;
-                    sb.append(t.getName());
-                }
-            }
-        }
-        return sb.toString();
-    }
 
     public String reactToAbyssOrTool() {
 
@@ -387,25 +368,4 @@ public class Core {
         return false;
     }
 
-    private void print2DArray(String[][] arr) {
-        if (arr == null) {
-            System.out.println("null");
-            return;
-        }
-
-        for (String[] line : arr) {
-            if (line == null) {
-                System.out.println("null");
-                continue;
-            }
-
-            for (int i = 0; i < line.length; i++) {
-                System.out.print(line[i]);
-                if (i < line.length - 1) {
-                    System.out.print(" ");
-                }
-            }
-            System.out.println();
-        }
-    }
 }

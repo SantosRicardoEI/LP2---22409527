@@ -119,4 +119,23 @@ public class Player {
     public void removeTool(Tool tool) {
         tools.remove(tool);
     }
+
+    public String getToolsAsStr() {
+        String toolsStr = "";
+
+        if (tools.isEmpty()) {
+            return "No tools";
+        }
+
+        boolean first = true;
+        for (Tool tool : tools) {
+            if (first) {
+                toolsStr += tool.getName();
+                first = false;
+            } else {
+                toolsStr += ", " + tool.getName();
+            }
+        }
+        return toolsStr;
+    }
 }

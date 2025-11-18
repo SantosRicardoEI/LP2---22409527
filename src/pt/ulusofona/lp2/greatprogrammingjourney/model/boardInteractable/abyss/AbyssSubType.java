@@ -6,14 +6,11 @@ import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.tool.Too
 
 public enum AbyssSubType {
 
-    //TODO
-    // Corrigir counters quando o bob ganhar juízo, para ja vou deixar todos iguais
-
     LOGIC_ERROR(0, "Logic Error", "logic.png", ToolSubType.INHERITANCE),
     EXCEPTION(1, "Exception", "exception.png", ToolSubType.INHERITANCE),
     FILE_NOT_FOUND(2, "File Not Found", "file-not-found-exception.png", ToolSubType.INHERITANCE),
     CRASH(3, "Crash", "crash.png", ToolSubType.INHERITANCE),
-    MEMORY_FAULT(4, "Memory Fault", "core-dumped.png", ToolSubType.INHERITANCE),
+    SYNTAX_ERROR(4, "Syntax Error", "syntax.png", ToolSubType.INHERITANCE),
     DUPLICATED_CODE(5, "Duplicated Code", "duplicated-code.png", ToolSubType.INHERITANCE),
     SECONDARY_EFFECTS(6, "Secondary Effects", "secondary-effects.png", ToolSubType.INHERITANCE),
     BSOD(7, "Blue Screen of Death", "bsod.png", ToolSubType.INHERITANCE),
@@ -77,8 +74,8 @@ public enum AbyssSubType {
             case LOGIC_ERROR:
                 return new LogicError();
 
-            case MEMORY_FAULT:
-                return new MemoryFault();
+            case SYNTAX_ERROR:
+                return new SyntaxError();
 
             case CRASH:
                 return new Crash();

@@ -5,10 +5,10 @@ import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.abyss.Ab
 import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.abyss.AbyssSubType;
 import pt.ulusofona.lp2.greatprogrammingjourney.model.player.Player;
 
-public class MemoryFault extends Abyss {
+public class SyntaxError extends Abyss {
 
-    public MemoryFault() {
-        super(AbyssSubType.MEMORY_FAULT);
+    public SyntaxError() {
+        super(AbyssSubType.SYNTAX_ERROR);
     }
 
     @Override
