@@ -35,7 +35,9 @@ public enum ToolSubType {
 
     public static ToolSubType fromId(int id) {
         for (ToolSubType t : values()) {
-            if (t.getId() == id) return t;
+            if (t.getId() == id) {
+                return t;
+            }
         }
         return null;
     }

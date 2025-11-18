@@ -26,9 +26,9 @@ public class PlayerParser {
             return null;
         }
 
-        String stringID   = info[0].trim();
-        String name       = info[1].trim();
-        String langsRaw   = info[2].trim();
+        String stringID = info[0].trim();
+        String name = info[1].trim();
+        String langsRaw = info[2].trim();
         String stringColor = (info.length >= 4) ? info[3].trim() : null;
 
         if (name.isEmpty()) {
@@ -82,7 +82,9 @@ public class PlayerParser {
     private static PlayerColor pickAutomaticColor(List<Player> players) {
         boolean[] used = new boolean[PlayerColor.values().length];
         for (Player p : players) {
-            if (p == null || p.getColor() == null) continue;
+            if (p == null || p.getColor() == null) {
+                continue;
+            }
             used[p.getColor().ordinal()] = true;
         }
 

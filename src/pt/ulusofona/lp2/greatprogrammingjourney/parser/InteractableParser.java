@@ -99,7 +99,7 @@ public class InteractableParser {
         }
 
         LOG.info("createFromInput: interactable created — type="
-                + type + ", id=" + subType + ", class=" + result.getClass().getSimpleName());
+                + type + ", id=" + subType);
 
         return result;
     }

@@ -21,9 +21,14 @@ public abstract class Interactable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Interactable that)) {
+        if (o == null) {
             return false;
         }
+        if (o.getClass() != this.getClass()) {
+            return false;
+        }
+
+        Interactable that = (Interactable) o;
         return id == that.id && interactableType == that.interactableType;
     }
 

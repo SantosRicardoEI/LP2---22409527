@@ -9,16 +9,16 @@ public enum AbyssSubType {
     //TODO
     // Corrigir counters quando o bob ganhar juízo, para ja vou deixar todos iguais
 
-    LOGIC_ERROR(0, "Logic Error", "logic.png",ToolSubType.INHERITANCE),
-    EXCEPTION(1, "Exception", "exception.png",ToolSubType.INHERITANCE),
-    FILE_NOT_FOUND(2, "File Not Found", "file-not-found-exception.png",ToolSubType.INHERITANCE),
-    CRASH(3, "Crash", "crash.png",ToolSubType.INHERITANCE),
-    MEMORY_FAULT(4, "Memory Fault", "core-dumped.png",ToolSubType.INHERITANCE),
-    DUPLICATED_CODE(5, "Duplicated Code", "duplicated-code.png",ToolSubType.INHERITANCE),
-    SECONDARY_EFFECTS(6, "Secondary Effects", "secondary-effects.png",ToolSubType.INHERITANCE),
-    BSOD(7, "Blue Screen of Death", "bsod.png",ToolSubType.INHERITANCE),
-    INFINITE_LOOP(8, "Infinite Loop", "infinite-loop.png",ToolSubType.INHERITANCE),
-    SEGMENTATION_FAULT(9, "Segmentation Fault", "catch.png",ToolSubType.INHERITANCE);
+    LOGIC_ERROR(0, "Logic Error", "logic.png", ToolSubType.INHERITANCE),
+    EXCEPTION(1, "Exception", "exception.png", ToolSubType.INHERITANCE),
+    FILE_NOT_FOUND(2, "File Not Found", "file-not-found-exception.png", ToolSubType.INHERITANCE),
+    CRASH(3, "Crash", "crash.png", ToolSubType.INHERITANCE),
+    MEMORY_FAULT(4, "Memory Fault", "core-dumped.png", ToolSubType.INHERITANCE),
+    DUPLICATED_CODE(5, "Duplicated Code", "duplicated-code.png", ToolSubType.INHERITANCE),
+    SECONDARY_EFFECTS(6, "Secondary Effects", "secondary-effects.png", ToolSubType.INHERITANCE),
+    BSOD(7, "Blue Screen of Death", "bsod.png", ToolSubType.INHERITANCE),
+    INFINITE_LOOP(8, "Infinite Loop", "infinite-loop.png", ToolSubType.INHERITANCE),
+    SEGMENTATION_FAULT(9, "Segmentation Fault", "catch.png", ToolSubType.INHERITANCE);
 
     private final int id;
     private final String name;
@@ -50,7 +50,9 @@ public enum AbyssSubType {
 
     public static AbyssSubType fromId(int id) {
         for (AbyssSubType t : values()) {
-            if (t.getId() == id) return t;
+            if (t.getId() == id) {
+                return t;
+            }
         }
         return null;
     }

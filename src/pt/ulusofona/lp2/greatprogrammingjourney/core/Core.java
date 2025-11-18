@@ -96,7 +96,7 @@ public class Core {
             return "glory.png";
         }
 
-        return "";
+        return null;
     }
 
     public String[] getProgrammerInfo(int id) {
@@ -401,7 +401,9 @@ public class Core {
 
             for (int i = 0; i < line.length; i++) {
                 System.out.print(line[i]);
-                if (i < line.length - 1) System.out.print(" ");
+                if (i < line.length - 1) {
+                    System.out.print(" ");
+                }
             }
             System.out.println();
         }

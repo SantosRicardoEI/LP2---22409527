@@ -72,7 +72,9 @@ public class GameAbyssContext implements AbyssContext {
     public Player getOtherPlayerAtSamePosition(Player p) {
         int pos = board.getPlayerPosition(p);
         for (Player other : board.getPlayersAt(pos)) {
-            if (other != p) return other;
+            if (other != p) {
+                return other;
+            }
         }
         return null;
     }
