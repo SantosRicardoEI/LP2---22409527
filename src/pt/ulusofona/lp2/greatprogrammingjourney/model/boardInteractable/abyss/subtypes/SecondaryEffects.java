@@ -1,7 +1,7 @@
 package pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.abyss.subtypes;
 
+import pt.ulusofona.lp2.greatprogrammingjourney.model.board.Board;
 import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.abyss.Abyss;
-import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.abyss.AbyssContext;
 import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.abyss.AbyssSubType;
 import pt.ulusofona.lp2.greatprogrammingjourney.model.player.Player;
 
@@ -12,15 +12,16 @@ public class SecondaryEffects extends Abyss {
     }
 
     @Override
+    public String effectMessage() {
+        return "DEFAULT ABYSS MESSAGE: " + name;
+    }
+
+    @Override
     public String abyssFallMessage() {
         return "Secondary Effects! Programador recua para a posição de duas jogadas atrás!";
     }
 
     @Override
-    public void affectPlayer(Player player, AbyssContext ctx) {
-        // Jogador recua para a casa onde estava há dois movimentos atrás
-        // (duas posições atrás no historico).
-        int posTwoMovesAgo = ctx.getPositionNMovesAgo(player, 2);
-        ctx.movePlayerTo(player, posTwoMovesAgo);
+    public void affectPlayer(Player player, Board board) {
     }
 }

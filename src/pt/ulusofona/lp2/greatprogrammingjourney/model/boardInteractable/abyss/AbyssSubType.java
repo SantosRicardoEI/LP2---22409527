@@ -6,15 +6,15 @@ import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.tool.Too
 
 public enum AbyssSubType {
 
-    LOGIC_ERROR(0, "Logic Error", "logic.png", ToolSubType.INHERITANCE),
-    EXCEPTION(1, "Exception", "exception.png", ToolSubType.INHERITANCE),
-    FILE_NOT_FOUND(2, "File Not Found", "file-not-found-exception.png", ToolSubType.INHERITANCE),
+    LOGIC_ERROR(0, "Erro de Lógica", "logic.png", ToolSubType.INHERITANCE),
+    EXCEPTION(1, "Eception", "exception.png", ToolSubType.INHERITANCE),
+    FILE_NOT_FOUND(2, "File Not Found Exeption", "file-not-found-exception.png", ToolSubType.INHERITANCE),
     CRASH(3, "Crash", "crash.png", ToolSubType.INHERITANCE),
-    SYNTAX_ERROR(4, "Syntax Error", "syntax.png", ToolSubType.INHERITANCE),
-    DUPLICATED_CODE(5, "Duplicated Code", "duplicated-code.png", ToolSubType.INHERITANCE),
-    SECONDARY_EFFECTS(6, "Secondary Effects", "secondary-effects.png", ToolSubType.INHERITANCE),
+    SYNTAX_ERROR(4, "Erro de sintaxe", "syntax.png", ToolSubType.INHERITANCE),
+    DUPLICATED_CODE(5, "Código Duplicado", "duplicated-code.png", ToolSubType.INHERITANCE),
+    SECONDARY_EFFECTS(6, "Efeitos Secundários", "secondary-effects.png", ToolSubType.INHERITANCE),
     BSOD(7, "Blue Screen of Death", "bsod.png", ToolSubType.INHERITANCE),
-    INFINITE_LOOP(8, "Infinite Loop", "infinite-loop.png", ToolSubType.INHERITANCE),
+    INFINITE_LOOP(8, "Ciclo infinito", "infinite-loop.png", ToolSubType.INHERITANCE),
     SEGMENTATION_FAULT(9, "Segmentation Fault", "catch.png", ToolSubType.INHERITANCE);
 
     private final int id;

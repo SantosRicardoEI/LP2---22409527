@@ -7,8 +7,6 @@ import pt.ulusofona.lp2.greatprogrammingjourney.model.board.InteractableInitiali
 import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.Interactable;
 import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.InteractableType;
 import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.abyss.Abyss;
-import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.abyss.AbyssContext;
-import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.abyss.GameAbyssContext;
 import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.tool.Tool;
 import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.tool.ToolSubType;
 import pt.ulusofona.lp2.greatprogrammingjourney.model.move.MoveHistory;
@@ -319,8 +317,6 @@ public class Core {
 
     public String reactToAbyssOrTool() {
 
-        AbyssContext ctx = new GameAbyssContext(board, moveHistory);
-
         Player lastPlayer = board.getPlayer(getCurrentPlayerId());
         int pos = board.getPlayerPosition(lastPlayer);
         advanceTurn();
@@ -335,30 +331,7 @@ public class Core {
             return null;
         }
 
-        if (interactable.getInteractableType() == InteractableType.TOOL) {
-            Tool tool = (Tool) interactable;
-            lastPlayer.addTool(tool);
-            LOG.info("reactToAbyssOrTool: " + "TOOL PICKUP! " + lastPlayer.getName() + " GOT " + tool.getName());
-            return tool.pickupMessage();
-
-        } else if (interactable.getInteractableType() == InteractableType.ABYSS) {
-            Abyss abyss = (Abyss) interactable;
-            Tool counterTool = ToolSubType.createTool(abyss.getCounter());
-
-            if (lastPlayer.hasTool(counterTool)) {
-                LOG.info("reactToAbyssOrTool: TOOL USED! " + lastPlayer.getName() + " USED " +
-                        counterTool.getName() + " TO COUNTER " +
-                        abyss.getName());
-                return abyss.counteredMessage("tool id " + counterTool.getId());
-            } else {
-                LOG.info("reactToAbyssOrTool: ABYSS APLIED! " + lastPlayer.getName() + " WAS AFFECTED BY " + abyss.getName());
-                abyss.affectPlayer(lastPlayer, ctx);
-                return abyss.abyssFallMessage();
-            }
-        }
-
-        LOG.warn("reactToAbyssOrTool: unknown interactable type=" + interactable.getInteractableType());
-        return null;
+        return interactable.interact(lastPlayer,board);
     }
 
     public void loadGame(File file) throws InvalidFileException, FileNotFoundException {

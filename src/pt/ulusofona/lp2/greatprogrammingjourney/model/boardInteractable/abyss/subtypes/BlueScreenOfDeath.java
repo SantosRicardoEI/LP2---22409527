@@ -1,7 +1,7 @@
 package pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.abyss.subtypes;
 
+import pt.ulusofona.lp2.greatprogrammingjourney.model.board.Board;
 import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.abyss.Abyss;
-import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.abyss.AbyssContext;
 import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.abyss.AbyssSubType;
 import pt.ulusofona.lp2.greatprogrammingjourney.model.player.Player;
 
@@ -12,12 +12,17 @@ public class BlueScreenOfDeath extends Abyss {
     }
 
     @Override
+    public String effectMessage() {
+        return "DEFAULT ABYSS MESSAGE: " + name;
+    }
+
+    @Override
     public String abyssFallMessage() {
         return "Blue Screen of Death! O programador perde o jogo.";
     }
 
     @Override
-    public void affectPlayer(Player player, AbyssContext ctx) {
+    public void affectPlayer(Player player, Board board) {
         player.kill();
     }
 }

@@ -1,5 +1,8 @@
 package pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable;
 
+import pt.ulusofona.lp2.greatprogrammingjourney.model.board.Board;
+import pt.ulusofona.lp2.greatprogrammingjourney.model.player.Player;
+
 import java.util.Objects;
 
 public abstract class Interactable {
@@ -15,6 +18,8 @@ public abstract class Interactable {
         this.interactableType = type;
         this.png = png;
     }
+
+    public abstract String interact(Player player, Board board);
 
     @Override
     public boolean equals(Object o) {
@@ -49,10 +54,6 @@ public abstract class Interactable {
         return interactableType;
     }
 
-
-    public String getDescription() {
-        return "OLA";
-    }
 
     public  String getPng() {
         return png;
