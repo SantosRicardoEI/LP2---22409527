@@ -14,7 +14,7 @@ public enum AbyssSubType {
     SECONDARY_EFFECTS(6, "Efeitos Secundários", "secondary-effects.png", ToolSubType.INHERITANCE),
     BSOD(7, "Blue Screen of Death", "bsod.png", ToolSubType.INHERITANCE),
     INFINITE_LOOP(8, "Ciclo infinito", "infinite-loop.png", ToolSubType.INHERITANCE),
-    SEGMENTATION_FAULT(9, "Segmentation Fault", "catch.png", ToolSubType.INHERITANCE);
+    SEGMENTATION_FAULT(9, "Segmentation Fault", "core-dumped.png", ToolSubType.INHERITANCE);
 
     private final int id;
     private final String name;

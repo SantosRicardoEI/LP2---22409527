@@ -286,6 +286,14 @@ public class Core {
         currentPlayerId = TurnManager.getNextPlayerId(activePlayers(), currentPlayerId, TURN_ORDER);
     }
 
+    public int getPosition(Player p, int stepsBack) {
+        return moveHistory.getPosition(p,stepsBack);
+    }
+
+    public int getRoll(Player p, int stepsBack) {
+        return moveHistory.getRoll(p,stepsBack);
+    }
+
     // ======================================================= Parte II ================================================
 
     public String getProgrammersInfo() {
@@ -326,7 +334,7 @@ public class Core {
             return null;
         }
 
-        return interactable.interact(lastPlayer,board);
+        return interactable.interact(lastPlayer,board,moveHistory);
     }
 
     public void loadGame(File file) throws InvalidFileException, FileNotFoundException {

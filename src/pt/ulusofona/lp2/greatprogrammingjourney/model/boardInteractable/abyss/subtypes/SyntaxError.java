@@ -3,6 +3,7 @@ package pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.abyss.s
 import pt.ulusofona.lp2.greatprogrammingjourney.model.board.Board;
 import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.abyss.Abyss;
 import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.abyss.AbyssSubType;
+import pt.ulusofona.lp2.greatprogrammingjourney.model.move.MoveHistory;
 import pt.ulusofona.lp2.greatprogrammingjourney.model.player.Player;
 
 public class SyntaxError extends Abyss {
@@ -17,11 +18,7 @@ public class SyntaxError extends Abyss {
     }
 
     @Override
-    public String abyssFallMessage() {
-        return "Memory Fault! Programador recua para posição anterior!";
-    }
-
-    @Override
-    public void affectPlayer(Player player, Board board) {
+    public void affectPlayer(Player player, Board board, MoveHistory moveHistory) {
+        board.movePlayerBySteps(player,-2);
     }
 }

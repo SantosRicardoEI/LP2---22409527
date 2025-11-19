@@ -39,57 +39,43 @@ public final class MoveHistory {
         return moves.toString();
     }
 
-    public int getLastRoll(Player p) {
-        int playerId = p.getId();
-
-        // percorre de trás para a frente
-        for (int i = moves.size() - 1; i >= 0; i--) {
-            Move m = moves.get(i);
-            if (m.getPlayerId() == playerId) {
-                return m.getDice();
-            }
-        }
-
-        LOG.warn("getLastRoll: no moves found for playerId=" + playerId);
-        return 0;
-    }
-
-    public int getLastPositionBefore(Player p) {
-        int playerId = p.getId();
-
-        for (int i = moves.size() - 1; i >= 0; i--) {
-            Move m = moves.get(i);
-            if (m.getPlayerId() == playerId) {
-                return m.getFrom();
-            }
-        }
-
-        LOG.warn("getLastPositionBefore: no moves found for playerId=" + playerId + " (using start position 1)");
-        return 1;
-    }
-
-    public int getPositionNMovesAgo(Player p, int n) {
+    public int getRoll(Player p, int stepsBack) {
         int playerId = p.getId();
         int count = 0;
 
-        // Voltar para tras
         for (int i = moves.size() - 1; i >= 0; i--) {
             Move m = moves.get(i);
-            if (m.getPlayerId() != playerId) {
-                continue;
-            }
 
-            count++;
-
-            // 1 movimento atras é o from do último
-            // 2 movimentos atráa é o from do penúltimo
-            if (count == n) {
-                return m.getFrom();
+            if (m.getPlayerId() == playerId) {
+                if (count == stepsBack) {
+                    return m.getDice();
+                }
+                count++;
             }
         }
 
-        LOG.warn("getPositionNMovesAgo: not enough moves for playerId=" + playerId +
-                ", requested n=" + n + " (using start position 1)");
+        LOG.warn("getRoll: playerId=" + playerId + " does not have " + stepsBack + " past rolls");
+        return 0;
+    }
+
+    public int getPosition(Player p, int stepsBack) {
+        int playerId = p.getId();
+        int count = 0;
+
+        for (int i = moves.size() - 1; i >= 0; i--) {
+            Move m = moves.get(i);
+
+            if (m.getPlayerId() == playerId) {
+                if (count == stepsBack) {
+                    return m.getFrom();
+                }
+                count++;
+            }
+        }
+
+        LOG.warn("getPosition: playerId=" + playerId
+                + " does not have " + stepsBack + " past positions (using start position 1)");
         return 1;
     }
+
 }

@@ -1,6 +1,7 @@
 package pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable;
 
 import pt.ulusofona.lp2.greatprogrammingjourney.model.board.Board;
+import pt.ulusofona.lp2.greatprogrammingjourney.model.move.MoveHistory;
 import pt.ulusofona.lp2.greatprogrammingjourney.model.player.Player;
 
 import java.util.Objects;
@@ -17,7 +18,7 @@ public abstract class Interactable {
         this.png = png;
     }
 
-    public abstract String interact(Player player, Board board);
+    public abstract String interact(Player player, Board board, MoveHistory moveHistory);
 
     @Override
     public boolean equals(Object o) {

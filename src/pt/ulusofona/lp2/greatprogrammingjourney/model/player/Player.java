@@ -1,6 +1,5 @@
 package pt.ulusofona.lp2.greatprogrammingjourney.model.player;
 
-import pt.ulusofona.lp2.greatprogrammingjourney.config.GameConfig;
 import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.tool.Tool;
 
 import java.util.ArrayList;
@@ -15,7 +14,6 @@ public class Player {
     private final String name;
     private final ArrayList<String> languages;
     private final PlayerColor color;
-    private int lives;
     private PlayerState state;
     private HashSet<Tool> tools;
 
@@ -26,7 +24,6 @@ public class Player {
         this.name = name;
         this.languages = languages;
         this.color = color;
-        this.lives = GameConfig.PLAYER_STARTING_LIVES;
         this.state = PlayerState.IN_GAME;
         this.tools = new HashSet();
     }
@@ -71,14 +68,6 @@ public class Player {
         return state == PlayerState.STUCK;
     }
 
-    public void setStuck(boolean stuck) {
-        if (stuck && state == PlayerState.IN_GAME) {
-            state = PlayerState.STUCK;
-        } else if (!stuck && state == PlayerState.STUCK) {
-            state = PlayerState.IN_GAME;
-        }
-    }
-
     public ArrayList<Tool> getTools() {
         return new ArrayList<>(tools);
     }
@@ -96,27 +85,24 @@ public class Player {
         return false;
     }
 
-    public boolean takeLife() {
-        if (lives == 0) {
-            return false;
-        }
-        lives--;
-        if (lives == 0) {
-            kill();
-        }
-        return true;
-    }
 
     public void kill() {
         state = PlayerState.DEFEATED;
-        lives = 0;
+    }
+
+    public void lock(boolean stuck) {
+        if (stuck && state == PlayerState.IN_GAME) {
+            state = PlayerState.STUCK;
+        } else if (!stuck && state == PlayerState.STUCK) {
+            state = PlayerState.IN_GAME;
+        }
     }
 
     public void addTool(Tool tool) {
         tools.add(tool);
     }
 
-    public void removeTool(Tool tool) {
+    public void useTool(Tool tool) {
         tools.remove(tool);
     }
 

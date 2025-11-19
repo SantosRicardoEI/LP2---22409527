@@ -11,28 +11,36 @@ final class Move {
 
     // ============================ Constructor =====================================
 
-    Move(int playerId, int from, int to, int die, int turn) {
+    Move(int playerId, int from, int to, int dice, int turn) {
         this.playerId = playerId;
         this.from = from;
         this.to = to;
-        this.dice = die;
+        this.dice = dice;
         this.turn = turn;
     }
 
-    public int getDice() {
-        return dice;
+    int getPlayerId() {
+        return playerId;
     }
 
-    public int getPlayerId() {
-        return playerId;
+    int getFrom() {
+        return from;
+    }
+
+    int getTo() {
+        return to;
+    }
+
+    int getTurn() {
+        return turn;
+    }
+
+    int getDice() {
+        return dice;
     }
 
     @Override
     public String toString() {
         return "[#" + turn + " (dice: " + dice + "): P" + playerId + " " + from + " -> " + to + "]";
-    }
-
-    public int getFrom() {
-        return from;
     }
 }
