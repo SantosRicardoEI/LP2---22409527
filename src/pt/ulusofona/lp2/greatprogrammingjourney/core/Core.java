@@ -17,10 +17,7 @@ import pt.ulusofona.lp2.greatprogrammingjourney.validator.ValidationResult;
 import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static pt.ulusofona.lp2.greatprogrammingjourney.config.GameConfig.THEME;
 import static pt.ulusofona.lp2.greatprogrammingjourney.config.GameConfig.TURN_ORDER;
@@ -226,6 +223,8 @@ public class Core {
                 defeatedInfo.add(new String[]{p.getName(), String.valueOf(pos)});
             }
         }
+
+        defeatedInfo.sort(Comparator.comparing(arr -> arr[0]));
 
         return ResultsBuilder.build(
                 "THE GREAT PROGRAMMING JOURNEY",
