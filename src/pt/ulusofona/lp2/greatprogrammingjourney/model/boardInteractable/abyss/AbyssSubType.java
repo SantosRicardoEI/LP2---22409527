@@ -54,6 +54,11 @@ public enum AbyssSubType {
     }
 
     public static Abyss createAbyss(AbyssSubType type) {
+
+        if (type == null) {
+            return null;
+        }
+
         switch (type) {
             case BSOD:
                 return new BlueScreenOfDeath();

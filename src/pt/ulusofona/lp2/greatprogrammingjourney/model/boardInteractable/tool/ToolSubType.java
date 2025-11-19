@@ -43,9 +43,12 @@ public enum ToolSubType {
     }
 
     public static Tool createTool(ToolSubType type) {
+
+        if (type == null) {
+            return null;
+        }
+
         switch (type) {
-            case null:
-                return null;
             case TEACHER_HELP:
                 return new TeacherHelp();
             case EXCEPTION_HANDLING:
