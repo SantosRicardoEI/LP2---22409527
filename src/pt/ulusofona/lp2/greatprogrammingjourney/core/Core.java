@@ -249,7 +249,7 @@ public class Core {
         return board.getPlayer(id);
     }
 
-    private int playerPosition(Player p) {
+    public int playerPosition(Player p) {
         if (board == null) {
             throw new IllegalStateException("Board not initialized");
         }

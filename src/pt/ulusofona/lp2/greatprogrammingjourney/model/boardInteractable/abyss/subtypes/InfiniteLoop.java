@@ -19,5 +19,14 @@ public class InfiniteLoop extends Abyss {
 
     @Override
     public void affectPlayer(Player player, Board board, MoveHistory moveHistory) {
+        player.lock(true);
+
+        int thisPosition = board.getPlayerPosition(player);
+
+        for (Player p : board.getPlayersAt(thisPosition)) {
+            if (p != player) {
+                p.lock(false);
+            }
+        }
     }
 }
