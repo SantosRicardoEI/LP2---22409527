@@ -226,7 +226,7 @@ public class Core {
 
         return ResultsBuilder.build(
                 "THE GREAT PROGRAMMING JOURNEY",
-                moveHistory.getSize(),
+                moveHistory.getSize() + 1,
                 winner.getName(),
                 defeatedInfo
         );
