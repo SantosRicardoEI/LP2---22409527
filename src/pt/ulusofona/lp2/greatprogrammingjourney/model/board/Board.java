@@ -7,6 +7,7 @@ import pt.ulusofona.lp2.greatprogrammingjourney.validator.InputValidator;
 import pt.ulusofona.lp2.greatprogrammingjourney.validator.ValidationResult;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static pt.ulusofona.lp2.greatprogrammingjourney.config.GameConfig.*;
@@ -55,11 +56,15 @@ public class Board {
 
     public List<Player> getPlayers() {
         List<Player> all = new ArrayList<>();
+
         for (Slot slot : slots) {
             if (slot != null) {
                 all.addAll(slot.getPlayers());
             }
         }
+
+        Collections.sort(all);
+
         return all;
     }
 

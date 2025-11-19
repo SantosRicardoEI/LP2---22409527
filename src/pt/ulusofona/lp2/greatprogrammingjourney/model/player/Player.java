@@ -7,7 +7,7 @@ import java.util.HashSet;
 
 import static pt.ulusofona.lp2.greatprogrammingjourney.utils.StringUtils.capitalize;
 
-public class Player {
+public class Player implements Comparable<Player> {
 
     // ============================== State ============================================================================
     private final int id;
@@ -123,5 +123,10 @@ public class Player {
             }
         }
         return toolsStr;
+    }
+
+    @Override
+    public int compareTo(Player other) {
+        return this.name.compareTo(other.name);
     }
 }

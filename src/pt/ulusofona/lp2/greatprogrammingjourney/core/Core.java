@@ -224,8 +224,6 @@ public class Core {
             }
         }
 
-        defeatedInfo.sort(Comparator.comparing(arr -> arr[0]));
-
         return ResultsBuilder.build(
                 "THE GREAT PROGRAMMING JOURNEY",
                 moveHistory.getSize(),
