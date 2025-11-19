@@ -20,6 +20,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import static pt.ulusofona.lp2.greatprogrammingjourney.config.GameConfig.THEME;
 import static pt.ulusofona.lp2.greatprogrammingjourney.config.GameConfig.TURN_ORDER;
@@ -166,6 +167,15 @@ public class Core {
         }
 
         Player p = player(currentPlayerId);
+        String firstLanguage = p.getLanguages().getFirst();
+        if (Objects.equals(firstLanguage, "Assembly") && nrSpaces > 2) {
+            return false;
+        }
+
+        if (Objects.equals(firstLanguage, "C") && nrSpaces > 3) {
+            return false;
+        }
+
         int newPos = board.movePlayerBySteps(p, nrSpaces);
         int oldPos = playerPosition(p);
         if (p.isStuck()) {
@@ -284,14 +294,6 @@ public class Core {
 
     private void advanceTurn() {
         currentPlayerId = TurnManager.getNextPlayerId(activePlayers(), currentPlayerId, TURN_ORDER);
-    }
-
-    public int getPosition(Player p, int stepsBack) {
-        return moveHistory.getPosition(p,stepsBack);
-    }
-
-    public int getRoll(Player p, int stepsBack) {
-        return moveHistory.getRoll(p,stepsBack);
     }
 
     // ======================================================= Parte II ================================================
