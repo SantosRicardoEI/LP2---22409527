@@ -329,6 +329,7 @@ public class Core {
             return null;
         }
 
+
         Interactable interactable = board.getIntercatableOfSlot(pos);
         if (interactable == null) {
             return null;

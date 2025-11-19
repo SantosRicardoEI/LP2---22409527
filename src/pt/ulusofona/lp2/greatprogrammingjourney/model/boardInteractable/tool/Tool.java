@@ -19,6 +19,6 @@ public abstract class Tool extends Interactable {
 
     @Override
     public String toString() {
-        return "F";
+        return "T";
     }
 }

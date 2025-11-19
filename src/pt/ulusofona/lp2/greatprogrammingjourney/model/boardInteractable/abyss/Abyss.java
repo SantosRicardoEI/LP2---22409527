@@ -18,7 +18,7 @@ public abstract class Abyss extends Interactable {
 
     @Override
     public final String interact(Player player, Board board, MoveHistory moveHistory) {
-        if (player.hasTool(counter)) {
+        if (counter != null && player.hasTool(counter)) {
             player.useTool(counter);
             return counteredMessage();
         }

@@ -5,21 +5,19 @@ import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.tool.Too
 
 public enum AbyssSubType {
 
-    LOGIC_ERROR(0, "Erro de Lógica", "logic.png", ToolSubType.INHERITANCE),
-    EXCEPTION(1, "Eception", "exception.png", ToolSubType.INHERITANCE),
-    FILE_NOT_FOUND(2, "File Not Found Exeption", "file-not-found-exception.png", ToolSubType.INHERITANCE),
-    CRASH(3, "Crash", "crash.png", ToolSubType.INHERITANCE),
-    SYNTAX_ERROR(4, "Erro de sintaxe", "syntax.png", ToolSubType.INHERITANCE),
+    SYNTAX_ERROR(0, "Erro de sintaxe", "syntax.png", ToolSubType.IDE),
+    LOGIC_ERROR(1, "Erro de Lógica", "logic.png", ToolSubType.UNIT_TESTS),
+    EXCEPTION(2, "Eception", "exception.png", ToolSubType.EXCEPTION_HANDLING),
+    FILE_NOT_FOUND(3, "File Not Found Exeption", "file-not-found-exception.png", null),
+    CRASH(4, "Crash", "crash.png", null),
     DUPLICATED_CODE(5, "Código Duplicado", "duplicated-code.png", ToolSubType.INHERITANCE),
-    SECONDARY_EFFECTS(6, "Efeitos Secundários", "secondary-effects.png", ToolSubType.INHERITANCE),
-    BSOD(7, "Blue Screen of Death", "bsod.png", ToolSubType.INHERITANCE),
-    INFINITE_LOOP(8, "Ciclo infinito", "infinite-loop.png", ToolSubType.INHERITANCE),
-    SEGMENTATION_FAULT(9, "Segmentation Fault", "core-dumped.png", ToolSubType.INHERITANCE);
+    SECONDARY_EFFECTS(6, "Efeitos Secundários", "secondary-effects.png", ToolSubType.FUNCTIONAL_PROGRAMMING),
+    BSOD(7, "Blue Screen of Death", "bsod.png", null),
+    INFINITE_LOOP(8, "Ciclo infinito", "infinite-loop.png", ToolSubType.TEACHER_HELP),
+    SEGMENTATION_FAULT(9, "Segmentation Fault", "core-dumped.png", null);
 
     private final int id;
     private final String name;
-    // private final String effectMessage;
-    // private final String saveMessage;
     private final ToolSubType counter;
     private final String image;
 
