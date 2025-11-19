@@ -164,7 +164,7 @@ public class Core {
         }
 
         Player p = player(currentPlayerId);
-        String firstLanguage = p.getLanguages().getFirst();
+        String firstLanguage = p.getLanguages().get(0);
         if (Objects.equals(firstLanguage, "Assembly") && nrSpaces > 2) {
             return false;
         }
