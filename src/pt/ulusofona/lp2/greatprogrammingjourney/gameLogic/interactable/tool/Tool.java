@@ -18,6 +18,8 @@ public abstract class Tool extends Interactable {
         return "Jogador agarrou " + name;
     }
 
+
+
     @Override
     public String toString() {
         return "1:" + id;

@@ -6,6 +6,7 @@ import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.player.Player;
 
 import java.util.Objects;
 
+
 public abstract class Interactable {
 
     protected final int id;
@@ -16,6 +17,17 @@ public abstract class Interactable {
         this.id = id;
         this.name = name;
         this.png = png;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        Interactable i = (Interactable) o;
+        return id == i.getId() && name.equals(i.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
     }
 
     public abstract String interact(Player player, Board board, MoveHistory moveHistory);

@@ -213,7 +213,7 @@ public final class GamePersistence {
     }
 
     public static boolean saveToFile(File file, Board board, MoveHistory moveHistory, int currentPlayerID) {
-        if (file == null) {
+        if (file == null || board == null || moveHistory == null) {
             return false;
         }
 
