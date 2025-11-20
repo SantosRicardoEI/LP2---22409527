@@ -99,9 +99,10 @@ public class Core {
         return new String[]{
                 String.valueOf(player.getId()),
                 player.getName(),
-                String.join(";", player.getLanguages()),
-                player.getColorAsStr(),
                 String.valueOf(playerPosition(player)),
+                String.join(";", player.getToolsStr()),
+                String.join(";", player.getLanguages()),
+                player.getState().toString(),
         };
     }
 

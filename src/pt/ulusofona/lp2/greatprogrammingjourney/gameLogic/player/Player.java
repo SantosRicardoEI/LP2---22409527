@@ -59,6 +59,21 @@ public class Player implements Comparable<Player> {
         return new ArrayList<>(languages);
     }
 
+    public ArrayList<Tool> getTools() {
+        return new ArrayList<>(tools);
+    }
+
+    public ArrayList<String> getToolsStr() {
+        ArrayList<String> toolsString = new ArrayList<>();
+        if (tools.isEmpty()) {
+            toolsString.add("No tools");
+        }
+        for (Tool t : tools) {
+            toolsString.add(t.getName());
+        }
+        return toolsString;
+    }
+
     public ArrayList<String> getSortedLangs() {
         ArrayList<String> sorted = new ArrayList<>(languages);
         sorted.sort(String.CASE_INSENSITIVE_ORDER);
@@ -85,9 +100,6 @@ public class Player implements Comparable<Player> {
         return state == PlayerState.STUCK;
     }
 
-    public ArrayList<Tool> getTools() {
-        return new ArrayList<>(tools);
-    }
 
     public boolean isAlive() {
         return state != PlayerState.DEFEATED;
@@ -123,6 +135,24 @@ public class Player implements Comparable<Player> {
         tools.remove(tool);
     }
 
+    public String getToolsInfo() {
+        String toolsStr = "";
+
+        if (tools.isEmpty()) {
+            return "No tools";
+        }
+
+        boolean first = true;
+        for (Tool tool : tools) {
+            if (first) {
+                toolsStr += tool.getName();
+                first = false;
+            } else {
+                toolsStr += ";" + tool.getName();
+            }
+        }
+        return toolsStr;
+    }
     public String getToolsAsStr() {
         String toolsStr = "";
 
