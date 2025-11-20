@@ -47,10 +47,9 @@ public class BoardInitializer {
 
     public static boolean initializeInteractables(Board board, String[][] abyssesAndTools) {
 
-        ValidationResult inputOk = InputValidator.validateInteractableInfo(abyssesAndTools);
-        if (!inputOk.isValid()) {
-            LOG.error("placeInteractables: " + inputOk.getMessage());
-            return false;
+        if (abyssesAndTools == null || abyssesAndTools.length == 0) {
+            LOG.info("placeInteractables: no interactables to place");
+            return true;
         }
 
         LOG.info("placeInteractables: starting board population with " + abyssesAndTools.length + " interactables");

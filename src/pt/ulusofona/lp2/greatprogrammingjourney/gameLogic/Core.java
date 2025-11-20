@@ -106,19 +106,6 @@ public class Core {
                 String.join(";", player.getToolsInfo()),
                 player.getState().toString(),
         };
-
-
-        /*
-        //old
-        return new String[]{
-                String.valueOf(player.getId()),
-                player.getName(),
-                String.join(";", player.getLanguages()),
-                player.getColorAsStr(),
-                String.valueOf(playerPosition(player)),
-        };
-
-         */
     }
 
     public String getProgrammerInfoAsStr(int id) {
