@@ -33,7 +33,7 @@ public abstract class Abyss extends Interactable {
 
     @Override
     public final String toString() {
-        return "0:" + id ;
+        return "0:" + id;
     }
 
     public abstract String effectMessage();
