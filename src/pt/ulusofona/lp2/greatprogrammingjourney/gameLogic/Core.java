@@ -229,7 +229,7 @@ public class Core {
 
         return ResultsBuilder.build(
                 "THE GREAT PROGRAMMING JOURNEY",
-                moveHistory.getSize() + 1,
+                moveHistory.getSize(),
                 winner.getName(),
                 defeatedInfo
         );
