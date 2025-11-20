@@ -24,7 +24,7 @@ public class InfiniteLoop extends Abyss {
         int thisPosition = board.getPlayerPosition(player);
 
         for (Player p : board.getPlayersAt(thisPosition)) {
-            if (p != player) {
+            if (!p.equals(player)) {
                 p.lock(false);
             }
         }

@@ -322,19 +322,21 @@ public class Core {
 
         Player lastPlayer = board.getPlayer(getCurrentPlayerId());
         int pos = board.getPlayerPosition(lastPlayer);
-        advanceTurn();
 
         if (!InputValidator.validateBoardInitialized(board).isValid()) {
             LOG.error("reactToAbyssOrTool: board not initialized");
+            advanceTurn();
             return null;
         }
 
 
         Interactable interactable = board.getIntercatableOfSlot(pos);
         if (interactable == null) {
+            advanceTurn();
             return null;
         }
 
+        advanceTurn();
         return interactable.interact(lastPlayer, board, moveHistory);
     }
 
