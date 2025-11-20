@@ -1,6 +1,6 @@
 package pt.ulusofona.lp2.greatprogrammingjourney;
 
-import pt.ulusofona.lp2.greatprogrammingjourney.core.Core;
+import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.Core;
 
 import javax.swing.*;
 import java.io.File;

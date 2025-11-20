@@ -1,6 +1,6 @@
 package pt.ulusofona.lp2.greatprogrammingjourney.config;
 
-import pt.ulusofona.lp2.greatprogrammingjourney.core.TurnOrder;
+import pt.ulusofona.lp2.greatprogrammingjourney.enums.TurnOrder;
 import pt.ulusofona.lp2.greatprogrammingjourney.ui.theme.ThemeType;
 
 public class GameConfig {

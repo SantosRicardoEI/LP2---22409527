@@ -1,8 +1,8 @@
 package pt.ulusofona.lp2.greatprogrammingjourney.validator;
 
-import pt.ulusofona.lp2.greatprogrammingjourney.model.board.Board;
-import pt.ulusofona.lp2.greatprogrammingjourney.model.boardInteractable.Interactable;
-import pt.ulusofona.lp2.greatprogrammingjourney.model.player.Player;
+import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.board.Board;
+import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.interactable.Interactable;
+import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.player.Player;
 
 import java.util.List;
 
