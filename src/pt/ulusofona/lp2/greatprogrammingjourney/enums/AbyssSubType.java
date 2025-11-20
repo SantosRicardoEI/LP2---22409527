@@ -7,7 +7,7 @@ public enum AbyssSubType {
 
     SYNTAX_ERROR(0, "Erro de sintaxe", "syntax.png", ToolSubType.IDE),
     LOGIC_ERROR(1, "Erro de Lógica", "logic.png", ToolSubType.UNIT_TESTS),
-    EXCEPTION(2, "Exeption", "exception.png", ToolSubType.EXCEPTION_HANDLING),
+    EXCEPTION(2, "Exception", "exception.png", ToolSubType.EXCEPTION_HANDLING),
     FILE_NOT_FOUND(3, "File Not Found Exeption", "file-not-found-exception.png", null),
     CRASH(4, "Crash", "crash.png", null),
     DUPLICATED_CODE(5, "Código Duplicado", "duplicated-code.png", ToolSubType.INHERITANCE),
