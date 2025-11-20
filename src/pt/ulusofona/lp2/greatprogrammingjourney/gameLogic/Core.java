@@ -177,7 +177,7 @@ public class Core {
         if (p.isStuck()) {
             LOG.info("moveCurrentPlayer: player " + p.getName() + " is stuck and cannot move this turn");
             moveHistory.addRecord(p.getId(), oldPos, oldPos, nrSpaces);
-            return true;
+            return false;
         }
 
         int newPos = board.movePlayerBySteps(p, nrSpaces);
