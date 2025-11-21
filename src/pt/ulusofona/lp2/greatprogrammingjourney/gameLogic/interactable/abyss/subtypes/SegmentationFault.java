@@ -6,6 +6,7 @@ import pt.ulusofona.lp2.greatprogrammingjourney.enums.AbyssSubType;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.movehistory.MoveHistory;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.player.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SegmentationFault extends Abyss {
@@ -22,14 +23,15 @@ public class SegmentationFault extends Abyss {
     @Override
     public void affectPlayer(Player player, Board board, MoveHistory moveHistory) {
         int thisPosition = board.getPlayerPosition(player);
-        List<Player> playersInThisSlot = board.getPlayersAt(thisPosition);
+
+        List<Player> playersInThisSlot = new ArrayList<>(board.getPlayersAt(thisPosition));
 
         if (playersInThisSlot.size() < 2) {
             return;
         }
 
         for (Player p : playersInThisSlot) {
-            board.movePlayerBySteps(p,-3);
+            board.movePlayerBySteps(p, -3);
         }
     }
 }
