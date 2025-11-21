@@ -148,47 +148,36 @@ public class Core {
     }
 
     public boolean moveCurrentPlayer(int nrSpaces) {
-        ValidationResult boardOk = InputValidator.validateBoardInitialized(board);
-        if (!boardOk.isValid()) {
-            LOG.error("moveCurrentPlayer: " + boardOk.getMessage());
-            return false;
-        }
-
-        ValidationResult diceOk = GameRules.validateDice(nrSpaces);
-        if (!diceOk.isValid()) {
-            LOG.error("moveCurrentPlayer: " + diceOk.getMessage());
-            return false;
-        }
-
-        ValidationResult playerOk = InputValidator.validatePlayerExists(board, currentPlayerID);
-        if (!playerOk.isValid()) {
-            LOG.error("moveCurrentPlayer: " + playerOk.getMessage());
-            return false;
-        }
 
         Player p = player(currentPlayerID);
         int oldPos = playerPosition(p);
-        String firstLanguage = p.getLanguages().get(0);
-        if (Objects.equals(firstLanguage, "Assembly") && nrSpaces > 2) {
-            moveHistory.addRecord(p.getId(), oldPos, oldPos, nrSpaces);
-            return false;
-        }
+        int newPos = oldPos;
+        boolean success = true;
 
-        if (Objects.equals(firstLanguage, "C") && nrSpaces > 3) {
-            moveHistory.addRecord(p.getId(), oldPos, oldPos, nrSpaces);
-            return false;
-        }
+        ValidationResult boardOk = InputValidator.validateBoardInitialized(board);
+        ValidationResult diceOk = GameRules.validateDice(nrSpaces);
+        ValidationResult playerOk = InputValidator.validatePlayerExists(board, currentPlayerID);
 
-        if (p.isStuck()) {
-            LOG.info("moveCurrentPlayer: player " + p.getName() + " is stuck and cannot move this turn");
-            moveHistory.addRecord(p.getId(), oldPos, oldPos, nrSpaces);
-            return false;
-        }
+        if (!boardOk.isValid() || !diceOk.isValid() || !playerOk.isValid()) {
+            LOG.error("moveCurrentPlayer: invalid state");
+            success = false;
+        } else {
+            String firstLanguage = p.getLanguages().get(0);
 
-        int newPos = board.movePlayerBySteps(p, nrSpaces);
+            if (Objects.equals(firstLanguage, "Assembly") && nrSpaces > 2) {
+                success = false;
+            } else if (Objects.equals(firstLanguage, "C") && nrSpaces > 3) {
+                success = false;
+            } else if (p.isStuck()) {
+                LOG.info("moveCurrentPlayer: player " + p.getName() + " is stuck and cannot move this turn");
+                success = false;
+            } else {
+                newPos = board.movePlayerBySteps(p, nrSpaces);
+            }
+        }
 
         moveHistory.addRecord(p.getId(), oldPos, newPos, nrSpaces);
-        return true;
+        return success;
     }
 
     public boolean gameIsOver() {
