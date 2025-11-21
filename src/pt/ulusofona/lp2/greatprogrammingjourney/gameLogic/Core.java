@@ -65,82 +65,69 @@ public class Core {
         if (board == null) {
             return null;
         }
-        if (!validatePosition(nrSquare, boardSize())) {
+        if (nrSquare < 1 || nrSquare > boardSize()) {
             return null;
         }
 
-        if (board.getIntercatableOfSlot(nrSquare) != null) {
-            return board.getIntercatableOfSlot(nrSquare).getPng();
+        Interactable i = board.getIntercatableOfSlot(nrSquare);
+        if (i != null) {
+            return i.getPng();
         }
 
-        if (nrSquare == boardSize()) {
-            return "glory.png";
-        }
-
-        return null;
+        return nrSquare == boardSize() ? "glory.png" : null;
     }
 
     public String[] getProgrammerInfo(int id) {
-        if (board == null) {
+        Player player = safeGetPlayer(id);
+        if (player == null) {
             return null;
         }
-        if (!validatePlayerExists(board, id)) {
-            return null;
-        }
-
-        Player player = player(id);
 
         return new String[]{
                 String.valueOf(player.getId()),
                 player.getName(),
                 String.join(";", player.getLanguages()),
                 player.getColorAsStr(),
-                String.valueOf(playerPosition(player)),
+                String.valueOf(getPlayerPosition(player)),
                 String.join(";", player.getToolsInfo()),
                 player.getState().toString(),
         };
     }
 
     public String getProgrammerInfoAsStr(int id) {
-        if (board == null) {
+        Player p = safeGetPlayer(id);
+        if (p == null) {
             return null;
         }
-        if (!validatePlayerExists(board, id)) {
-            return null;
-        }
-
-        Player p = player(id);
 
         String name = p.getName();
-        String pos = playerPosition(p) + "";
+        String pos = String.valueOf(getPlayerPosition(p));
         String tools = p.getToolsAsStr();
-        String state = p.getState() + "";
+        String state = p.getState().toString();
         String langsStr = String.join("; ", p.getSortedLangs());
 
-        return id + " | " + name + " | " + pos + " | " + tools + " | " + langsStr + " | " + state;
+        return p.getId() + " | " + name + " | " + pos + " | " + tools + " | " + langsStr + " | " + state;
     }
 
     public String getProgrammersInfo() {
-        List<Player> jogadores = new ArrayList<>(board.getPlayers());
+        if (board == null) {
+            return "";
+        }
 
+        List<Player> jogadores = new ArrayList<>(board.getPlayers());
         jogadores.sort(Comparator.comparingInt(Player::getId));
 
         StringBuilder sb = new StringBuilder();
-        boolean first = true;
 
         for (Player p : jogadores) {
             if (!p.isAlive()) {
                 continue;
             }
 
-            String playerString = p.getName() + " : " + p.getToolsAsStr();
-
-            if (first) {
-                sb.append(playerString);
-                first = false;
-            } else {
-                sb.append(" | ").append(playerString);
+            if (sb.length() > 0) {
+                sb.append(" | ");
             }
+            sb.append(p.getName()).append(" : ").append(p.getToolsAsStr());
         }
 
         return sb.toString();
@@ -152,7 +139,7 @@ public class Core {
             return null;
         }
 
-        if (!validatePosition(position, boardSize())) {
+        if (position < 1 || position > boardSize()) {
             LOG.warn("getSlotInfo: " + "invalid position");
             return null;
         }
@@ -165,8 +152,14 @@ public class Core {
     }
 
     public boolean moveCurrentPlayer(int nrSpaces) {
+        Player p = safeGetPlayer(turnManager.getCurrentID());
         if (board == null) {
             LOG.error("moveCurrentPlayer: " + "board is null");
+            return false;
+        }
+
+        if (p == null) {
+            LOG.error("moveCurrentPlayer: " + "no player found for id " + turnManager.getCurrentID());
             return false;
         }
 
@@ -175,13 +168,7 @@ public class Core {
             return false;
         }
 
-        if (!validatePlayerExists(board, turnManager.getCurrentID())) {
-            LOG.error("moveCurrentPlayer: " + "no player found for id " + turnManager.getCurrentID());
-            return false;
-        }
-
-        Player p = player(turnManager.getCurrentID());
-        int oldPos = playerPosition(p);
+        int oldPos = getPlayerPosition(p);
         String firstLanguage = p.getLanguages().get(0);
         if (Objects.equals(firstLanguage, "Assembly") && nrSpaces > 2) {
             moveHistory.addRecord(p.getId(), oldPos, oldPos, nrSpaces);
@@ -217,11 +204,7 @@ public class Core {
 
         turnManager.advanceTurn(activePlayers());
 
-        if (inter == null) {
-            return null;
-        }
-
-        return inter.interact(p, board, moveHistory);
+        return inter == null ? null : inter.interact(p, board, moveHistory);
     }
 
     public boolean gameIsOver() {
@@ -254,7 +237,7 @@ public class Core {
 
         ArrayList<String[]> playersNameAndPosition = new ArrayList<>();
         for (Player p : allPlayers()) {
-            int pos = playerPosition(p);
+            int pos = getPlayerPosition(p);
             playersNameAndPosition.add(new String[]{p.getName(), String.valueOf(pos)});
         }
 
@@ -286,20 +269,17 @@ public class Core {
 
     // =============================================== Helpers =========================================================
 
-    private Player player(int id) {
+
+    private Player safeGetPlayer(int id) {
         if (board == null) {
-            throw new IllegalStateException("Board not initialized");
+            return null;
         }
-        return board.getPlayer(id);
+
+        Player p = board.getPlayer(id);
+        return p;
     }
 
-    private int playerPosition(Player p) {
-        if (board == null) {
-            throw new IllegalStateException("Board not initialized");
-        }
-        if (p == null) {
-            throw new IllegalArgumentException("Player is null");
-        }
+    private int getPlayerPosition(Player p) {
         return board.getPlayerPosition(p);
     }
 
@@ -313,13 +293,13 @@ public class Core {
     }
 
     private List<Player> activePlayers() {
-        List<Player> activePlayers = new ArrayList<>();
-        for (Player p : allPlayers()) {
+        List<Player> result = new ArrayList<>();
+        for (Player p : board.getPlayers()) {
             if (p.isAlive()) {
-                activePlayers.add(p);
+                result.add(p);
             }
         }
-        return activePlayers;
+        return result;
     }
 
     private int boardSize() {
@@ -329,17 +309,4 @@ public class Core {
         return board.getSize();
     }
 
-    private static boolean validatePosition(int pos, int boardSize) {
-        if (pos < 1 || pos > boardSize) {
-            return false;
-        }
-        return true;
-    }
-
-    private static boolean validatePlayerExists(Board board, int playerId) {
-        if (board.getPlayer(playerId) == null) {
-            return false;
-        }
-        return true;
-    }
 }
