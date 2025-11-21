@@ -37,7 +37,7 @@ public class Board {
     }
 
     public String[] getSlotInfo(int position) {
-        if (!validateSlot(position, getSize())) {
+        if (position < 1 || position > getSize()) {
             LOG.error("getSlotInfo: " + "invalid slot");
             return null;
         }
@@ -59,6 +59,19 @@ public class Board {
         return all;
     }
 
+    public Player getPlayer(int id) {
+        for (Player player : getPlayers()) {
+            if (player.getId() == id) {
+                return player;
+            }
+        }
+        return null;
+    }
+
+    public List<Player> getPlayersAt(int slot) {
+        return slots[slot].getPlayers();
+    }
+
     public List<Interactable> getInteractables() {
         List<Interactable> all = new ArrayList<>();
 
@@ -72,18 +85,12 @@ public class Board {
         return all;
     }
 
-
-    public Player getPlayer(int id) {
-        for (Player player : getPlayers()) {
-            if (player.getId() == id) {
-                return player;
-            }
+    public Interactable getIntercatableAt(int slotNumber) {
+        if (slotNumber < 1 || slotNumber > getSize()) {
+            LOG.error("getIntercatableOfSlot: invalid slot");
+            return null;
         }
-        return null;
-    }
-
-    public List<Player> getPlayersAt(int slot) {
-        return slots[slot].getPlayers();
+        return slots[slotNumber].getInteractable();
     }
 
     public int getPlayerPosition(Player player) {
@@ -143,6 +150,30 @@ public class Board {
         movePlayerBySteps(p, delta);
     }
 
+    public boolean placePlayer(Player player, int position) {
+        if (player == null) {
+            LOG.error("placePlayer: " + "player is null");
+            return false;
+        }
+
+        if (position < 1 || position > getSize()) {
+            LOG.error("placePlayer: " + "invalid slot");
+            return false;
+        }
+
+        return slots[position].addPlayer(player);
+    }
+
+    public boolean placeInteractable(Interactable interactable, int pos) {
+        if (pos < 1 || pos > getSize()) {
+            LOG.error("placeInteractable: " + "invalid slot");
+            return false;
+        }
+
+        slots[pos].setInteractable(interactable);
+        return true;
+    }
+
     // ============================== Helper Methods ===================================================================
 
     private void createSlots(int size) {
@@ -153,31 +184,13 @@ public class Board {
         LOG.info("createSlots: created " + size + " slots");
     }
 
-    public boolean placePlayer(Player player) {
-        return placePlayer(player, INITIAL_POSITION);
-    }
-
-    public boolean placePlayer(Player player, int position) {
-        if (player == null) {
-            LOG.error("placePlayer: " + "player is null");
-            return false;
-        }
-
-        if (!validateSlot(position, getSize())) {
-            LOG.error("placePlayer: " + "invalid slot");
-            return false;
-        }
-
-        return slots[position].addPlayer(player);
-    }
-
     private void removePlayer(Player player, int position) {
         if (player == null){
             LOG.error("removePlayer: " + "player is null");
             return;
         }
 
-        if (!validateSlot(position, getSize())) {
+        if (position < 1 || position > getSize()) {
             LOG.error("removePlayer: " + "invalid slot");
             return;
         }
@@ -198,27 +211,5 @@ public class Board {
         }
 
         return Math.max(1, target);
-    }
-
-    public boolean placeInteractable(Interactable interactable, int pos) {
-        if (!validateSlot(pos, getSize())) {
-            LOG.error("placeInteractable: " + "invalid slot");
-            return false;
-        }
-
-        slots[pos].setInteractable(interactable);
-        return true;
-    }
-
-
-    public Interactable getIntercatableOfSlot(int slotNumber) {
-        return slots[slotNumber].getInteractable();
-    }
-
-    public static boolean validateSlot(int pos, int max) {
-        if (pos < 1 || pos > max) {
-            return false;
-        }
-        return true;
     }
 }

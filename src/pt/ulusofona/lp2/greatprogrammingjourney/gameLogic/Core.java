@@ -65,11 +65,8 @@ public class Core {
         if (board == null) {
             return null;
         }
-        if (nrSquare < 1 || nrSquare > boardSize()) {
-            return null;
-        }
 
-        Interactable i = board.getIntercatableOfSlot(nrSquare);
+        Interactable i = board.getIntercatableAt(nrSquare);
         if (i != null) {
             return i.getPng();
         }
@@ -89,7 +86,7 @@ public class Core {
                 String.join(";", player.getLanguages()),
                 player.getColorAsStr(),
                 String.valueOf(getPlayerPosition(player)),
-                String.join(";", player.getToolsInfo()),
+                player.joinTools(";"),
                 player.getState().toString(),
         };
     }
@@ -102,7 +99,7 @@ public class Core {
 
         String name = p.getName();
         String pos = String.valueOf(getPlayerPosition(p));
-        String tools = p.getToolsAsStr();
+        String tools = p.joinTools(",");
         String state = p.getState().toString();
         String langsStr = String.join("; ", p.getSortedLangs());
 
@@ -114,7 +111,7 @@ public class Core {
             return "";
         }
 
-        List<Player> jogadores = new ArrayList<>(board.getPlayers());
+        List<Player> jogadores = board.getPlayers();
         jogadores.sort(Comparator.comparingInt(Player::getId));
 
         StringBuilder sb = new StringBuilder();
@@ -127,7 +124,7 @@ public class Core {
             if (sb.length() > 0) {
                 sb.append(" | ");
             }
-            sb.append(p.getName()).append(" : ").append(p.getToolsAsStr());
+            sb.append(p.getName()).append(" : ").append(p.joinTools(","));
         }
 
         return sb.toString();
@@ -135,15 +132,9 @@ public class Core {
 
     public String[] getSlotInfo(int position) {
         if (board == null) {
-            LOG.error("getSlotInfo: " + "board is null");
+            LOG.error("getSlotInfo: board is null");
             return null;
         }
-
-        if (position < 1 || position > boardSize()) {
-            LOG.warn("getSlotInfo: " + "invalid position");
-            return null;
-        }
-
         return board.getSlotInfo(position);
     }
 
@@ -200,7 +191,7 @@ public class Core {
         }
 
         Player p = board.getPlayer(getCurrentPlayerId());
-        Interactable inter = board.getIntercatableOfSlot(board.getPlayerPosition(p));
+        Interactable inter = board.getIntercatableAt(board.getPlayerPosition(p));
 
         turnManager.advanceTurn(activePlayers());
 
@@ -271,12 +262,7 @@ public class Core {
 
 
     private Player safeGetPlayer(int id) {
-        if (board == null) {
-            return null;
-        }
-
-        Player p = board.getPlayer(id);
-        return p;
+        return (board == null) ? null : board.getPlayer(id);
     }
 
     private int getPlayerPosition(Player p) {

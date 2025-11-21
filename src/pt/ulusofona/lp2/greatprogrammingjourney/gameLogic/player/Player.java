@@ -25,10 +25,10 @@ public class Player implements Comparable<Player> {
     public Player(int id, String name, ArrayList<String> languages, PlayerColor color) {
         this.id = id;
         this.name = name;
-        this.languages = languages;
+        this.languages = new ArrayList<>(languages);
         this.color = color;
         this.state = PlayerState.IN_GAME;
-        this.tools = new HashSet();
+        this.tools = new HashSet<>();
     }
 
     @Override
@@ -42,7 +42,7 @@ public class Player implements Comparable<Player> {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Integer.hashCode(id);
     }
 
     // ============================== Getters & Setters ================================================================
@@ -61,17 +61,6 @@ public class Player implements Comparable<Player> {
 
     public ArrayList<Tool> getTools() {
         return new ArrayList<>(tools);
-    }
-
-    public ArrayList<String> getToolsStr() {
-        ArrayList<String> toolsString = new ArrayList<>();
-        if (tools.isEmpty()) {
-            toolsString.add("No tools");
-        }
-        for (Tool t : tools) {
-            toolsString.add(t.getName());
-        }
-        return toolsString;
     }
 
     public ArrayList<String> getSortedLangs() {
@@ -106,16 +95,7 @@ public class Player implements Comparable<Player> {
     }
 
     public boolean hasTool(Tool tool) {
-        if (tool == null) {
-            return false;
-        }
-
-        for (Tool t : tools) {
-            if (t.getId() == tool.getId()) {
-                return true;
-            }
-        }
-        return false;
+        return tool != null && tools.contains(tool);
     }
 
 
@@ -139,41 +119,23 @@ public class Player implements Comparable<Player> {
         tools.remove(tool);
     }
 
-    public String getToolsInfo() {
-        String toolsStr = "";
-
+    public String joinTools(String sep) {
         if (tools.isEmpty()) {
             return "No tools";
         }
 
+        StringBuilder sb = new StringBuilder();
         boolean first = true;
-        for (Tool tool : tools) {
-            if (first) {
-                toolsStr += tool.getName();
-                first = false;
-            } else {
-                toolsStr += ";" + tool.getName();
-            }
-        }
-        return toolsStr;
-    }
-    public String getToolsAsStr() {
-        String toolsStr = "";
 
-        if (tools.isEmpty()) {
-            return "No tools";
+        for (Tool t : tools) {
+            if (!first) {
+                sb.append(sep);
+            }
+            sb.append(t.getName());
+            first = false;
         }
 
-        boolean first = true;
-        for (Tool tool : tools) {
-            if (first) {
-                toolsStr += tool.getName();
-                first = false;
-            } else {
-                toolsStr += ", " + tool.getName();
-            }
-        }
-        return toolsStr;
+        return sb.toString();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.board;
 
+import pt.ulusofona.lp2.greatprogrammingjourney.config.GameConfig;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.interactable.Interactable;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.player.Player;
 import pt.ulusofona.lp2.greatprogrammingjourney.parser.Parser;
@@ -31,7 +32,7 @@ public class BoardInitializer {
                 return false;
             }
 
-            if (!board.placePlayer(p)) {
+            if (!board.placePlayer(p, GameConfig.INITIAL_POSITION)) {
                 LOG.error("initializePlayers: could not place player=" + p.getName() + " on board");
                 return false;
             }

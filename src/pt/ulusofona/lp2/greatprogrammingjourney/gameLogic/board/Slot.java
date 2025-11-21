@@ -31,7 +31,7 @@ final class Slot {
     }
 
     List<Player> getPlayers() {
-        return java.util.Collections.unmodifiableList(players);
+        return new ArrayList<>(players);
     }
 
     Interactable getInteractable() {
