@@ -21,15 +21,15 @@ public class InfiniteLoop extends Abyss {
     @Override
     public void applyAbyssEffects(Player player, Board board, MoveHistory moveHistory) {
         player.lock(true);
-    }
-    @Override
-    public void applyCommonEffects(Player player, Board board, MoveHistory moveHistory) {
         int thisPosition = board.getPlayerPosition(player);
         for (Player p : board.getPlayersAt(thisPosition)) {
             if (!p.equals(player)) {
                 p.lock(false);
             }
         }
+    }
+    @Override
+    public void applyCommonEffects(Player player, Board board, MoveHistory moveHistory) {
     }
 
     @Override
