@@ -299,10 +299,14 @@ public class Core {
     // ======================================================= Parte II ================================================
 
     public String getProgrammersInfo() {
-        StringBuilder sb = new StringBuilder();
+        List<Player> jogadores = new ArrayList<>(board.getPlayers());
 
+        jogadores.sort(Comparator.comparingInt(Player::getId));
+
+        StringBuilder sb = new StringBuilder();
         boolean first = true;
-        for (Player p : board.getPlayers()) {
+
+        for (Player p : jogadores) {
             if (!p.isAlive()) {
                 continue;
             }
@@ -313,10 +317,10 @@ public class Core {
                 sb.append(playerString);
                 first = false;
             } else {
-                sb.append(" | " + playerString);
+                sb.append(" | ").append(playerString);
             }
-
         }
+
         return sb.toString();
     }
 
