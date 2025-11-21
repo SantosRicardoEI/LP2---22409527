@@ -3,8 +3,6 @@ package pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.board;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.interactable.Interactable;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.player.Player;
 import pt.ulusofona.lp2.greatprogrammingjourney.utils.GameLogger;
-import pt.ulusofona.lp2.greatprogrammingjourney.validator.InputValidator;
-import pt.ulusofona.lp2.greatprogrammingjourney.validator.ValidationResult;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,15 +37,8 @@ public class Board {
     }
 
     public String[] getSlotInfo(int position) {
-        ValidationResult boardOk = InputValidator.validateBoardInitialized(this);
-        if (!boardOk.isValid()) {
-            LOG.error("getSlotInfo: " + boardOk.getMessage());
-            return null;
-        }
-
-        ValidationResult slotOk = InputValidator.validateSlot(position, getSize());
-        if (!slotOk.isValid()) {
-            LOG.error("getSlotInfo: " + slotOk.getMessage());
+        if (!validateSlot(position, getSize())) {
+            LOG.error("getSlotInfo: " + "invalid slot");
             return null;
         }
 
@@ -78,9 +69,6 @@ public class Board {
                 }
             }
         }
-
-
-
         return all;
     }
 
@@ -124,25 +112,13 @@ public class Board {
 
 
     public Player getWinner() {
-        ValidationResult boardOk = InputValidator.validateBoardInitialized(this);
-        if (!boardOk.isValid()) {
-            LOG.error("getWinner: " + boardOk.getMessage());
-            return null;
-        }
-
         return slots[getSize()].getPlayer(0);
     }
 
     public int movePlayerBySteps(Player player, int steps) {
-        ValidationResult boardOk = InputValidator.validateBoardInitialized(this);
-        if (!boardOk.isValid()) {
-            LOG.error("movePlayer: " + boardOk.getMessage());
-            return -1;
-        }
 
-        ValidationResult playerOk = InputValidator.validatePlayerOnBoard(this, player);
-        if (!playerOk.isValid()) {
-            LOG.error("movePlayer: " + playerOk.getMessage());
+        if (player == null || getPlayerPosition(player) < 1 ) {
+            LOG.error("movePlayer: " + "invalid player or player position");
             return -1;
         }
 
@@ -182,21 +158,13 @@ public class Board {
     }
 
     public boolean placePlayer(Player player, int position) {
-        ValidationResult boardOk = InputValidator.validateBoardInitialized(this);
-        if (!boardOk.isValid()) {
-            LOG.error("placePlayer: " + boardOk.getMessage());
+        if (player == null) {
+            LOG.error("placePlayer: " + "player is null");
             return false;
         }
 
-        ValidationResult playerOk = InputValidator.validatePlayerNotNull(player);
-        if (!playerOk.isValid()) {
-            LOG.error("placePlayer: " + playerOk.getMessage());
-            return false;
-        }
-
-        ValidationResult slotOk = InputValidator.validateSlot(position, getSize());
-        if (!slotOk.isValid()) {
-            LOG.error("placePlayer: " + slotOk.getMessage());
+        if (!validateSlot(position, getSize())) {
+            LOG.error("placePlayer: " + "invalid slot");
             return false;
         }
 
@@ -204,21 +172,13 @@ public class Board {
     }
 
     private void removePlayer(Player player, int position) {
-        ValidationResult boardOk = InputValidator.validateBoardInitialized(this);
-        if (!boardOk.isValid()) {
-            LOG.error("removePlayer: " + boardOk.getMessage());
+        if (player == null){
+            LOG.error("removePlayer: " + "player is null");
             return;
         }
 
-        ValidationResult playerOk = InputValidator.validatePlayerNotNull(player);
-        if (!playerOk.isValid()) {
-            LOG.error("removePlayer: " + playerOk.getMessage());
-            return;
-        }
-
-        ValidationResult slotOk = InputValidator.validateSlot(position, getSize());
-        if (!slotOk.isValid()) {
-            LOG.error("removePlayer: " + slotOk.getMessage());
+        if (!validateSlot(position, getSize())) {
+            LOG.error("removePlayer: " + "invalid slot");
             return;
         }
 
@@ -241,9 +201,8 @@ public class Board {
     }
 
     public boolean placeInteractable(Interactable interactable, int pos) {
-        ValidationResult slotOk = InputValidator.validateSlot(pos, getSize());
-        if (!slotOk.isValid()) {
-            LOG.error("placeInteractable: " + slotOk.getMessage());
+        if (!validateSlot(pos, getSize())) {
+            LOG.error("placeInteractable: " + "invalid slot");
             return false;
         }
 
@@ -254,5 +213,12 @@ public class Board {
 
     public Interactable getIntercatableOfSlot(int slotNumber) {
         return slots[slotNumber].getInteractable();
+    }
+
+    public static boolean validateSlot(int pos, int max) {
+        if (pos < 1 || pos > max) {
+            return false;
+        }
+        return true;
     }
 }

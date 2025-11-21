@@ -6,8 +6,6 @@ import pt.ulusofona.lp2.greatprogrammingjourney.enums.InteractableType;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.player.Player;
 import pt.ulusofona.lp2.greatprogrammingjourney.enums.PlayerColor;
 import pt.ulusofona.lp2.greatprogrammingjourney.enums.PlayerState;
-import pt.ulusofona.lp2.greatprogrammingjourney.validator.InputValidator;
-import pt.ulusofona.lp2.greatprogrammingjourney.validator.ValidationResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +15,10 @@ public class Parser {
     // ================================================== Player Parsing ===============================================
 
     public static Player parsePlayer(String[] info, List<Player> players) {
-        if (!validatePlayersList(players) || !validateInfoLine(info)) {
+        if (info == null) {
+            throw new IllegalArgumentException("Invalid player input line");
+        }
+        if (info.length != 4 && info.length != 3) {
             throw new IllegalArgumentException("Invalid player input line");
         }
 
@@ -214,24 +215,5 @@ public class Parser {
 
         String raw = parts[0].trim() + ":" + parts[1].trim();
         return parseInteractable(raw);
-    }
-
-    // ============================================== Validation Helpers ===============================================
-
-
-    private static boolean validatePlayersList(List<Player> players) {
-        ValidationResult playersOk = InputValidator.validatePlayerList(players);
-        if (!playersOk.isValid()) {
-            return false;
-        }
-        return true;
-    }
-
-    private static boolean validateInfoLine(String[] info) {
-        ValidationResult infoOk = InputValidator.validatePlayerInfoLine(info);
-        if (!infoOk.isValid()) {
-            return false;
-        }
-        return true;
     }
 }

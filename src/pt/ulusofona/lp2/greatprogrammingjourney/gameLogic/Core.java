@@ -1,6 +1,7 @@
 package pt.ulusofona.lp2.greatprogrammingjourney.gameLogic;
 
 import pt.ulusofona.lp2.greatprogrammingjourney.InvalidFileException;
+import pt.ulusofona.lp2.greatprogrammingjourney.config.GameConfig;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.board.Board;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.board.BoardInitializer;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.gamepersistence.GamePersistence;
@@ -11,15 +12,12 @@ import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.player.Player;
 import pt.ulusofona.lp2.greatprogrammingjourney.ui.Credits;
 import pt.ulusofona.lp2.greatprogrammingjourney.ui.theme.ThemeLibrary;
 import pt.ulusofona.lp2.greatprogrammingjourney.utils.GameLogger;
-import pt.ulusofona.lp2.greatprogrammingjourney.utils.ResultsBuilder;
-import pt.ulusofona.lp2.greatprogrammingjourney.validator.InputValidator;
-import pt.ulusofona.lp2.greatprogrammingjourney.validator.ValidationResult;
+import pt.ulusofona.lp2.greatprogrammingjourney.utils.StringUtils;
 
 import javax.swing.*;
 import java.io.*;
 import java.util.*;
 
-import static pt.ulusofona.lp2.greatprogrammingjourney.config.GameConfig.THEME;
 
 public class Core {
 
@@ -37,26 +35,22 @@ public class Core {
     }
 
     public boolean createInitialBoard(String[][] playerInfo, int worldSize, String[][] abyssAndTools) {
-
-        ValidationResult playersOk = InputValidator.validatePlayerInfo(playerInfo);
-        if (!playersOk.isValid()) {
-            LOG.error("createInitialBoard: " + playersOk.getMessage());
+        if (playerInfo == null || playerInfo.length == 0) {
+            LOG.error("createInitialBoard: " + "invalid player info");
             return false;
         }
 
-        ValidationResult playerCountOk = GameRules.validatePlayerCount(playerInfo.length);
-        if (!playerCountOk.isValid()) {
-            LOG.error("createInitialBoard: " + playerCountOk.getMessage());
+        if (!GameRules.validatePlayerCount(playerInfo.length)) {
+            LOG.error("createInitialBoard: " + "invalid player count");
             return false;
         }
 
-        ValidationResult worldSizeOk = GameRules.validateWorldSize(worldSize, playerInfo.length);
-        if (!worldSizeOk.isValid()) {
-            LOG.error("createInitialBoard: " + worldSizeOk.getMessage());
+        if (!GameRules.validateWorldSize(worldSize, playerInfo.length)) {
+            LOG.error("createInitialBoard: " + "invalid world size");
             return false;
         }
 
-        if (!startBoard(playerInfo, abyssAndTools, worldSize)) {
+        if (!initializeBoard(playerInfo, abyssAndTools, worldSize)) {
             LOG.error("createInitialBoard: startBoard() failed");
             return false;
         }
@@ -68,10 +62,10 @@ public class Core {
     }
 
     public String getImagePng(int nrSquare) {
-        if (!InputValidator.validateBoardInitialized(board).isValid()) {
+        if (board == null) {
             return null;
         }
-        if (!InputValidator.validatePosition(nrSquare, boardSize()).isValid()) {
+        if (!validatePosition(nrSquare, boardSize())) {
             return null;
         }
 
@@ -87,10 +81,10 @@ public class Core {
     }
 
     public String[] getProgrammerInfo(int id) {
-        if (!InputValidator.validateBoardInitialized(board).isValid()) {
+        if (board == null) {
             return null;
         }
-        if (!InputValidator.validatePlayerExists(board, id).isValid()) {
+        if (!validatePlayerExists(board, id)) {
             return null;
         }
 
@@ -108,10 +102,10 @@ public class Core {
     }
 
     public String getProgrammerInfoAsStr(int id) {
-        if (!InputValidator.validateBoardInitialized(board).isValid()) {
+        if (board == null) {
             return null;
         }
-        if (!InputValidator.validatePlayerExists(board, id).isValid()) {
+        if (!validatePlayerExists(board, id)) {
             return null;
         }
 
@@ -125,168 +119,6 @@ public class Core {
 
         return id + " | " + name + " | " + pos + " | " + tools + " | " + langsStr + " | " + state;
     }
-
-    public String[] getSlotInfo(int position) {
-        ValidationResult boardOk = InputValidator.validateBoardInitialized(board);
-        if (!boardOk.isValid()) {
-            LOG.error("getSlotInfo: " + boardOk.getMessage());
-            return null;
-        }
-
-        ValidationResult positionOk = InputValidator.validatePosition(position, boardSize());
-        if (!positionOk.isValid()) {
-            LOG.warn("getSlotInfo: " + positionOk.getMessage());
-            return null;
-        }
-
-        return board.getSlotInfo(position);
-    }
-
-    public int getCurrentPlayerId() {
-        return turnManager.getCurrentID();
-    }
-
-    public boolean moveCurrentPlayer(int nrSpaces) {
-        ValidationResult boardOk = InputValidator.validateBoardInitialized(board);
-        if (!boardOk.isValid()) {
-            LOG.error("moveCurrentPlayer: " + boardOk.getMessage());
-            return false;
-        }
-
-        ValidationResult diceOk = GameRules.validateDice(nrSpaces);
-        if (!diceOk.isValid()) {
-            LOG.error("moveCurrentPlayer: " + diceOk.getMessage());
-            return false;
-        }
-
-        ValidationResult playerOk = InputValidator.validatePlayerExists(board, turnManager.getCurrentID());
-        if (!playerOk.isValid()) {
-            LOG.error("moveCurrentPlayer: " + playerOk.getMessage());
-            return false;
-        }
-
-        Player p = player(turnManager.getCurrentID());
-        int oldPos = playerPosition(p);
-        String firstLanguage = p.getLanguages().get(0);
-        if (Objects.equals(firstLanguage, "Assembly") && nrSpaces > 2) {
-            moveHistory.addRecord(p.getId(), oldPos, oldPos, nrSpaces);
-            return false;
-        }
-
-        if (Objects.equals(firstLanguage, "C") && nrSpaces > 3) {
-            moveHistory.addRecord(p.getId(), oldPos, oldPos, nrSpaces);
-            return false;
-        }
-
-        if (p.isStuck()) {
-            LOG.info("moveCurrentPlayer: player " + p.getName() + " is stuck and cannot move this turn");
-            moveHistory.addRecord(p.getId(), oldPos, oldPos, nrSpaces);
-            return true;
-        }
-
-        int newPos = board.movePlayerBySteps(p, nrSpaces);
-
-        moveHistory.addRecord(p.getId(), oldPos, newPos, nrSpaces);
-        return true;
-    }
-
-    public boolean gameIsOver() {
-        ValidationResult boardOk = InputValidator.validateBoardInitialized(board);
-        if (!boardOk.isValid()) {
-            LOG.error("gameIsOver: " + boardOk.getMessage());
-            return false;
-        }
-
-        Player winner = board.getWinner();
-        if (winner == null) {
-            return false;
-        }
-
-        LOG.info("gameIsOver: winner=" + winner.getName());
-        return true;
-    }
-
-
-    public ArrayList<String> getGameResults() {
-        ValidationResult boardOk = InputValidator.validateBoardInitialized(board);
-        if (!boardOk.isValid()) {
-            LOG.error("getGameResults: " + boardOk.getMessage());
-            return new ArrayList<>();
-        }
-
-        Player winner = board.getWinner();
-        if (winner == null) {
-            LOG.info("getGameResults: no winner yet, returning empty results");
-            return new ArrayList<>();
-        }
-
-        ArrayList<String[]> playersNameAndPosition = new ArrayList<>();
-        for (Player p : allPlayers()) {
-            int pos = playerPosition(p);
-            playersNameAndPosition.add(new String[]{p.getName(), String.valueOf(pos)});
-        }
-
-        return ResultsBuilder.build(
-                "THE GREAT PROGRAMMING JOURNEY",
-                turnManager.getTurnCount(),
-                playersNameAndPosition
-        );
-    }
-
-    public JPanel getAuthorsPanel() {
-        return Credits.buildPanel();
-    }
-
-    public HashMap<String, String> customizeBoard() {
-        return ThemeLibrary.get(THEME);
-    }
-
-    // ============================== Helper Methods ===================================================================
-
-    private Player player(int id) {
-        if (board == null) {
-            throw new IllegalStateException("Board not initialized");
-        }
-        return board.getPlayer(id);
-    }
-
-    public int playerPosition(Player p) {
-        if (board == null) {
-            throw new IllegalStateException("Board not initialized");
-        }
-        if (p == null) {
-            throw new IllegalArgumentException("Player is null");
-        }
-        return board.getPlayerPosition(p);
-    }
-
-    private boolean startBoard(String[][] playerInfo, String[][] interactableInfo, int worldSize) {
-        board = new Board(worldSize);
-        return board.initializePlayers(playerInfo) && BoardInitializer.initializeInteractables(board, interactableInfo);
-    }
-
-    public List<Player> allPlayers() {
-        return board.getPlayers();
-    }
-
-
-    private List<Player> activePlayers() {
-        List<Player> activePlayers = new ArrayList<>();
-        for (Player p : allPlayers()) {
-            if (p.isAlive()) {
-                activePlayers.add(p);
-            }
-        }
-        return activePlayers;
-    }
-
-    private int boardSize() {
-        if (board == null) {
-            throw new IllegalStateException("Board not initialized");
-        }
-        return board.getSize();
-    }
-    // ======================================================= Parte II ================================================
 
     public String getProgrammersInfo() {
         List<Player> jogadores = new ArrayList<>(board.getPlayers());
@@ -314,6 +146,65 @@ public class Core {
         return sb.toString();
     }
 
+    public String[] getSlotInfo(int position) {
+        if (board == null) {
+            LOG.error("getSlotInfo: " + "board is null");
+            return null;
+        }
+
+        if (!validatePosition(position, boardSize())) {
+            LOG.warn("getSlotInfo: " + "invalid position");
+            return null;
+        }
+
+        return board.getSlotInfo(position);
+    }
+
+    public int getCurrentPlayerId() {
+        return turnManager.getCurrentID();
+    }
+
+    public boolean moveCurrentPlayer(int nrSpaces) {
+        if (board == null) {
+            LOG.error("moveCurrentPlayer: " + "board is null");
+            return false;
+        }
+
+        if (!GameRules.validateDice(nrSpaces)) {
+            LOG.error("moveCurrentPlayer: " + "invalid dice value");
+            return false;
+        }
+
+        if (!validatePlayerExists(board, turnManager.getCurrentID())) {
+            LOG.error("moveCurrentPlayer: " + "no player found for id " + turnManager.getCurrentID());
+            return false;
+        }
+
+        Player p = player(turnManager.getCurrentID());
+        int oldPos = playerPosition(p);
+        String firstLanguage = p.getLanguages().get(0);
+        if (Objects.equals(firstLanguage, "Assembly") && nrSpaces > 2) {
+            moveHistory.addRecord(p.getId(), oldPos, oldPos, nrSpaces);
+            return false;
+        }
+
+        if (Objects.equals(firstLanguage, "C") && nrSpaces > 3) {
+            moveHistory.addRecord(p.getId(), oldPos, oldPos, nrSpaces);
+            return false;
+        }
+
+        if (p.isStuck()) {
+            LOG.info("moveCurrentPlayer: player " + p.getName() + " is stuck and cannot move this turn");
+            moveHistory.addRecord(p.getId(), oldPos, oldPos, nrSpaces);
+            return false;
+        }
+
+        int newPos = board.movePlayerBySteps(p, nrSpaces);
+
+        moveHistory.addRecord(p.getId(), oldPos, newPos, nrSpaces);
+        return true;
+    }
+
     public String reactToAbyssOrTool() {
         if (board == null) {
             LOG.error("reactToAbyssOrTool: board is null");
@@ -333,6 +224,46 @@ public class Core {
         return inter.interact(p, board, moveHistory);
     }
 
+    public boolean gameIsOver() {
+        if (board == null) {
+            LOG.error("gameIsOver: " + "board is null");
+            return false;
+        }
+
+        Player winner = board.getWinner();
+        if (winner == null) {
+            return false;
+        }
+
+        LOG.info("gameIsOver: winner=" + winner.getName());
+        return true;
+    }
+
+
+    public ArrayList<String> getGameResults() {
+        if (board == null) {
+            LOG.error("getGameResults: " + "board is null");
+            return new ArrayList<>();
+        }
+
+        Player winner = board.getWinner();
+        if (winner == null) {
+            LOG.info("getGameResults: no winner yet, returning empty results");
+            return new ArrayList<>();
+        }
+
+        ArrayList<String[]> playersNameAndPosition = new ArrayList<>();
+        for (Player p : allPlayers()) {
+            int pos = playerPosition(p);
+            playersNameAndPosition.add(new String[]{p.getName(), String.valueOf(pos)});
+        }
+
+        return StringUtils.buildResultsString(
+                turnManager.getTurnCount(),
+                playersNameAndPosition
+        );
+    }
+
     public void loadGame(File file) throws InvalidFileException, FileNotFoundException {
         LoadedGame state = GamePersistence.loadFromFile(file);
         this.board = state.board();
@@ -343,5 +274,72 @@ public class Core {
 
     public boolean saveGame(File file) {
         return GamePersistence.saveToFile(file, board, moveHistory, turnManager.getCurrentID(), turnManager.getTurnCount());
+    }
+
+    public JPanel getAuthorsPanel() {
+        return Credits.buildPanel();
+    }
+
+    public HashMap<String, String> customizeBoard() {
+        return ThemeLibrary.get(GameConfig.THEME);
+    }
+
+    // =============================================== Helpers =========================================================
+
+    private Player player(int id) {
+        if (board == null) {
+            throw new IllegalStateException("Board not initialized");
+        }
+        return board.getPlayer(id);
+    }
+
+    private int playerPosition(Player p) {
+        if (board == null) {
+            throw new IllegalStateException("Board not initialized");
+        }
+        if (p == null) {
+            throw new IllegalArgumentException("Player is null");
+        }
+        return board.getPlayerPosition(p);
+    }
+
+    private boolean initializeBoard(String[][] playerInfo, String[][] interactableInfo, int worldSize) {
+        board = new Board(worldSize);
+        return board.initializePlayers(playerInfo) && BoardInitializer.initializeInteractables(board, interactableInfo);
+    }
+
+    private List<Player> allPlayers() {
+        return board.getPlayers();
+    }
+
+    private List<Player> activePlayers() {
+        List<Player> activePlayers = new ArrayList<>();
+        for (Player p : allPlayers()) {
+            if (p.isAlive()) {
+                activePlayers.add(p);
+            }
+        }
+        return activePlayers;
+    }
+
+    private int boardSize() {
+        if (board == null) {
+            throw new IllegalStateException("Board not initialized");
+        }
+        return board.getSize();
+    }
+
+    private static boolean validatePosition(int pos, int boardSize) {
+        if (pos < 1 || pos > boardSize) {
+            return false;
+        }
+        return true;
+    }
+
+    private static boolean validatePlayerExists(Board board, int playerId) {
+        if (board.getPlayer(playerId) == null) {
+            return false;
+        }
+        return true;
     }
 }

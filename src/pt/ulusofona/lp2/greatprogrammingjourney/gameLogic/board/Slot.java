@@ -4,8 +4,6 @@ import pt.ulusofona.lp2.greatprogrammingjourney.config.GameConfig;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.interactable.Interactable;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.player.Player;
 import pt.ulusofona.lp2.greatprogrammingjourney.utils.GameLogger;
-import pt.ulusofona.lp2.greatprogrammingjourney.validator.InputValidator;
-import pt.ulusofona.lp2.greatprogrammingjourney.validator.ValidationResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,9 +45,8 @@ final class Slot {
     }
 
     boolean addPlayer(Player player) {
-        ValidationResult playerOk = InputValidator.validatePlayerNotNull(player);
-        if (!playerOk.isValid()) {
-            LOG.error("addPlayer: " + playerOk.getMessage() + " for slot=" + number);
+        if (player == null) {
+            LOG.error("addPlayer: " + "player null" + " for slot=" + number);
             return false;
         }
         if (isFull()) {
@@ -70,9 +67,8 @@ final class Slot {
     }
 
     void removePlayer(Player player) {
-        var playerOk = InputValidator.validatePlayerNotNull(player);
-        if (!playerOk.isValid()) {
-            LOG.error("removePlayer: " + playerOk.getMessage() + " for slot=" + number);
+        if (player == null) {
+            LOG.error("removePlayer: " + "player null" + " for slot=" + number);
             return;
         }
         if (!players.remove(player)) {

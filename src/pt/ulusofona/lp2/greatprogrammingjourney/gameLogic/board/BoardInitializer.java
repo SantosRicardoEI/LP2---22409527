@@ -4,23 +4,19 @@ import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.interactable.Interacta
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.player.Player;
 import pt.ulusofona.lp2.greatprogrammingjourney.parser.Parser;
 import pt.ulusofona.lp2.greatprogrammingjourney.utils.GameLogger;
-import pt.ulusofona.lp2.greatprogrammingjourney.validator.InputValidator;
-import pt.ulusofona.lp2.greatprogrammingjourney.validator.ValidationResult;
 
 public class BoardInitializer {
 
     private static final GameLogger LOG = new GameLogger(BoardInitializer.class);
 
     static boolean initializePlayers(Board board, String[][] playerInfo) {
-        ValidationResult boardOk = InputValidator.validateBoardInitialized(board);
-        if (!boardOk.isValid()) {
-            LOG.error("initializePlayers: " + boardOk.getMessage());
+        if (board == null) {
+            LOG.error("initializePlayers: " + "board is null");
             return false;
         }
 
-        ValidationResult playersOk = InputValidator.validatePlayerInfo(playerInfo);
-        if (!playersOk.isValid()) {
-            LOG.error("initializePlayers: " + playersOk.getMessage());
+        if (playerInfo == null || playerInfo.length == 0) {
+            LOG.error("initializePlayers: " + "invalid player info");
             return false;
         }
 
@@ -71,13 +67,6 @@ public class BoardInitializer {
             } catch (IllegalArgumentException e) {
                 LOG.warn("placeInteractables: rejected — invalid interactable data for input=" +
                         String.join(",", line));
-                return false;
-            }
-
-            ValidationResult iOk = InputValidator.validateInteractableNotNull(interactable);
-            if (!iOk.isValid()) {
-                LOG.warn("placeInteractables: " + iOk.getMessage() +
-                        " for input=" + String.join(",", line));
                 return false;
             }
 
