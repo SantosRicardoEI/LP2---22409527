@@ -9,7 +9,7 @@ import java.util.List;
 import static pt.ulusofona.lp2.greatprogrammingjourney.config.GameConfig.TURN_ORDER;
 
 
-final class TurnManager {
+public final class TurnManager {
 
     private static final GameLogger LOG = new GameLogger(TurnManager.class);
 
@@ -37,8 +37,9 @@ final class TurnManager {
     public void advanceTurn(List<Player> activePlayers) {
         if (turnCount == 0) {
             currentID = getFirstPlayerId(activePlayers, TURN_ORDER);
+        } else {
+            currentID = getNextPlayerId(activePlayers, TURN_ORDER);
         }
-        currentID = getNextPlayerId(activePlayers, TURN_ORDER);
         turnCount++;
     }
 
