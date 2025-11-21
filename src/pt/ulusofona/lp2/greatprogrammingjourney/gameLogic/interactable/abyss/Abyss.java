@@ -10,7 +10,7 @@ import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.player.Player;
 
 public abstract class Abyss extends Interactable {
 
-    private final Tool counter;
+    protected final Tool counter;
 
     protected Abyss(AbyssSubType subType) {
         super(subType.getId(), subType.getName(),subType.getImage());
@@ -18,7 +18,7 @@ public abstract class Abyss extends Interactable {
     }
 
     @Override
-    public final String interact(Player player, Board board, MoveHistory moveHistory) {
+    public String interact(Player player, Board board, MoveHistory moveHistory) {
         if (counter != null && player.hasTool(counter)) {
             player.useTool(counter);
             return counteredMessage();

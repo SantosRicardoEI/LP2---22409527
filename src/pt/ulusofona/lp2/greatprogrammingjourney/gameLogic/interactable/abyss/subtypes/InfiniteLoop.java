@@ -18,6 +18,17 @@ public class InfiniteLoop extends Abyss {
     }
 
     @Override
+    public String interact(Player player, Board board, MoveHistory moveHistory) {
+        if (counter != null && player.hasTool(counter)) {
+            player.useTool(counter);
+            affectPlayer(player,board,moveHistory);
+            return counteredMessage();
+        }
+        player.lock(true);
+        affectPlayer(player,board,moveHistory);
+        return effectMessage();
+    }
+    @Override
     public void affectPlayer(Player player, Board board, MoveHistory moveHistory) {
         player.lock(true);
 
