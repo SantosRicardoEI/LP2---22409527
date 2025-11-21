@@ -18,7 +18,7 @@ public class SecondaryEffects extends Abyss {
     }
 
     @Override
-    public void affectPlayer(Player player, Board board, MoveHistory moveHistory) {
+    public void applyAbyssEffects(Player player, Board board, MoveHistory moveHistory) {
         int lastPosition = moveHistory.getPosition(player,1);
         board.movePlayerTo(player,lastPosition);
     }

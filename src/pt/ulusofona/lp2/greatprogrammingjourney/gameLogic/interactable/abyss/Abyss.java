@@ -18,13 +18,19 @@ public abstract class Abyss extends Interactable {
     }
 
     @Override
-    public String interact(Player player, Board board, MoveHistory moveHistory) {
-        if (counter != null && player.hasTool(counter)) {
+    public final String interact(Player player, Board board, MoveHistory moveHistory) {
+        boolean usedTool = counter != null && player.hasTool(counter);
+
+        if (usedTool) {
             player.useTool(counter);
-            return counteredMessage();
+            applyOnToolCounterEffects(player,board,moveHistory);
+        } else {
+            applyAbyssEffects(player, board, moveHistory);
         }
-        affectPlayer(player,board,moveHistory);
-        return effectMessage();
+
+        applyCommonEffects(player, board, moveHistory);
+
+        return usedTool ? counteredMessage() : effectMessage();
     }
 
     public final String counteredMessage() {
@@ -39,6 +45,13 @@ public abstract class Abyss extends Interactable {
     public abstract String effectMessage();
 
 
-    public abstract void affectPlayer(Player player, Board board, MoveHistory moveHistory);
+    public abstract void applyAbyssEffects(Player player, Board board, MoveHistory moveHistory);
+
+    public void applyCommonEffects(Player player, Board board, MoveHistory moveHistory) {
+    }
+
+    public void applyOnToolCounterEffects(Player player, Board board, MoveHistory moveHistory) {
+
+    }
 
 }

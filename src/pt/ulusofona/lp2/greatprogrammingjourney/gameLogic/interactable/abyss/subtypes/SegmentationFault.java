@@ -21,7 +21,7 @@ public class SegmentationFault extends Abyss {
     }
 
     @Override
-    public void affectPlayer(Player player, Board board, MoveHistory moveHistory) {
+    public void applyAbyssEffects(Player player, Board board, MoveHistory moveHistory) {
         int thisPosition = board.getPlayerPosition(player);
 
         List<Player> playersInThisSlot = new ArrayList<>(board.getPlayersAt(thisPosition));

@@ -17,42 +17,23 @@ public class InfiniteLoop extends Abyss {
         return "DEFAULT ABYSS MESSAGE: " + name;
     }
 
+
     @Override
-    public String interact(Player player, Board board, MoveHistory moveHistory) {
-        int thisPosition = board.getPlayerPosition(player);
-
-        boolean hasCounter = counter != null && player.hasTool(counter);
-
-        if (hasCounter) {
-            // Este nao fica preso
-            player.useTool(counter);
-
-            // Liberto os outros
-            for (Player p : board.getPlayersAt(thisPosition)) {
-                if (!p.equals(player)) {
-                    p.lock(false);
-                }
-            }
-
-            // Mensagem
-            return counteredMessage();
-        }
-
-        // Este (sem ferramenta) fica preso
+    public void applyAbyssEffects(Player player, Board board, MoveHistory moveHistory) {
         player.lock(true);
-
-        // Liberto os outros
+    }
+    @Override
+    public void applyCommonEffects(Player player, Board board, MoveHistory moveHistory) {
+        int thisPosition = board.getPlayerPosition(player);
         for (Player p : board.getPlayersAt(thisPosition)) {
             if (!p.equals(player)) {
                 p.lock(false);
             }
         }
-
-        // Mensagem
-        return effectMessage();
     }
+
     @Override
-    public void affectPlayer(Player player, Board board, MoveHistory moveHistory) {
-        // Nao usado, override no interact
+    public void applyOnToolCounterEffects(Player player, Board board, MoveHistory moveHistory) {
+        player.lock(false);
     }
 }

@@ -18,7 +18,7 @@ public class BlueScreenOfDeath extends Abyss {
     }
 
     @Override
-    public void affectPlayer(Player player, Board board, MoveHistory moveHistory) {
+    public void applyAbyssEffects(Player player, Board board, MoveHistory moveHistory) {
         player.kill();
     }
 }

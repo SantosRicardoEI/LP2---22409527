@@ -18,7 +18,7 @@ public class CodeDuplication extends Abyss {
     }
 
     @Override
-    public void affectPlayer(Player player, Board board, MoveHistory moveHistory) {
+    public void applyAbyssEffects(Player player, Board board, MoveHistory moveHistory) {
         int lastPosition = moveHistory.getPosition(player,0);
         board.movePlayerTo(player,lastPosition);
     }

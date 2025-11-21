@@ -6,7 +6,7 @@ import pt.ulusofona.lp2.greatprogrammingjourney.enums.AbyssSubType;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.movehistory.MoveHistory;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.player.Player;
 
-// O jogador recua 1 casa
+
 public class SyntaxError extends Abyss {
 
     public SyntaxError() {
@@ -19,7 +19,7 @@ public class SyntaxError extends Abyss {
     }
 
     @Override
-    public void affectPlayer(Player player, Board board, MoveHistory moveHistory) {
+    public void applyAbyssEffects(Player player, Board board, MoveHistory moveHistory) {
         board.movePlayerBySteps(player,-1);
     }
 }
