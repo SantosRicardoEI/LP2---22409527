@@ -5,8 +5,8 @@ import pt.ulusofona.lp2.greatprogrammingjourney.enums.PlayerColor;
 import pt.ulusofona.lp2.greatprogrammingjourney.enums.PlayerState;
 import pt.ulusofona.lp2.greatprogrammingjourney.enums.ToolSubType;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.board.Board;
-import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.interactable.Interactable;
-import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.interactable.tool.Tool;
+import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.MapObject;
+import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.tool.Tool;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.movehistory.MoveHistory;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.player.Player;
 import pt.ulusofona.lp2.greatprogrammingjourney.parser.Parser;
@@ -107,8 +107,8 @@ public final class GamePersistence {
                             throw new InvalidFileException("Line " + lineNumber +
                                     ": [ITEMS] section found before [BOARD]");
                         }
-                        if (chave.equals("INTERACTABLE")) {
-                            parseAndPlaceInteractable(newBoard, valorStr, lineNumber);
+                        if (chave.equals("MAP_OBJECT")) {
+                            parseAndPlaceMapObjects(newBoard, valorStr, lineNumber);
                         } else {
                             throw new InvalidFileException("Line " + lineNumber +
                                     ": unknown key in section [ITEMS]: '" + chave + "'");
@@ -169,8 +169,7 @@ public final class GamePersistence {
         PlayerState state = Parser.parseState(stateStr);
         ArrayList<String> languages = Parser.parseLanguages(languagesStr);
 
-        Player player = new Player(id, name, languages, color);
-        player.setState(state);
+        Player player = new Player(id, name, languages, color, state);
 
         if (!toolsStr.isEmpty()) {
             String[] tools = toolsStr.split(";");
@@ -188,25 +187,25 @@ public final class GamePersistence {
         board.placePlayer(player, position);
     }
 
-    private static void parseAndPlaceInteractable(Board board, String valorStr, int lineNumber) throws InvalidFileException {
+    private static void parseAndPlaceMapObjects(Board board, String valorStr, int lineNumber) throws InvalidFileException {
 
         String[] valores = valorStr.split("\\|", -1);
         if (valores.length != 2) {
             throw new InvalidFileException("Line " + lineNumber +
-                    ": INTERACTABLE with invalid number of data (expected 2), value='" + valorStr + "'");
+                    ": OBJECT with invalid number of data (expected 2), value='" + valorStr + "'");
         }
 
         int position = Parser.parsePosition(valores[0].trim());
 
-        Interactable interactable;
+        MapObject mapObject;
         try {
-            interactable = Parser.parseInteractable(valores[1].trim());
+            mapObject = Parser.parseMapObject(valores[1].trim());
         } catch (IllegalArgumentException e) {
             throw new InvalidFileException("Line " + lineNumber +
-                    ": invalid INTERACTABLE data '" + valorStr + "'");
+                    ": invalid OBJECT data '" + valorStr + "'");
         }
 
-        board.placeInteractable(interactable, position);
+        board.placeMapObject(mapObject, position);
     }
 
     private static void parseAndAddMove(MoveHistory history, String valorStr, int lineNumber) throws InvalidFileException {
@@ -237,7 +236,7 @@ public final class GamePersistence {
 
             writeBoardSection(bw, board, currentPlayerID,turnCount);
             writePlayersSection(bw, board);
-            writeItemsSection(bw, board);
+            writeMapObjectsSection(bw, board);
             writeMovesSection(bw, moveHistory);
 
             return true;
@@ -268,7 +267,7 @@ public final class GamePersistence {
 
         for (Player p : board.getPlayers()) {
             int pos = board.getPlayerPosition(p);
-            String languages = String.join(";", p.getLanguages());
+            String languages = p.joinLanguages(";",false);
 
             StringBuilder line = new StringBuilder();
             line.append("PLAYER=")
@@ -300,14 +299,14 @@ public final class GamePersistence {
         bw.newLine();
     }
 
-    private static void writeItemsSection(BufferedWriter bw, Board board) throws IOException {
+    private static void writeMapObjectsSection(BufferedWriter bw, Board board) throws IOException {
 
-        bw.write("[ITEMS]");
+        bw.write("[MAP_OBJECTS]");
         bw.newLine();
 
-        for (Interactable i : board.getInteractables()) {
-            int pos = board.getInteractablePosition(i);
-            bw.write("INTERACTABLE=" + pos + "|" + i.toString());
+        for (MapObject i : board.getMapObjects()) {
+            int pos = board.getMapObjectPosition(i);
+            bw.write("MAP_OBJECT=" + pos + "|" + i.toString());
             bw.newLine();
         }
 

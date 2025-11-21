@@ -1,13 +1,12 @@
 package pt.ulusofona.lp2.greatprogrammingjourney.enums;
 
+import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.MapObject;
 
-import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.interactable.Interactable;
-
-public enum InteractableType {
+public enum MapObjectType {
     ABYSS,
     TOOL;
 
-    public static InteractableType fromID(int id) {
+    public static MapObjectType fromID(int id) {
 
         switch (id) {
             case 0:
@@ -19,9 +18,8 @@ public enum InteractableType {
         }
     }
 
-
-    public static Interactable createInteractable(int typeID, int subTypeID) {
-        InteractableType type = fromID(typeID);
+    public static MapObject createMapObject(int typeID, int subTypeID) {
+        MapObjectType type = fromID(typeID);
 
         if (type == null) {
             return null;

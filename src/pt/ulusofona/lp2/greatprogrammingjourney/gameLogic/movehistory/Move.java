@@ -3,6 +3,7 @@ package pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.movehistory;
 final class Move {
 
     // ============================== State ==========================================
+
     private final int playerId;
     private final int from;
     private final int to;

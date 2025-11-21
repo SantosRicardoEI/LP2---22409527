@@ -11,12 +11,13 @@ import static pt.ulusofona.lp2.greatprogrammingjourney.config.GameConfig.TURN_OR
 
 public final class TurnManager {
 
-    private static final GameLogger LOG = new GameLogger(TurnManager.class);
-
-    // ============================== Constructor ======================================================================
+    // ===================================== State =====================================================================
 
     private int currentID;
     private int turnCount;
+    private static final GameLogger LOG = new GameLogger(TurnManager.class);
+
+    // ==================================== Constructor ================================================================
 
     public TurnManager() {
     }

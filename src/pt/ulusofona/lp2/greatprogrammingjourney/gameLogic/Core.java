@@ -3,10 +3,9 @@ package pt.ulusofona.lp2.greatprogrammingjourney.gameLogic;
 import pt.ulusofona.lp2.greatprogrammingjourney.InvalidFileException;
 import pt.ulusofona.lp2.greatprogrammingjourney.config.GameConfig;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.board.Board;
-import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.board.BoardInitializer;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.gamepersistence.GamePersistence;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.gamepersistence.LoadedGame;
-import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.interactable.Interactable;
+import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.MapObject;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.movehistory.MoveHistory;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.player.Player;
 import pt.ulusofona.lp2.greatprogrammingjourney.ui.Credits;
@@ -34,7 +33,7 @@ public class Core {
         return createInitialBoard(playerInfo, worldSize, new String[0][0]);
     }
 
-    public boolean createInitialBoard(String[][] playerInfo, int worldSize, String[][] abyssAndTools) {
+    public boolean createInitialBoard(String[][] playerInfo, int worldSize, String[][] mapObjects) {
         if (playerInfo == null || playerInfo.length == 0) {
             LOG.error("createInitialBoard: " + "invalid player info");
             return false;
@@ -50,7 +49,7 @@ public class Core {
             return false;
         }
 
-        if (!initializeBoard(playerInfo, abyssAndTools, worldSize)) {
+        if (!initializeBoard(playerInfo, mapObjects, worldSize)) {
             LOG.error("createInitialBoard: startBoard() failed");
             return false;
         }
@@ -66,9 +65,9 @@ public class Core {
             return null;
         }
 
-        Interactable i = board.getIntercatableAt(nrSquare);
-        if (i != null) {
-            return i.getPng();
+        MapObject o = board.getMapObjectsAt(nrSquare);
+        if (o != null) {
+            return o.getPng();
         }
 
         return nrSquare == boardSize() ? "glory.png" : null;
@@ -83,8 +82,8 @@ public class Core {
         return new String[]{
                 String.valueOf(player.getId()),
                 player.getName(),
-                String.join(";", player.getLanguages()),
-                player.getColorAsStr(),
+                player.joinLanguages(";",false),
+                player.getColor().toString(),
                 String.valueOf(getPlayerPosition(player)),
                 player.joinTools(";"),
                 player.getState().toString(),
@@ -101,7 +100,7 @@ public class Core {
         String pos = String.valueOf(getPlayerPosition(p));
         String tools = p.joinTools(",");
         String state = p.getState().toString();
-        String langsStr = String.join("; ", p.getSortedLangs());
+        String langsStr = p.joinLanguages("; ",true);
 
         return p.getId() + " | " + name + " | " + pos + " | " + tools + " | " + langsStr + " | " + state;
     }
@@ -191,11 +190,11 @@ public class Core {
         }
 
         Player p = board.getPlayer(getCurrentPlayerId());
-        Interactable inter = board.getIntercatableAt(board.getPlayerPosition(p));
+        MapObject object = board.getMapObjectsAt(board.getPlayerPosition(p));
 
         turnManager.advanceTurn(activePlayers());
 
-        return inter == null ? null : inter.interact(p, board, moveHistory);
+        return object == null ? null : object.interact(p, board, moveHistory);
     }
 
     public boolean gameIsOver() {
@@ -269,9 +268,9 @@ public class Core {
         return board.getPlayerPosition(p);
     }
 
-    private boolean initializeBoard(String[][] playerInfo, String[][] interactableInfo, int worldSize) {
+    private boolean initializeBoard(String[][] playerInfo, String[][] mapObjectsInfo, int worldSize) {
         board = new Board(worldSize);
-        return board.initializePlayers(playerInfo) && BoardInitializer.initializeInteractables(board, interactableInfo);
+        return board.initialize(playerInfo,mapObjectsInfo);
     }
 
     private List<Player> allPlayers() {

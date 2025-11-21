@@ -1,7 +1,7 @@
-package pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.interactable.abyss.subtypes;
+package pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.abyss.subtypes;
 
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.board.Board;
-import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.interactable.abyss.Abyss;
+import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.abyss.Abyss;
 import pt.ulusofona.lp2.greatprogrammingjourney.enums.AbyssSubType;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.movehistory.MoveHistory;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.player.Player;
@@ -14,7 +14,7 @@ public class LogicError extends Abyss {
 
     @Override
     public String effectMessage() {
-        return "DEFAULT ABYSS MESSAGE: " + name;
+        return "Erro de Lógica! O programador recua metade do valor do dado.";
     }
 
     @Override

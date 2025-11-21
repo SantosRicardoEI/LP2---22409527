@@ -1,8 +1,8 @@
 package pt.ulusofona.lp2.greatprogrammingjourney.parser;
 
 import pt.ulusofona.lp2.greatprogrammingjourney.config.GameConfig;
-import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.interactable.Interactable;
-import pt.ulusofona.lp2.greatprogrammingjourney.enums.InteractableType;
+import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.MapObject;
+import pt.ulusofona.lp2.greatprogrammingjourney.enums.MapObjectType;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.player.Player;
 import pt.ulusofona.lp2.greatprogrammingjourney.enums.PlayerColor;
 import pt.ulusofona.lp2.greatprogrammingjourney.enums.PlayerState;
@@ -185,9 +185,9 @@ public class Parser {
         return langsList;
     }
 
-    // ============================================ Interactable Parsing ===============================================
+    // ============================================ MapObject Parsing ==================================================
 
-    public static Interactable parseInteractable(String raw) {
+    public static MapObject parseMapObject(String raw) {
         if (raw == null || raw.isBlank()) {
             throw new IllegalArgumentException();
         }
@@ -200,20 +200,20 @@ public class Parser {
         int typeID = parseID(parts[0].trim());
         int subType = parseID(parts[1].trim());
 
-        Interactable interactable = InteractableType.createInteractable(typeID, subType);
-        if (interactable == null) {
+        MapObject mapObject = MapObjectType.createMapObject(typeID, subType);
+        if (mapObject == null) {
             throw new IllegalArgumentException();
         }
 
-        return interactable;
+        return mapObject;
     }
 
-    public static Interactable parseInteractable(String[] parts) {
+    public static MapObject parseMapObject(String[] parts) {
         if (parts == null || parts.length != 2) {
             throw new IllegalArgumentException();
         }
 
         String raw = parts[0].trim() + ":" + parts[1].trim();
-        return parseInteractable(raw);
+        return parseMapObject(raw);
     }
 }

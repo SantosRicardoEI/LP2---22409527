@@ -2,17 +2,15 @@ package pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.player;
 
 import pt.ulusofona.lp2.greatprogrammingjourney.enums.PlayerColor;
 import pt.ulusofona.lp2.greatprogrammingjourney.enums.PlayerState;
-import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.interactable.tool.Tool;
+import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.tool.Tool;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Objects;
-
-import static pt.ulusofona.lp2.greatprogrammingjourney.utils.StringUtils.capitalize;
 
 public class Player implements Comparable<Player> {
 
     // ============================== State ============================================================================
+
     private final int id;
     private final String name;
     private final ArrayList<String> languages;
@@ -20,7 +18,7 @@ public class Player implements Comparable<Player> {
     private PlayerState state;
     private HashSet<Tool> tools;
 
-    // ============================== Constructor ======================================================================
+    // ========================================== Constructor ==========================================================
 
     public Player(int id, String name, ArrayList<String> languages, PlayerColor color) {
         this.id = id;
@@ -29,6 +27,11 @@ public class Player implements Comparable<Player> {
         this.color = color;
         this.state = PlayerState.IN_GAME;
         this.tools = new HashSet<>();
+    }
+
+    public Player(int id, String name, ArrayList<String> languages, PlayerColor color, PlayerState state) {
+        this(id,name,languages,color);
+        this.state = state;
     }
 
     @Override
@@ -45,7 +48,12 @@ public class Player implements Comparable<Player> {
         return Integer.hashCode(id);
     }
 
-    // ============================== Getters & Setters ================================================================
+    @Override
+    public int compareTo(Player other) {
+        return this.name.compareTo(other.name);
+    }
+
+    // ========================================= Getters ===============================================================
 
     public int getId() {
         return id;
@@ -63,27 +71,15 @@ public class Player implements Comparable<Player> {
         return new ArrayList<>(tools);
     }
 
-    public ArrayList<String> getSortedLangs() {
-        ArrayList<String> sorted = new ArrayList<>(languages);
-        sorted.sort(String.CASE_INSENSITIVE_ORDER);
-        return sorted;
-    }
-
     public PlayerColor getColor() {
         return color;
-    }
-
-    public String getColorAsStr() {
-        return capitalize(color.toString());
     }
 
     public PlayerState getState() {
         return state;
     }
 
-    public void setState(PlayerState state) {
-        this.state = state;
-    }
+    // ============================== Public Methods ================================================================
 
     public boolean isStuck() {
         return state == PlayerState.STUCK;
@@ -99,7 +95,7 @@ public class Player implements Comparable<Player> {
     }
 
 
-    public void kill() {
+    public void defeat() {
         state = PlayerState.DEFEATED;
     }
 
@@ -118,6 +114,9 @@ public class Player implements Comparable<Player> {
     public void useTool(Tool tool) {
         tools.remove(tool);
     }
+
+    // ================================== String format ================================================================
+
 
     public String joinTools(String sep) {
         if (tools.isEmpty()) {
@@ -138,8 +137,28 @@ public class Player implements Comparable<Player> {
         return sb.toString();
     }
 
-    @Override
-    public int compareTo(Player other) {
-        return this.name.compareTo(other.name);
+    public String joinLanguages(String sep, boolean sort) {
+        if (languages.isEmpty()) {
+            return "";
+        }
+
+        ArrayList<String> list = new ArrayList<>(languages);
+
+        if (sort) {
+            list.sort(String.CASE_INSENSITIVE_ORDER);
+        }
+
+        StringBuilder sb = new StringBuilder();
+        boolean first = true;
+
+        for (String lang : list) {
+            if (!first) {
+                sb.append(sep);
+            }
+            sb.append(lang);
+            first = false;
+        }
+
+        return sb.toString();
     }
 }

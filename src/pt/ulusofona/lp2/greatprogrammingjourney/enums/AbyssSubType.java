@@ -1,7 +1,7 @@
 package pt.ulusofona.lp2.greatprogrammingjourney.enums;
 
-import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.interactable.abyss.Abyss;
-import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.interactable.abyss.subtypes.*;
+import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.abyss.Abyss;
+import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.abyss.subtypes.*;
 
 public enum AbyssSubType {
 

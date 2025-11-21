@@ -4,11 +4,11 @@ import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.player.Player;
 import pt.ulusofona.lp2.greatprogrammingjourney.utils.GameLogger;
 
 import java.util.LinkedList;
-import java.util.List;
 
 public final class MoveHistory {
 
     // ============================== State ============================================================================
+
     private final LinkedList<Move> moves = new LinkedList<>();
     private static final GameLogger LOG = new GameLogger(MoveHistory.class);
 
@@ -17,28 +17,7 @@ public final class MoveHistory {
     public MoveHistory() {
     }
 
-    // ============================== Public API =======================================================================
-
-    public void addRecord(int playerId, int from, int to, int dice) {
-        int turn = moves.size() + 1;
-        moves.add(new Move(playerId, from, to, dice, turn));
-        LOG.info("addRecord: turn=" + turn + ", playerId=" + playerId +
-                ", from=" + from + ", to=" + to + ", dice=" + dice);
-    }
-
-    public int getSize() {
-        return moves.size();
-    }
-
-    public void reset() {
-        moves.clear();
-        LOG.info("reset: move log reseted");
-    }
-
-    @Override
-    public String toString() {
-        return moves.toString();
-    }
+    // ================================== Getters ======================================================================
 
     public int getRoll(Player p, int stepsBack) {
         int playerId = p.getId();
@@ -89,13 +68,33 @@ public final class MoveHistory {
     }
 
     public String[][] getAllMovesInfo() {
-        String[][] info = new String[getSize()][4];
+        String[][] info = new String[moves.size()][4];
 
-        for (int i = 0; i < getSize(); i++) {
+        for (int i = 0; i < moves.size(); i++) {
             info[i] = getMoveInfo(i + 1);
         }
 
         return info;
+    }
+
+
+    // ======================================== Public Methods =========================================================
+
+    public void addRecord(int playerId, int from, int to, int dice) {
+        int turn = moves.size() + 1;
+        moves.add(new Move(playerId, from, to, dice, turn));
+        LOG.info("addRecord: turn=" + turn + ", playerId=" + playerId +
+                ", from=" + from + ", to=" + to + ", dice=" + dice);
+    }
+
+    public void reset() {
+        moves.clear();
+        LOG.info("reset: move log reseted");
+    }
+
+    @Override
+    public String toString() {
+        return moves.toString();
     }
 
 }

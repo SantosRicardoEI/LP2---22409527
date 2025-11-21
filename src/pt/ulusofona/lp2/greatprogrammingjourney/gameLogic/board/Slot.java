@@ -1,7 +1,7 @@
 package pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.board;
 
 import pt.ulusofona.lp2.greatprogrammingjourney.config.GameConfig;
-import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.interactable.Interactable;
+import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.MapObject;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.player.Player;
 import pt.ulusofona.lp2.greatprogrammingjourney.utils.GameLogger;
 
@@ -11,17 +11,17 @@ import java.util.List;
 final class Slot {
 
     // ============================== State ============================================================================
+
     private final int number;
     private final List<Player> players = new ArrayList<>(GameConfig.SLOT_SIZE);
-    private Interactable interactable;
-
+    private MapObject mapObject;
     private static final GameLogger LOG = new GameLogger(Slot.class);
 
     // ============================== Constructor ======================================================================
 
     Slot(int slotNumber) {
         this.number = slotNumber;
-        this.interactable = null;
+        this.mapObject = null;
     }
 
     // ============================== Getters ==========================================================================
@@ -34,11 +34,11 @@ final class Slot {
         return new ArrayList<>(players);
     }
 
-    Interactable getInteractable() {
-        return this.interactable;
+    MapObject getMapObject() {
+        return this.mapObject;
     }
 
-    // ============================== Public API =======================================================================
+    // ============================== Methods =======================================================================
 
     Player getPlayer(int index) {
         return (index >= 0 && index < players.size()) ? players.get(index) : null;
@@ -49,7 +49,7 @@ final class Slot {
             LOG.error("addPlayer: " + "player null" + " for slot=" + number);
             return false;
         }
-        if (isFull()) {
+        if (players.size() >= GameConfig.SLOT_SIZE) {
             LOG.warn("addPlayer: slot=" + number + " is full");
             return false;
         }
@@ -62,8 +62,8 @@ final class Slot {
         return true;
     }
 
-    public void setInteractable(Interactable interactable) {
-        this.interactable = interactable;
+    void setMapObject(MapObject mapObject) {
+        this.mapObject = mapObject;
     }
 
     void removePlayer(Player player) {
@@ -86,37 +86,32 @@ final class Slot {
         return false;
     }
 
-    boolean isFull() {
-        return players.size() >= GameConfig.SLOT_SIZE;
-    }
-
-
     String[] getInfo() {
 
         String[] result = new String[3];
 
-        StringBuilder pl = new StringBuilder();
-        for (int i = 0; i < players.size(); i++) {
+        StringBuilder players = new StringBuilder();
+        for (int i = 0; i < this.players.size(); i++) {
             if (i > 0) {
-                pl.append(',');
+                players.append(',');
             }
-            pl.append(players.get(i).getId());
+            players.append(this.players.get(i).getId());
         }
 
 
-        String interType = "";
+        String mapObjectType = "";
         String name = "";
 
-        if (getInteractable() != null) {
-            String raw = getInteractable().toString();
+        if (getMapObject() != null) {
+            String raw = getMapObject().toString();
             char c = raw.charAt(0);
-            interType = (c == '0' ? "A" : "T") + raw.substring(1);
-            name += getInteractable().getName();
+            mapObjectType = (c == '0' ? "A" : "T") + raw.substring(1);
+            name += getMapObject().getName();
         }
 
-        result[0] = pl.toString();
+        result[0] = players.toString();
         result[1] = name;
-        result[2] = interType;
+        result[2] = mapObjectType;
 
         return result;
     }
