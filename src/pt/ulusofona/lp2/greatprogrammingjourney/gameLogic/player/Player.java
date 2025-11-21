@@ -85,9 +85,12 @@ public class Player implements Comparable<Player> {
         return state == PlayerState.STUCK;
     }
 
-
     public boolean isAlive() {
         return state != PlayerState.DEFEATED;
+    }
+
+    public boolean isActive() {
+        return state == PlayerState.IN_GAME;
     }
 
     public boolean hasTool(Tool tool) {
