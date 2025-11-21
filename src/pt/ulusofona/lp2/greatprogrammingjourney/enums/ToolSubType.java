@@ -8,7 +8,7 @@ public enum ToolSubType {
     INHERITANCE(0, "Herança", "inheritance.png"),
     FUNCTIONAL_PROGRAMMING(1, "Programação Funcional", "functional.png"),
     UNIT_TESTS(2, "Testes Unitários", "unit-tests.png"),
-    EXCEPTION_HANDLING(3, "Tratamento de Excepções", "exception.png"),
+    EXCEPTION_HANDLING(3, "Tratamento de Excepções", "catch.png"),
     IDE(4, "IDE", "IDE.png"),
     TEACHER_HELP(5, "Ajuda do Professor", "ajuda-professor.png");
 

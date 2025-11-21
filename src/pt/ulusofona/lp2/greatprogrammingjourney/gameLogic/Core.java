@@ -321,15 +321,15 @@ public class Core {
     }
 
     public String reactToAbyssOrTool() {
-
-        Player lastPlayer = board.getPlayer(getCurrentPlayerId());
-        int pos = board.getPlayerPosition(lastPlayer);
-
-        if (!InputValidator.validateBoardInitialized(board).isValid()) {
-            LOG.error("reactToAbyssOrTool: board not initialized");
+        ValidationResult boardOk = InputValidator.validateBoardInitialized(board);
+        if (!boardOk.isValid()) {
+            LOG.error("reactToAbyssOrTool: " + boardOk.getMessage());
             advanceTurn();
             return null;
         }
+
+        Player lastPlayer = board.getPlayer(getCurrentPlayerId());
+        int pos = board.getPlayerPosition(lastPlayer);
 
 
         Interactable interactable = board.getIntercatableOfSlot(pos);

@@ -106,8 +106,12 @@ public class Player implements Comparable<Player> {
     }
 
     public boolean hasTool(Tool tool) {
+        if (tool == null) {
+            return false;
+        }
+
         for (Tool t : tools) {
-            if (t.getId() == id) {
+            if (t.getId() == tool.getId()) {
                 return true;
             }
         }
