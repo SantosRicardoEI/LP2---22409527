@@ -38,6 +38,7 @@ public final class GamePersistence {
         Board newBoard = null;
         MoveHistory newHistory = new MoveHistory();
         int newCurrentPlayer = -1;
+        int newTurnCount = -1;
 
         int lineNumber = 0;
         String currentSection = null;
@@ -80,7 +81,9 @@ public final class GamePersistence {
                             newBoard = new Board(boardSize);
                         } else if (chave.equals("CURRENT_PLAYER")) {
                             newCurrentPlayer = Parser.parseInt(valorStr);
-                        } else {
+                        } else if (chave.equals("TURN_COUNT")){
+                            newTurnCount = Parser.parseInt(valorStr);
+                        }else {
                             throw new InvalidFileException("Line " + lineNumber +
                                     ": unknown key in section [BOARD]: '" + chave + "'");
                         }
@@ -135,7 +138,7 @@ public final class GamePersistence {
                 throw new InvalidFileException("Incomplete file: BOARD or CURRENT_PLAYER missing");
             }
 
-            return new LoadedGame(newBoard, newHistory, newCurrentPlayer);
+            return new LoadedGame(newBoard, newHistory, newCurrentPlayer,newTurnCount);
 
         } catch (IOException | IllegalArgumentException e) {
             e.printStackTrace();
@@ -225,14 +228,14 @@ public final class GamePersistence {
 
     // ================================================= Save ==========================================================
 
-    public static boolean saveToFile(File file, Board board, MoveHistory moveHistory, int currentPlayerID) {
+    public static boolean saveToFile(File file, Board board, MoveHistory moveHistory, int currentPlayerID, int turnCount) {
         if (file == null || board == null || moveHistory == null) {
             return false;
         }
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
 
-            writeBoardSection(bw, board, currentPlayerID);
+            writeBoardSection(bw, board, currentPlayerID,turnCount);
             writePlayersSection(bw, board);
             writeItemsSection(bw, board);
             writeMovesSection(bw, moveHistory);
@@ -245,13 +248,15 @@ public final class GamePersistence {
     }
 
 
-    private static void writeBoardSection(BufferedWriter bw, Board board, int currentPlayerID) throws IOException {
+    private static void writeBoardSection(BufferedWriter bw, Board board, int currentPlayerID, int turnCount) throws IOException {
 
         bw.write("[BOARD]");
         bw.newLine();
         bw.write("BOARD_SIZE=" + board.getSize());
         bw.newLine();
         bw.write("CURRENT_PLAYER=" + currentPlayerID);
+        bw.newLine();
+        bw.write("TURN_COUNT=" + turnCount);
         bw.newLine();
         bw.newLine();
     }

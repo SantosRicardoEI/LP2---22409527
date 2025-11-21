@@ -28,6 +28,7 @@ public class Core {
 
     private Board board;
     private int currentPlayerID;
+    private int turnCount;
     private MoveHistory moveHistory = new MoveHistory();
     private static final GameLogger LOG = new GameLogger(Core.class);
 
@@ -148,36 +149,47 @@ public class Core {
     }
 
     public boolean moveCurrentPlayer(int nrSpaces) {
+        ValidationResult boardOk = InputValidator.validateBoardInitialized(board);
+        if (!boardOk.isValid()) {
+            LOG.error("moveCurrentPlayer: " + boardOk.getMessage());
+            return false;
+        }
+
+        ValidationResult diceOk = GameRules.validateDice(nrSpaces);
+        if (!diceOk.isValid()) {
+            LOG.error("moveCurrentPlayer: " + diceOk.getMessage());
+            return false;
+        }
+
+        ValidationResult playerOk = InputValidator.validatePlayerExists(board, currentPlayerID);
+        if (!playerOk.isValid()) {
+            LOG.error("moveCurrentPlayer: " + playerOk.getMessage());
+            return false;
+        }
 
         Player p = player(currentPlayerID);
         int oldPos = playerPosition(p);
-        int newPos = oldPos;
-        boolean success = true;
-
-        ValidationResult boardOk = InputValidator.validateBoardInitialized(board);
-        ValidationResult diceOk = GameRules.validateDice(nrSpaces);
-        ValidationResult playerOk = InputValidator.validatePlayerExists(board, currentPlayerID);
-
-        if (!boardOk.isValid() || !diceOk.isValid() || !playerOk.isValid()) {
-            LOG.error("moveCurrentPlayer: invalid state");
-            success = false;
-        } else {
-            String firstLanguage = p.getLanguages().get(0);
-
-            if (Objects.equals(firstLanguage, "Assembly") && nrSpaces > 2) {
-                success = false;
-            } else if (Objects.equals(firstLanguage, "C") && nrSpaces > 3) {
-                success = false;
-            } else if (p.isStuck()) {
-                LOG.info("moveCurrentPlayer: player " + p.getName() + " is stuck and cannot move this turn");
-                success = false;
-            } else {
-                newPos = board.movePlayerBySteps(p, nrSpaces);
-            }
+        String firstLanguage = p.getLanguages().get(0);
+        if (Objects.equals(firstLanguage, "Assembly") && nrSpaces > 2) {
+            moveHistory.addRecord(p.getId(), oldPos, oldPos, nrSpaces);
+            return false;
         }
 
+        if (Objects.equals(firstLanguage, "C") && nrSpaces > 3) {
+            moveHistory.addRecord(p.getId(), oldPos, oldPos, nrSpaces);
+            return false;
+        }
+
+        if (p.isStuck()) {
+            LOG.info("moveCurrentPlayer: player " + p.getName() + " is stuck and cannot move this turn");
+            moveHistory.addRecord(p.getId(), oldPos, oldPos, nrSpaces);
+            return false;
+        }
+
+        int newPos = board.movePlayerBySteps(p, nrSpaces);
+
         moveHistory.addRecord(p.getId(), oldPos, newPos, nrSpaces);
-        return success;
+        return true;
     }
 
     public boolean gameIsOver() {
@@ -218,7 +230,7 @@ public class Core {
 
         return ResultsBuilder.build(
                 "THE GREAT PROGRAMMING JOURNEY",
-                moveHistory.getSize(),
+                turnCount,
                 playersNameAndPosition
         );
     }
@@ -283,6 +295,7 @@ public class Core {
 
     private void advanceTurn() {
         currentPlayerID = TurnManager.getNextPlayerId(activePlayers(), currentPlayerID, TURN_ORDER);
+        turnCount++;
     }
 
     // ======================================================= Parte II ================================================
@@ -340,10 +353,11 @@ public class Core {
         this.board = state.board();
         this.moveHistory = state.history();
         this.currentPlayerID = state.currentPlayerID();
+        this.turnCount = state.turnCount();
     }
 
 
     public boolean saveGame(File file) {
-        return GamePersistence.saveToFile(file,board,moveHistory,currentPlayerID);
+        return GamePersistence.saveToFile(file,board,moveHistory,currentPlayerID,turnCount);
     }
 }
