@@ -48,6 +48,9 @@ public class ResultsBuilder {
             }
         });
 
+        String[] winner = players.get(0);
+        String winnerName = winner[0];
+
         ArrayList<String> results = new ArrayList<>();
         results.add(title);
         results.add("");
@@ -55,7 +58,7 @@ public class ResultsBuilder {
         results.add(String.valueOf(turnCount));
         results.add("");
         results.add("VENCEDOR");
-        results.add(players.getFirst()[0]);
+        results.add(winnerName);
         results.add("");
         results.add("RESTANTES");
 
