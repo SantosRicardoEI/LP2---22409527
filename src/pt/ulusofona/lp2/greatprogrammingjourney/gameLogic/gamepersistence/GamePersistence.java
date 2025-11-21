@@ -1,6 +1,7 @@
 package pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.gamepersistence;
 
 import pt.ulusofona.lp2.greatprogrammingjourney.InvalidFileException;
+import pt.ulusofona.lp2.greatprogrammingjourney.config.GameConfig;
 import pt.ulusofona.lp2.greatprogrammingjourney.enums.PlayerColor;
 import pt.ulusofona.lp2.greatprogrammingjourney.enums.PlayerState;
 import pt.ulusofona.lp2.greatprogrammingjourney.enums.ToolSubType;
@@ -12,13 +13,7 @@ import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.player.Player;
 import pt.ulusofona.lp2.greatprogrammingjourney.parser.Parser;
 import pt.ulusofona.lp2.greatprogrammingjourney.utils.GameLogger;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 
 public final class GamePersistence {
@@ -61,8 +56,14 @@ public final class GamePersistence {
                 }
 
                 if (currentSection == null) {
-                    throw new InvalidFileException("Line " + lineNumber +
-                            ": data found before any section [BOARD]/[PLAYERS]/[ITEMS]/[MOVES]");
+                    throw new InvalidFileException(
+                            "Line " + lineNumber +
+                                    ": data found before any section [" +
+                                    GameConfig.BOARD_SECTION + "]/[" +
+                                    GameConfig.PLAYER_SECTION + "]/[" +
+                                    GameConfig.MAP_OBJECT_SECTION + "]/[" +
+                                    GameConfig.MOVE_SECTION + "]"
+                    );
                 }
 
                 String[] partes = line.split("=");
@@ -75,56 +76,56 @@ public final class GamePersistence {
 
                 switch (currentSection) {
 
-                    case "BOARD":
-                        if (chave.equals("BOARD_SIZE")) {
+                    case GameConfig.BOARD_SECTION:
+                        if (chave.equals(GameConfig.BOARD_SIZE_KEY)) {
                             int boardSize = Parser.parseInt(valorStr);
                             newBoard = new Board(boardSize);
-                        } else if (chave.equals("CURRENT_PLAYER")) {
+                        } else if (chave.equals(GameConfig.CURRENT_ID_KEY)) {
                             newCurrentPlayer = Parser.parseInt(valorStr);
-                        } else if (chave.equals("TURN_COUNT")){
+                        } else if (chave.equals(GameConfig.TURN_COUNT_KEY)) {
                             newTurnCount = Parser.parseInt(valorStr);
-                        }else {
+                        } else {
                             throw new InvalidFileException("Line " + lineNumber +
-                                    ": unknown key in section [BOARD]: '" + chave + "'");
+                                    ": unknown key in section [" + GameConfig.BOARD_SECTION + "]: '" + chave + "'");
                         }
                         break;
 
-                    case "PLAYERS":
+                    case GameConfig.PLAYER_SECTION:
                         if (newBoard == null) {
                             throw new InvalidFileException("Line " + lineNumber +
-                                    ": [PLAYERS] section found before [BOARD]");
+                                    ": [" + GameConfig.PLAYER_SECTION + "] section found before [" + GameConfig.BOARD_SECTION + "]");
                         }
-                        if (chave.equals("PLAYER")) {
+                        if (chave.equals(GameConfig.PLAYER_KEY)) {
                             parseAndPlacePlayer(newBoard, valorStr, lineNumber);
                         } else {
                             throw new InvalidFileException("Line " + lineNumber +
-                                    ": unknown key in section [PLAYERS]: '" + chave + "'");
+                                    ": unknown key in section [" + GameConfig.PLAYER_SECTION + "]: '" + chave + "'");
                         }
                         break;
 
-                    case "ITEMS":
+                    case GameConfig.MAP_OBJECT_SECTION:
                         if (newBoard == null) {
                             throw new InvalidFileException("Line " + lineNumber +
-                                    ": [ITEMS] section found before [BOARD]");
+                                    ": [" + GameConfig.MAP_OBJECT_SECTION + "] section found before [" + GameConfig.BOARD_SECTION + "]");
                         }
-                        if (chave.equals("MAP_OBJECT")) {
+                        if (chave.equals(GameConfig.MAP_OBJECT_KEY)) {
                             parseAndPlaceMapObjects(newBoard, valorStr, lineNumber);
                         } else {
                             throw new InvalidFileException("Line " + lineNumber +
-                                    ": unknown key in section [ITEMS]: '" + chave + "'");
+                                    ": unknown key in section [" + GameConfig.MAP_OBJECT_SECTION + "]: '" + chave + "'");
                         }
                         break;
 
-                    case "MOVES":
+                    case GameConfig.MOVE_SECTION:
                         if (newBoard == null) {
                             throw new InvalidFileException("Line " + lineNumber +
-                                    ": [MOVES] section found before [BOARD]");
+                                    ": [" + GameConfig.MOVE_SECTION + "] section found before [" + GameConfig.BOARD_SECTION + "]");
                         }
-                        if (chave.equals("MOVE")) {
+                        if (chave.equals(GameConfig.MOVE_KEY)) {
                             parseAndAddMove(newHistory, valorStr, lineNumber);
                         } else {
                             throw new InvalidFileException("Line " + lineNumber +
-                                    ": unknown key in section [MOVES]: '" + chave + "'");
+                                    ": unknown key in section [" + GameConfig.MOVE_SECTION + "]: '" + chave + "'");
                         }
                         break;
 
@@ -135,10 +136,11 @@ public final class GamePersistence {
             }
 
             if (newBoard == null || newCurrentPlayer == -1) {
-                throw new InvalidFileException("Incomplete file: BOARD or CURRENT_PLAYER missing");
+                throw new InvalidFileException("Incomplete file: " +
+                        GameConfig.BOARD_SECTION + " or " + GameConfig.CURRENT_ID_KEY + " missing");
             }
 
-            return new LoadedGame(newBoard, newHistory, newCurrentPlayer,newTurnCount);
+            return new LoadedGame(newBoard, newHistory, newCurrentPlayer, newTurnCount);
 
         } catch (IOException | IllegalArgumentException e) {
             e.printStackTrace();
@@ -152,7 +154,8 @@ public final class GamePersistence {
         String[] valores = valorStr.split("\\|", -1);
         if (valores.length < 6) {
             throw new InvalidFileException("Line " + lineNumber +
-                    ": PLAYER with invalid number of data (expected >= 6), value='" + valorStr + "'");
+                    ": " + GameConfig.PLAYER_KEY +
+                    " with invalid number of data (expected >= 6), value='" + valorStr + "'");
         }
 
         String posStr = valores[0].trim();
@@ -192,7 +195,8 @@ public final class GamePersistence {
         String[] valores = valorStr.split("\\|", -1);
         if (valores.length != 2) {
             throw new InvalidFileException("Line " + lineNumber +
-                    ": OBJECT with invalid number of data (expected 2), value='" + valorStr + "'");
+                    ": " + GameConfig.MAP_OBJECT_KEY +
+                    " with invalid number of data (expected 2), value='" + valorStr + "'");
         }
 
         int position = Parser.parsePosition(valores[0].trim());
@@ -202,7 +206,7 @@ public final class GamePersistence {
             mapObject = Parser.parseMapObject(valores[1].trim());
         } catch (IllegalArgumentException e) {
             throw new InvalidFileException("Line " + lineNumber +
-                    ": invalid OBJECT data '" + valorStr + "'");
+                    ": invalid " + GameConfig.MAP_OBJECT_KEY + " data '" + valorStr + "'");
         }
 
         board.placeMapObject(mapObject, position);
@@ -213,7 +217,8 @@ public final class GamePersistence {
         String[] valores = valorStr.split("\\|", -1);
         if (valores.length != 4) {
             throw new InvalidFileException("Line " + lineNumber +
-                    ": MOVE with invalid number of data (expected 4), value='" + valorStr + "'");
+                    ": " + GameConfig.MOVE_KEY +
+                    " with invalid number of data (expected 4), value='" + valorStr + "'");
         }
 
         int playerID = Parser.parseID(valores[0].trim());
@@ -234,7 +239,7 @@ public final class GamePersistence {
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
 
-            writeBoardSection(bw, board, currentPlayerID,turnCount);
+            writeBoardSection(bw, board, currentPlayerID, turnCount);
             writePlayersSection(bw, board);
             writeMapObjectsSection(bw, board);
             writeMovesSection(bw, moveHistory);
@@ -249,28 +254,38 @@ public final class GamePersistence {
 
     private static void writeBoardSection(BufferedWriter bw, Board board, int currentPlayerID, int turnCount) throws IOException {
 
-        bw.write("[BOARD]");
+        bw.write("[" + GameConfig.BOARD_SECTION + "]");
         bw.newLine();
-        bw.write("BOARD_SIZE=" + board.getSize());
+        bw.write(GameConfig.BOARD_SIZE_KEY + "=" + board.getSize());
         bw.newLine();
-        bw.write("CURRENT_PLAYER=" + currentPlayerID);
+        bw.write(GameConfig.CURRENT_ID_KEY + "=" + currentPlayerID);
         bw.newLine();
-        bw.write("TURN_COUNT=" + turnCount);
+        bw.write(GameConfig.TURN_COUNT_KEY + "=" + turnCount);
         bw.newLine();
         bw.newLine();
     }
 
     private static void writePlayersSection(BufferedWriter bw, Board board) throws IOException {
 
-        bw.write("[PLAYERS]");
+
+        bw.write("[" + GameConfig.PLAYER_SECTION + "]");
         bw.newLine();
+        bw.write("# Each PLAYER line follows the format:");
+        bw.newLine();
+        bw.write("# PLAYER=position|id|name|languages(;)|color|state|tools(optional)");
+        bw.newLine();
+        bw.write("# Example:");
+        bw.newLine();
+        bw.write("# PLAYER=5|2|Miguel|Java;C|BLUE|IN_GAME|1;3");
+        bw.newLine();
+
 
         for (Player p : board.getPlayers()) {
             int pos = board.getPlayerPosition(p);
-            String languages = p.joinLanguages(";",false);
+            String languages = p.joinLanguages(";", false);
 
             StringBuilder line = new StringBuilder();
-            line.append("PLAYER=")
+            line.append(GameConfig.PLAYER_KEY).append("=")
                     .append(pos).append("|")
                     .append(p.getId()).append("|")
                     .append(p.getName()).append("|")
@@ -301,12 +316,22 @@ public final class GamePersistence {
 
     private static void writeMapObjectsSection(BufferedWriter bw, Board board) throws IOException {
 
-        bw.write("[MAP_OBJECTS]");
+        bw.write("[" + GameConfig.MAP_OBJECT_SECTION + "]");
+        bw.newLine();
+        bw.write("# Each MAP_OBJECT line follows the format:");
+        bw.newLine();
+        bw.write("# MAP_OBJECT=position|type(id)");
+        bw.newLine();
+        bw.write("# Example:");
+        bw.newLine();
+        bw.write("# MAP_OBJECT=7|0:3");
+        bw.newLine();
+        bw.write("# (Example above: object of type 0 with id 3 placed at position 7)");
         bw.newLine();
 
         for (MapObject i : board.getMapObjects()) {
             int pos = board.getMapObjectPosition(i);
-            bw.write("MAP_OBJECT=" + pos + "|" + i.toString());
+            bw.write(GameConfig.MAP_OBJECT_KEY + "=" + pos + "|" + i.toString());
             bw.newLine();
         }
 
@@ -315,12 +340,22 @@ public final class GamePersistence {
 
     private static void writeMovesSection(BufferedWriter bw, MoveHistory moveHistory) throws IOException {
 
-        bw.write("[MOVES]");
+        bw.write("[" + GameConfig.MOVE_SECTION + "]");
+        bw.newLine();
+        bw.write("# Each MOVE line follows the format:");
+        bw.newLine();
+        bw.write("# MOVE=playerID|fromPosition|toPosition|diceValue");
+        bw.newLine();
+        bw.write("# Example:");
+        bw.newLine();
+        bw.write("# MOVE=2|5|8|3");
+        bw.newLine();
+        bw.write("# (Example above: player 2 moved from position 5 to 8 using dice value 3)");
         bw.newLine();
 
         String[][] moves = moveHistory.getAllMovesInfo();
         for (String[] m : moves) {
-            bw.write("MOVE=" + m[0] + "|" + m[1] + "|" + m[2] + "|" + m[3]);
+            bw.write(GameConfig.MOVE_KEY + "=" + m[0] + "|" + m[1] + "|" + m[2] + "|" + m[3]);
             bw.newLine();
         }
     }

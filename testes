@@ -1,0 +1,54 @@
+[BOARD]
+BOARD_SIZE=79
+CURRENT_PLAYER_ID=3
+TURN_COUNT=5
+
+[PLAYERS]
+# Each PLAYER line follows the format:
+# PLAYER=position|id|name|languages(;)|color|state|tools(optional)
+# Example:
+# PLAYER=5|2|Miguel|Java;C|BLUE|IN_GAME|1;3
+PLAYER=2|3|Ada Lovelace|Ada|GREEN|IN_GAME
+PLAYER=6|7|Bjarne Stroustrup|C++|BROWN|IN_GAME|0
+PLAYER=1|5|Dennis Ritchie|C|PURPLE|IN_GAME
+PLAYER=2|6|Kathleen Booth|Assembly|BLUE|IN_GAME
+
+[MAP_OBJECTS]
+# Each MAP_OBJECT line follows the format:
+# MAP_OBJECT=position|type(id)
+# Example:
+# MAP_OBJECT=7|0:3
+# (Example above: object of type 0 with id 3 placed at position 7)
+MAP_OBJECT=3|1:4
+MAP_OBJECT=5|1:5
+MAP_OBJECT=6|1:0
+MAP_OBJECT=9|1:2
+MAP_OBJECT=12|1:3
+MAP_OBJECT=13|1:5
+MAP_OBJECT=19|1:1
+MAP_OBJECT=25|1:2
+MAP_OBJECT=33|1:4
+MAP_OBJECT=34|1:3
+MAP_OBJECT=35|1:0
+MAP_OBJECT=36|1:1
+MAP_OBJECT=40|0:0
+MAP_OBJECT=44|0:8
+MAP_OBJECT=46|0:2
+MAP_OBJECT=48|0:5
+MAP_OBJECT=52|0:6
+MAP_OBJECT=57|0:9
+MAP_OBJECT=61|0:7
+MAP_OBJECT=68|0:1
+MAP_OBJECT=76|0:3
+MAP_OBJECT=78|0:4
+
+[MOVES]
+# Each MOVE line follows the format:
+# MOVE=playerID|fromPosition|toPosition|diceValue
+# Example:
+# MOVE=2|5|8|3
+# (Example above: player 2 moved from position 5 to 8 using dice value 3)
+MOVE=3|1|2|1
+MOVE=5|1|1|5
+MOVE=6|1|2|1
+MOVE=7|1|6|5
