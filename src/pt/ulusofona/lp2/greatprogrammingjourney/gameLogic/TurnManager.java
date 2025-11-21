@@ -6,6 +6,8 @@ import pt.ulusofona.lp2.greatprogrammingjourney.utils.GameLogger;
 
 import java.util.List;
 
+import static pt.ulusofona.lp2.greatprogrammingjourney.config.GameConfig.TURN_ORDER;
+
 
 final class TurnManager {
 
@@ -13,12 +15,36 @@ final class TurnManager {
 
     // ============================== Constructor ======================================================================
 
-    private TurnManager() {
+    private int currentID;
+    private int turnCount;
+
+    public TurnManager() {
     }
 
-    // ============================== Static Methods ===================================================================
+    public TurnManager(int currentID, int turnCount) {
+        this.currentID = currentID;
+        this.turnCount = turnCount;
+    }
 
-    static int getFirstPlayerId(List<Player> players, TurnOrder order) {
+    public int getCurrentID() {
+        return currentID;
+    }
+
+    public int getTurnCount() {
+        return turnCount;
+    }
+
+    public void advanceTurn(List<Player> activePlayers) {
+        if (turnCount == 0) {
+            currentID = getFirstPlayerId(activePlayers, TURN_ORDER);
+        }
+        currentID = getNextPlayerId(activePlayers, TURN_ORDER);
+        turnCount++;
+    }
+
+    // ============================== Helper Methods ===================================================================
+
+    private int getFirstPlayerId(List<Player> players, TurnOrder order) {
         if (players == null || players.isEmpty()) {
             throw new IllegalArgumentException("getFirstPlayerId: players list is null or empty");
         }
@@ -30,7 +56,7 @@ final class TurnManager {
         };
     }
 
-    static int getNextPlayerId(List<Player> players, int currentId, TurnOrder order) {
+    private int getNextPlayerId(List<Player> players, TurnOrder order) {
         if (players == null || players.isEmpty()) {
             throw new IllegalArgumentException("getNextPlayerId: players list is null or empty");
         }
@@ -43,14 +69,14 @@ final class TurnManager {
 
         switch (order) {
             case ASCENDING:
-                nextId = getMinimumPlayerId(players, currentId);
+                nextId = getMinimumPlayerId(players, currentID);
                 if (nextId == -1) {
                     nextId = getMinimumPlayerId(players);
                 }
                 break;
 
             case DESCENDING:
-                nextId = getMaximumPlayerId(players, currentId);
+                nextId = getMaximumPlayerId(players, currentID);
                 if (nextId == -1) {
                     nextId = getMaximumPlayerId(players);
                 }
@@ -69,14 +95,11 @@ final class TurnManager {
         return nextId;
     }
 
-
-    // ============================== Helper Methods ===================================================================
-
-    private static int getMinimumPlayerId(List<Player> players) {
+    private int getMinimumPlayerId(List<Player> players) {
         return getMinimumPlayerId(players, -1);
     }
 
-    private static int getMinimumPlayerId(List<Player> players, int greaterThan) {
+    private int getMinimumPlayerId(List<Player> players, int greaterThan) {
         if (players == null || players.isEmpty()) {
             return -1;
         }
@@ -94,11 +117,11 @@ final class TurnManager {
         return (minimum == Integer.MAX_VALUE) ? -1 : minimum;
     }
 
-    private static int getMaximumPlayerId(List<Player> players) {
+    private int getMaximumPlayerId(List<Player> players) {
         return getMaximumPlayerId(players, Integer.MAX_VALUE);
     }
 
-    private static int getMaximumPlayerId(List<Player> players, int smallerThan) {
+    private int getMaximumPlayerId(List<Player> players, int smallerThan) {
         if (players == null || players.isEmpty()) {
             return -1;
         }

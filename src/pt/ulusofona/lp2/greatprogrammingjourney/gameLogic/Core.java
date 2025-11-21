@@ -20,15 +20,13 @@ import java.io.*;
 import java.util.*;
 
 import static pt.ulusofona.lp2.greatprogrammingjourney.config.GameConfig.THEME;
-import static pt.ulusofona.lp2.greatprogrammingjourney.config.GameConfig.TURN_ORDER;
 
 public class Core {
 
     // ============================== State ============================================================================
 
     private Board board;
-    private int currentPlayerID;
-    private int turnCount;
+    private TurnManager turnManager = new TurnManager();
     private MoveHistory moveHistory = new MoveHistory();
     private static final GameLogger LOG = new GameLogger(Core.class);
 
@@ -64,7 +62,7 @@ public class Core {
         }
 
         moveHistory.reset();
-        setFirstPlayer();
+        turnManager.advanceTurn(activePlayers());
         LOG.info("createInitialBoard: board created and initialized — starting game...");
         return true;
     }
@@ -145,7 +143,7 @@ public class Core {
     }
 
     public int getCurrentPlayerId() {
-        return currentPlayerID;
+        return turnManager.getCurrentID();
     }
 
     public boolean moveCurrentPlayer(int nrSpaces) {
@@ -161,13 +159,13 @@ public class Core {
             return false;
         }
 
-        ValidationResult playerOk = InputValidator.validatePlayerExists(board, currentPlayerID);
+        ValidationResult playerOk = InputValidator.validatePlayerExists(board, turnManager.getCurrentID());
         if (!playerOk.isValid()) {
             LOG.error("moveCurrentPlayer: " + playerOk.getMessage());
             return false;
         }
 
-        Player p = player(currentPlayerID);
+        Player p = player(turnManager.getCurrentID());
         int oldPos = playerPosition(p);
         String firstLanguage = p.getLanguages().get(0);
         if (Objects.equals(firstLanguage, "Assembly") && nrSpaces > 2) {
@@ -224,13 +222,13 @@ public class Core {
 
         ArrayList<String[]> playersNameAndPosition = new ArrayList<>();
         for (Player p : allPlayers()) {
-                int pos = playerPosition(p);
-                playersNameAndPosition.add(new String[]{p.getName(), String.valueOf(pos)});
+            int pos = playerPosition(p);
+            playersNameAndPosition.add(new String[]{p.getName(), String.valueOf(pos)});
         }
 
         return ResultsBuilder.build(
                 "THE GREAT PROGRAMMING JOURNEY",
-                turnCount,
+                turnManager.getTurnCount(),
                 playersNameAndPosition
         );
     }
@@ -288,16 +286,6 @@ public class Core {
         }
         return board.getSize();
     }
-
-    private void setFirstPlayer() {
-        currentPlayerID = TurnManager.getFirstPlayerId(allPlayers(), TURN_ORDER);
-    }
-
-    private void advanceTurn() {
-        currentPlayerID = TurnManager.getNextPlayerId(activePlayers(), currentPlayerID, TURN_ORDER);
-        turnCount++;
-    }
-
     // ======================================================= Parte II ================================================
 
     public String getProgrammersInfo() {
@@ -327,37 +315,33 @@ public class Core {
     }
 
     public String reactToAbyssOrTool() {
-        ValidationResult boardOk = InputValidator.validateBoardInitialized(board);
-        if (!boardOk.isValid()) {
-            LOG.error("reactToAbyssOrTool: " + boardOk.getMessage());
-            advanceTurn();
+        if (board == null) {
+            LOG.error("reactToAbyssOrTool: board is null");
+            turnManager.advanceTurn(activePlayers());
             return null;
         }
 
-        Player lastPlayer = board.getPlayer(getCurrentPlayerId());
-        int pos = board.getPlayerPosition(lastPlayer);
+        Player p = board.getPlayer(getCurrentPlayerId());
+        Interactable inter = board.getIntercatableOfSlot(board.getPlayerPosition(p));
 
+        turnManager.advanceTurn(activePlayers());
 
-        Interactable interactable = board.getIntercatableOfSlot(pos);
-        if (interactable == null) {
-            advanceTurn();
+        if (inter == null) {
             return null;
         }
 
-        advanceTurn();
-        return interactable.interact(lastPlayer, board, moveHistory);
+        return inter.interact(p, board, moveHistory);
     }
 
     public void loadGame(File file) throws InvalidFileException, FileNotFoundException {
         LoadedGame state = GamePersistence.loadFromFile(file);
         this.board = state.board();
         this.moveHistory = state.history();
-        this.currentPlayerID = state.currentPlayerID();
-        this.turnCount = state.turnCount();
+        this.turnManager = new TurnManager(state.currentPlayerID(), state.turnCount());
     }
 
 
     public boolean saveGame(File file) {
-        return GamePersistence.saveToFile(file,board,moveHistory,currentPlayerID,turnCount);
+        return GamePersistence.saveToFile(file, board, moveHistory, turnManager.getCurrentID(), turnManager.getTurnCount());
     }
 }
