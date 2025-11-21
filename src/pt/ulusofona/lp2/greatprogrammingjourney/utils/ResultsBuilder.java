@@ -11,30 +11,38 @@ public class ResultsBuilder {
 
     // ============================== Public API =======================================================================
 
-    public static ArrayList<String> build(String title, int turnCount, String winnerName, ArrayList<String[]> defeatedInfo) {
-        if (title == null || title.isBlank() || winnerName == null || winnerName.isBlank()) {
-            throw new IllegalArgumentException("Title and winner name cannot be null or blank");
+    public static ArrayList<String> build(String title, int turnCount, ArrayList<String[]> players) {
+        if (title == null || title.isBlank()) {
+            throw new IllegalArgumentException("Title cannot be null or blank");
         }
 
         if (turnCount < 0) {
             throw new IllegalArgumentException("Turn count must be non-negative");
         }
 
-        if (defeatedInfo == null || defeatedInfo.isEmpty()) {
+        if (players == null || players.isEmpty()) {
             return new ArrayList<>();
         }
 
-        for (String[] info : defeatedInfo) {
+        for (String[] info : players) {
             if (info == null || info.length < 2 || info[0] == null || info[1] == null) {
                 throw new IllegalArgumentException("Invalid player info entry: missing name or position");
             }
         }
 
-        defeatedInfo.sort((a, b) -> {
+        players.sort((a, b) -> {
             try {
                 int posA = Integer.parseInt(a[1]);
                 int posB = Integer.parseInt(b[1]);
-                return Integer.compare(posB, posA);
+
+                int cmp = Integer.compare(posB, posA);
+
+                if (cmp != 0) {
+                    return cmp;
+                }
+
+                return a[0].compareToIgnoreCase(b[0]);
+
             } catch (NumberFormatException e) {
                 return 0;
             }
@@ -47,11 +55,12 @@ public class ResultsBuilder {
         results.add(String.valueOf(turnCount));
         results.add("");
         results.add("VENCEDOR");
-        results.add(winnerName);
+        results.add(players.getFirst()[0]);
         results.add("");
         results.add("RESTANTES");
 
-        for (String[] info : defeatedInfo) {
+        for (int i = 1; i < players.size(); i++) {
+            String[] info = players.get(i);
             results.add(info[0] + " " + info[1]);
         }
 

@@ -167,16 +167,18 @@ public class Core {
         }
 
         Player p = player(currentPlayerID);
+        int oldPos = playerPosition(p);
         String firstLanguage = p.getLanguages().get(0);
         if (Objects.equals(firstLanguage, "Assembly") && nrSpaces > 2) {
+            moveHistory.addRecord(p.getId(), oldPos, oldPos, nrSpaces);
             return false;
         }
 
         if (Objects.equals(firstLanguage, "C") && nrSpaces > 3) {
+            moveHistory.addRecord(p.getId(), oldPos, oldPos, nrSpaces);
             return false;
         }
 
-        int oldPos = playerPosition(p);
         if (p.isStuck()) {
             LOG.info("moveCurrentPlayer: player " + p.getName() + " is stuck and cannot move this turn");
             moveHistory.addRecord(p.getId(), oldPos, oldPos, nrSpaces);
@@ -219,19 +221,16 @@ public class Core {
             return new ArrayList<>();
         }
 
-        ArrayList<String[]> defeatedInfo = new ArrayList<>();
+        ArrayList<String[]> playersNameAndPosition = new ArrayList<>();
         for (Player p : allPlayers()) {
-            if (p.getId() != winner.getId()) {
                 int pos = playerPosition(p);
-                defeatedInfo.add(new String[]{p.getName(), String.valueOf(pos)});
-            }
+                playersNameAndPosition.add(new String[]{p.getName(), String.valueOf(pos)});
         }
 
         return ResultsBuilder.build(
                 "THE GREAT PROGRAMMING JOURNEY",
                 moveHistory.getSize(),
-                winner.getName(),
-                defeatedInfo
+                playersNameAndPosition
         );
     }
 
