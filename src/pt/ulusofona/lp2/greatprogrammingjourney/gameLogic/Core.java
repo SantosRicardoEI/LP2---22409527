@@ -83,7 +83,7 @@ public class Core {
         return new String[]{
                 String.valueOf(player.getId()),
                 player.getName(),
-                player.joinLanguages(";",false),
+                player.joinLanguages(";", false),
                 player.getColor().toString(),
                 String.valueOf(getPlayerPosition(player)),
                 player.joinTools(";"),
@@ -101,7 +101,7 @@ public class Core {
         String pos = String.valueOf(getPlayerPosition(p));
         String tools = p.joinTools(",");
         String state = p.getState().toString();
-        String langsStr = p.joinLanguages("; ",true);
+        String langsStr = p.joinLanguages("; ", true);
 
         return p.getId() + " | " + name + " | " + pos + " | " + tools + " | " + langsStr + " | " + state;
     }
@@ -184,7 +184,7 @@ public class Core {
     }
 
     // Original
-    public String reactToAbyssOrTool() {
+    public String reactToAbyssOrToolANTIGO() {
         if (board == null) {
             LOG.error("reactToAbyssOrTool: board is null");
             turnManager.advanceTurn(activePlayers());
@@ -201,6 +201,41 @@ public class Core {
 
         turnManager.advanceTurn(activePlayers());
         return object.interact(p, board, moveHistory);
+    }
+
+    public String reactToAbyssOrTool() {
+        Player p = board.getPlayer(getCurrentPlayerId());
+        if (p == null) {
+            return null;
+        }
+
+        Set<Integer> visited = new HashSet<>();
+        StringBuilder msg = new StringBuilder();
+
+        while (true) {
+            int pos = board.getPlayerPosition(p);
+
+            if (visited.contains(pos)) {
+                break;
+            }
+            visited.add(pos);
+
+            MapObject obj = board.getMapObjectsAt(pos);
+            if (obj == null) {
+                break;
+            }
+
+            msg.append(obj.interact(p, board, moveHistory));
+
+            int newPos = board.getPlayerPosition(p);
+
+            if (newPos == pos) {
+                break;
+            }
+        }
+
+        turnManager.advanceTurn(activePlayers());
+        return msg.toString();
     }
 
     public boolean gameIsOver() {
@@ -276,7 +311,7 @@ public class Core {
 
     private boolean initializeBoard(String[][] playerInfo, String[][] mapObjectsInfo, int worldSize) {
         board = new Board(worldSize);
-        return board.initialize(playerInfo,mapObjectsInfo);
+        return board.initialize(playerInfo, mapObjectsInfo);
     }
 
     private List<Player> allPlayers() {

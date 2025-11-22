@@ -2,7 +2,6 @@ package pt.ulusofona.lp2.greatprogrammingjourney.tests;
 
 import org.junit.jupiter.api.Test;
 import pt.ulusofona.lp2.greatprogrammingjourney.enums.PlayerColor;
-import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.Core;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.board.Board;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.player.Player;
 
