@@ -48,27 +48,15 @@ public enum ToolSubType {
         ToolSubType subType = fromId(toolID);
         return createTool(subType);
     }
+
     public static Tool createTool(ToolSubType subType) {
-
-        if (subType == null) {
-            return null;
-        }
-
-        switch (subType) {
-            case TEACHER_HELP:
-                return new TeacherHelp();
-            case EXCEPTION_HANDLING:
-                return new ExceptionHandling();
-            case IDE:
-                return new IDE();
-            case FUNCTIONAL_PROGRAMMING:
-                return new FunctionalProgramming();
-            case INHERITANCE:
-                return new Inheritance();
-            case UNIT_TESTS:
-                return new UnitTests();
-            default:
-                return null;
-        }
+        return (subType == null) ? null : switch (subType) {
+            case TEACHER_HELP -> new TeacherHelp();
+            case EXCEPTION_HANDLING -> new ExceptionHandling();
+            case IDE -> new IDE();
+            case FUNCTIONAL_PROGRAMMING -> new FunctionalProgramming();
+            case INHERITANCE -> new Inheritance();
+            case UNIT_TESTS -> new UnitTests();
+        };
     }
 }

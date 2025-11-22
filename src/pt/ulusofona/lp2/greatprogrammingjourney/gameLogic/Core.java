@@ -170,14 +170,11 @@ public class Core {
             return false;
         }
 
-        /*
         if (p.isStuck()) {
             LOG.info("moveCurrentPlayer: player " + p.getName() + " is stuck and cannot move this turn");
             moveHistory.addRecord(p.getId(), oldPos, oldPos, nrSpaces);
             return false;
         }
-
-         */
 
         int newPos = board.movePlayerBySteps(p, nrSpaces);
 
@@ -283,7 +280,7 @@ public class Core {
     private List<Player> activePlayers() {
         List<Player> result = new ArrayList<>();
         for (Player p : board.getPlayers()) {
-            if (p.isActive()) {
+            if (p.isAlive()) {
                 result.add(p);
             }
         }

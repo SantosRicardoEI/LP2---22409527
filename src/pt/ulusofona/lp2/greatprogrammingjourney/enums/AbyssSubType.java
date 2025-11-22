@@ -59,44 +59,17 @@ public enum AbyssSubType {
     }
 
     public static Abyss createAbyss(AbyssSubType subType) {
-
-        if (subType == null) {
-            return null;
-        }
-
-        switch (subType) {
-            case BSOD:
-                return new BlueScreenOfDeath();
-
-            case DUPLICATED_CODE:
-                return new CodeDuplication();
-
-            case SECONDARY_EFFECTS:
-                return new SecondaryEffects();
-
-            case FILE_NOT_FOUND:
-                return new FileNotFound();
-
-            case INFINITE_LOOP:
-                return new InfiniteLoop();
-
-            case LOGIC_ERROR:
-                return new LogicError();
-
-            case SYNTAX_ERROR:
-                return new SyntaxError();
-
-            case CRASH:
-                return new Crash();
-
-            case EXCEPTION:
-                return new ExceptionA();
-
-            case SEGMENTATION_FAULT:
-                return new SegmentationFault();
-
-            default:
-                return null;
-        }
+        return (subType == null) ? null : switch (subType) {
+            case BSOD -> new BlueScreenOfDeath();
+            case DUPLICATED_CODE -> new CodeDuplication();
+            case SECONDARY_EFFECTS -> new SecondaryEffects();
+            case FILE_NOT_FOUND -> new FileNotFound();
+            case INFINITE_LOOP -> new InfiniteLoop();
+            case LOGIC_ERROR -> new LogicError();
+            case SYNTAX_ERROR -> new SyntaxError();
+            case CRASH -> new Crash();
+            case EXCEPTION -> new ExceptionA();
+            case SEGMENTATION_FAULT -> new SegmentationFault();
+        };
     }
 }
