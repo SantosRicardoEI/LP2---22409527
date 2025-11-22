@@ -35,11 +35,6 @@ public class Core {
 
     public boolean createInitialBoard(String[][] playerInfo, int worldSize, String[][] mapObjects) {
 
-        for (String[] s : mapObjects) {
-            System.out.println(s[0] + " " + s[1] + " " + s[2]);
-            System.out.println();
-        }
-
         if (playerInfo == null || playerInfo.length == 0) {
             LOG.error("createInitialBoard: " + "invalid player info");
             return false;
@@ -186,6 +181,22 @@ public class Core {
 
         moveHistory.addRecord(p.getId(), oldPos, newPos, nrSpaces);
         return true;
+    }
+
+    // Original
+    public String reactToAbyssOrTool1() {
+        if (board == null) {
+            LOG.error("reactToAbyssOrTool: board is null");
+            turnManager.advanceTurn(activePlayers());
+            return null;
+        }
+
+        Player p = board.getPlayer(getCurrentPlayerId());
+        MapObject object = board.getMapObjectsAt(board.getPlayerPosition(p));
+
+        turnManager.advanceTurn(activePlayers());
+
+        return object == null ? null : object.interact(p, board, moveHistory);
     }
 
     public String reactToAbyssOrTool() {

@@ -22,7 +22,7 @@ public abstract class MapObject {
     @Override
     public boolean equals(Object o) {
         MapObject i = (MapObject) o;
-        return id == i.getId() && name.equals(i.getName());
+        return id == i.getId();
     }
 
     @Override
