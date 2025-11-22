@@ -4,8 +4,6 @@ import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.board.Board;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.movehistory.MoveHistory;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.player.Player;
 
-import java.util.Objects;
-
 
 public abstract class MapObject {
 
@@ -21,13 +19,19 @@ public abstract class MapObject {
 
     @Override
     public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof MapObject)) {
+            return false;
+        }
         MapObject i = (MapObject) o;
-        return id == i.getId();
+        return id == i.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
+        return Integer.hashCode(id);
     }
 
     public abstract String interact(Player player, Board board, MoveHistory moveHistory);
@@ -40,7 +44,7 @@ public abstract class MapObject {
         return name;
     }
 
-    public  String getPng() {
+    public String getPng() {
         return png;
     }
 }

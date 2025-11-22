@@ -35,20 +35,6 @@ public class Player implements Comparable<Player> {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o == null) {
-            return false;
-        }
-        Player p = (Player) o;
-        return id == p.getId();
-    }
-
-    @Override
-    public int hashCode() {
-        return Integer.hashCode(id);
-    }
-
-    @Override
     public int compareTo(Player other) {
         return this.name.compareTo(other.name);
     }

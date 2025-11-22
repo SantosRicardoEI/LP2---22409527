@@ -184,7 +184,7 @@ public class Core {
     }
 
     // Original
-    public String reactToAbyssOrTool1() {
+    public String reactToAbyssOrTool() {
         if (board == null) {
             LOG.error("reactToAbyssOrTool: board is null");
             turnManager.advanceTurn(activePlayers());
@@ -194,27 +194,13 @@ public class Core {
         Player p = board.getPlayer(getCurrentPlayerId());
         MapObject object = board.getMapObjectsAt(board.getPlayerPosition(p));
 
-        turnManager.advanceTurn(activePlayers());
-
-        return object == null ? null : object.interact(p, board, moveHistory);
-    }
-
-    public String reactToAbyssOrTool() {
-        if (board == null) {
-            LOG.error("reactToAbyssOrTool: board is null");
+        if (object == null) {
             turnManager.advanceTurn(activePlayers());
             return null;
         }
 
-        Player p = board.getPlayer(getCurrentPlayerId());
-        int pos = board.getPlayerPosition(p);
-        MapObject object = board.getMapObjectsAt(pos);
-
-        String msg = (object == null) ? null : object.interact(p, board, moveHistory);
-
         turnManager.advanceTurn(activePlayers());
-
-        return msg;
+        return object.interact(p, board, moveHistory);
     }
 
     public boolean gameIsOver() {
