@@ -6,7 +6,7 @@ import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.GameRules;
 
 import static org.junit.Assert.*;
 
-public class TestGameRules {
+public class GameRulesTest {
 
     // ======================================= Player Count ============================================================
 

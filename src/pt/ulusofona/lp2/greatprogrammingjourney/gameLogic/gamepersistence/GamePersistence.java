@@ -30,20 +30,15 @@ public final class GamePersistence {
             throw new FileNotFoundException("File not found");
         }
 
-        Board newBoard = null;
+        LoadContext ctx = new LoadContext();
         MoveHistory newHistory = new MoveHistory();
-        int newCurrentPlayer = -1;
-        int newTurnCount = -1;
-
         int lineNumber = 0;
         String currentSection = null;
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
-
             while ((line = br.readLine()) != null) {
                 lineNumber++;
-
                 line = line.trim();
 
                 if (line.isEmpty() || line.startsWith("#")) {
@@ -66,86 +61,95 @@ public final class GamePersistence {
                     );
                 }
 
-                String[] partes = line.split("=");
+                String[] partes = line.split("=", 2);
                 if (partes.length != 2) {
                     throw new InvalidFileException("Line " + lineNumber +
                             ": invalid format (expected key=value), line='" + line + "'");
                 }
-                String chave = partes[0].trim();
-                String valorStr = partes[1].trim();
 
-                switch (currentSection) {
-
-                    case GameConfig.BOARD_SECTION:
-                        if (chave.equals(GameConfig.BOARD_SIZE_KEY)) {
-                            int boardSize = Parser.parseInt(valorStr);
-                            newBoard = new Board(boardSize);
-                        } else if (chave.equals(GameConfig.CURRENT_ID_KEY)) {
-                            newCurrentPlayer = Parser.parseInt(valorStr);
-                        } else if (chave.equals(GameConfig.TURN_COUNT_KEY)) {
-                            newTurnCount = Parser.parseInt(valorStr);
-                        } else {
-                            throw new InvalidFileException("Line " + lineNumber +
-                                    ": unknown key in section [" + GameConfig.BOARD_SECTION + "]: '" + chave + "'");
-                        }
-                        break;
-
-                    case GameConfig.PLAYER_SECTION:
-                        if (newBoard == null) {
-                            throw new InvalidFileException("Line " + lineNumber +
-                                    ": [" + GameConfig.PLAYER_SECTION + "] section found before [" + GameConfig.BOARD_SECTION + "]");
-                        }
-                        if (chave.equals(GameConfig.PLAYER_KEY)) {
-                            parseAndPlacePlayer(newBoard, valorStr, lineNumber);
-                        } else {
-                            throw new InvalidFileException("Line " + lineNumber +
-                                    ": unknown key in section [" + GameConfig.PLAYER_SECTION + "]: '" + chave + "'");
-                        }
-                        break;
-
-                    case GameConfig.MAP_OBJECT_SECTION:
-                        if (newBoard == null) {
-                            throw new InvalidFileException("Line " + lineNumber +
-                                    ": [" + GameConfig.MAP_OBJECT_SECTION + "] section found before [" + GameConfig.BOARD_SECTION + "]");
-                        }
-                        if (chave.equals(GameConfig.MAP_OBJECT_KEY)) {
-                            parseAndPlaceMapObjects(newBoard, valorStr, lineNumber);
-                        } else {
-                            throw new InvalidFileException("Line " + lineNumber +
-                                    ": unknown key in section [" + GameConfig.MAP_OBJECT_SECTION + "]: '" + chave + "'");
-                        }
-                        break;
-
-                    case GameConfig.MOVE_SECTION:
-                        if (newBoard == null) {
-                            throw new InvalidFileException("Line " + lineNumber +
-                                    ": [" + GameConfig.MOVE_SECTION + "] section found before [" + GameConfig.BOARD_SECTION + "]");
-                        }
-                        if (chave.equals(GameConfig.MOVE_KEY)) {
-                            parseAndAddMove(newHistory, valorStr, lineNumber);
-                        } else {
-                            throw new InvalidFileException("Line " + lineNumber +
-                                    ": unknown key in section [" + GameConfig.MOVE_SECTION + "]: '" + chave + "'");
-                        }
-                        break;
-
-                    default:
-                        throw new InvalidFileException("Line " + lineNumber +
-                                ": unknown section '" + currentSection + "'");
-                }
+                processSectionLine(currentSection, partes[0].trim(), partes[1].trim(), lineNumber, ctx, newHistory);
             }
 
-            if (newBoard == null || newCurrentPlayer == -1) {
+            if (ctx.board == null || ctx.currentPlayer == -1) {
                 throw new InvalidFileException("Incomplete file: " +
                         GameConfig.BOARD_SECTION + " or " + GameConfig.CURRENT_ID_KEY + " missing");
             }
 
-            return new LoadedGame(newBoard, newHistory, newCurrentPlayer, newTurnCount);
+            return new LoadedGame(ctx.board, newHistory, ctx.currentPlayer, ctx.turnCount);
 
         } catch (IOException | IllegalArgumentException e) {
             e.printStackTrace();
             LOG.error("loadFromFile: error while reading file", e);
             throw new InvalidFileException("Error while reading file: " + e.getMessage(), e);
+        }
+    }
+
+    // Para reduzir parametros
+    private static class LoadContext {
+        Board board;
+        int currentPlayer = -1;
+        int turnCount = -1;
+    }
+
+    private static void processSectionLine(String section, String key, String value, int lineNumber, LoadContext ctx, MoveHistory history
+    ) throws InvalidFileException {
+
+        switch (section) {
+            case GameConfig.BOARD_SECTION:
+                if (key.equals(GameConfig.BOARD_SIZE_KEY)) {
+                    ctx.board = new Board(Parser.parseInt(value));
+                } else if (key.equals(GameConfig.CURRENT_ID_KEY)) {
+                    ctx.currentPlayer = Parser.parseInt(value);
+                } else if (key.equals(GameConfig.TURN_COUNT_KEY)) {
+                    ctx.turnCount = Parser.parseInt(value);
+                } else {
+                    throw new InvalidFileException("Line " + lineNumber +
+                            ": unknown key in section [" + GameConfig.BOARD_SECTION + "]: '" + key + "'");
+                }
+                break;
+
+            case GameConfig.PLAYER_SECTION:
+                if (ctx.board == null) {
+                    throw new InvalidFileException("Line " + lineNumber +
+                            ": [" + GameConfig.PLAYER_SECTION + "] section found before [" + GameConfig.BOARD_SECTION + "]");
+                }
+                if (key.equals(GameConfig.PLAYER_KEY)) {
+                    parseAndPlacePlayer(ctx.board, value, lineNumber);
+                } else {
+                    throw new InvalidFileException("Line " + lineNumber +
+                            ": unknown key in section [" + GameConfig.PLAYER_SECTION + "]: '" + key + "'");
+                }
+                break;
+
+            case GameConfig.MAP_OBJECT_SECTION:
+                if (ctx.board == null) {
+                    throw new InvalidFileException("Line " + lineNumber +
+                            ": [" + GameConfig.MAP_OBJECT_SECTION + "] section found before [" + GameConfig.BOARD_SECTION + "]");
+                }
+                if (key.equals(GameConfig.MAP_OBJECT_KEY)) {
+                    parseAndPlaceMapObjects(ctx.board, value, lineNumber);
+                } else {
+                    throw new InvalidFileException("Line " + lineNumber +
+                            ": unknown key in section [" + GameConfig.MAP_OBJECT_SECTION + "]: '" + key + "'");
+                }
+                break;
+
+            case GameConfig.MOVE_SECTION:
+                if (ctx.board == null) {
+                    throw new InvalidFileException("Line " + lineNumber +
+                            ": [" + GameConfig.MOVE_SECTION + "] section found before [" + GameConfig.BOARD_SECTION + "]");
+                }
+                if (key.equals(GameConfig.MOVE_KEY)) {
+                    parseAndAddMove(history, value, lineNumber);
+                } else {
+                    throw new InvalidFileException("Line " + lineNumber +
+                            ": unknown key in section [" + GameConfig.MOVE_SECTION + "]: '" + key + "'");
+                }
+                break;
+
+            default:
+                throw new InvalidFileException("Line " + lineNumber +
+                        ": unknown section '" + section + "'");
         }
     }
 

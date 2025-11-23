@@ -22,9 +22,6 @@ public abstract class MapObject {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof MapObject)) {
-            return false;
-        }
         MapObject i = (MapObject) o;
         return id == i.id;
     }

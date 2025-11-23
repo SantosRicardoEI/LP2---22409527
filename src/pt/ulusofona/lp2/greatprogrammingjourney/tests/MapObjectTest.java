@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
-public class TestMapObject {
+public class MapObjectTest {
 
     private Core core;
 
