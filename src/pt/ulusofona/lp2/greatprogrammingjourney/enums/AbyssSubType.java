@@ -41,6 +41,11 @@ public enum AbyssSubType {
     }
 
     public static AbyssSubType fromId(int id) {
+
+        if (!GameConfig.HAS_NEW_ABYSS && id == UNDOCUMENTED_CODE.getId()) {
+            return null;
+        }
+
         for (AbyssSubType t : values()) {
             if (t.getId() == id) {
                 return t;
@@ -50,12 +55,11 @@ public enum AbyssSubType {
     }
 
     public static Abyss createAbyss(int id) {
-
-        if (!GameConfig.HAS_NEW_ABYSS && id == UNDOCUMENTED_CODE.getId()) {
+        AbyssSubType sub = fromId(id);
+        if (sub == null) {
             return null;
         }
-
-        AbyssSubType sub = fromId(id);
-        return (sub == null) ? null : sub.getInstance();
+        return sub.getInstance();
     }
+
 }
