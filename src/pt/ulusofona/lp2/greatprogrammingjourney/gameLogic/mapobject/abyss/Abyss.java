@@ -28,7 +28,10 @@ public abstract class Abyss extends MapObject {
         if (usedTool) {
             player.useTool(counter);
         } else {
-            if (player.hasTool(ToolSubType.CHAT_GPT.getInstance())) {
+
+
+            Tool chatGPT = ToolSubType.CHAT_GPT.getInstance();
+            if (player.hasTool(chatGPT)) {
                 double r = Math.random();
 
                 if (r < 0.5) {
@@ -49,6 +52,7 @@ public abstract class Abyss extends MapObject {
                 }
                 return "ChatGPT reduziu o efeito do abismo " + name + " (avançou 1 casa)";
             }
+
             applyAbyssEffects(player, board, moveHistory);
         }
         return usedTool ? counteredMessage() : effectMessage();

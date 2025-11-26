@@ -3,13 +3,14 @@ package pt.ulusofona.lp2.greatprogrammingjourney.config;
 import pt.ulusofona.lp2.greatprogrammingjourney.enums.TurnOrder;
 import pt.ulusofona.lp2.greatprogrammingjourney.ui.theme.ThemeType;
 
+import javax.swing.plaf.PanelUI;
+
 public class GameConfig {
 
     private GameConfig() {
     }
 
     // Game settings
-
     public static final int MIN_PLAYERS = 2;
     public static final int MAX_PLAYERS = 4;
     public static final int MIN_DICE = 1;
@@ -20,13 +21,57 @@ public class GameConfig {
     public static final int INITIAL_POSITION = 1;
     public static final TurnOrder TURN_ORDER = TurnOrder.ASCENDING;
     public static final boolean ENABLE_BOUNCE = true;
+    public static final boolean HAS_NEW_TOOL = false;
+    public static final boolean HAS_NEW_ABYSS = false;
+
+    // Colors
+    public static final String WHITE = "#FFFFFF";
+    public static final String BLACK = "#000000";
+    public static final String DARK_GRAY = "#2E2E2E";
+    public static final String GRAY_BG = "#1C1C1C";
+
+    public static final String RETRO_GREEN = "#00FF00";
+    public static final String RETRO_BG = "#001100";
+
+    public static final String OCEAN_DEEP = "#005F73";
+    public static final String OCEAN_LIGHT = "#0A9396";
+    public static final String OCEAN_DARK = "#001219";
+
+    public static final String NEON_MAGENTA = "#FF00FF";
+    public static final String NEON_BG = "#111111";
+
+    public static final String DESERT_BROWN = "#4E342E";
+    public static final String DESERT_SAND = "#F4A261";
+    public static final String DESERT_GOLD = "#E9C46A";
+    public static final String DESERT_RED = "#E76F51";
+
+    public static final String TERMINAL_GREEN = "#00FFB4";
+    public static final String TERMINAL_DARK1 = "#001A16";
+    public static final String TERMINAL_DARK2 = "#00211C";
 
     // Theme
+    public static final String PLAYER_BLUE_IMAGE = "blueP.png";
+    public static final String PLAYER_BROWN_IMAGE = "brownP.png";
+    public static final String PLAYER_GREEN_IMAGE = "greenP.png";
+    public static final String PLAYER_PURPLE_IMAGE = "purpleP.png";
 
-    public static final ThemeType THEME = ThemeType.DESERT;
+    public static final String SLOT_NUMBER_COLOR = WHITE;
+    public static final int SLOT_NUMBER_FONT_SIZE = 16;
+
+    public static final String SLOT_BACKGROUND_COLOR= NEON_BG;
+    public static final int CELL_SPACING = 4;
+    public static final String GRID_BACKGROUND_COLOR = TERMINAL_GREEN;
+    public static final String TOOLBAR_BACKGROUND_COLOR = TERMINAL_DARK1;
+    public static final String LOGO = "logo2.png";
+
+    // Credits
+    public static final String CREDITS_TEXT_COLOR = WHITE;
+    public static final String CREDITS_BORDER_COLOR = GRAY_BG;
+    public static final String CREDITS_BACKGROUND_COLOR = BLACK;
+
+
 
     // Log settings
-
     public static final boolean DEBUG_MODE = true;
     public static final String RESET = "\u001B[0m";
     public static final String INFO_COLOR = "\u001B[37m";
@@ -35,7 +80,6 @@ public class GameConfig {
 
 
     // Save & Load settings
-
     public static final String BOARD_SECTION = "BOARD";
     public static final String BOARD_SIZE_KEY = "BOARD_SIZE";
     public static final String TURN_COUNT_KEY = "TURN_COUNT";

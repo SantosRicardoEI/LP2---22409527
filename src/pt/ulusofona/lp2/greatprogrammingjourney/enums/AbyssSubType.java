@@ -1,5 +1,6 @@
 package pt.ulusofona.lp2.greatprogrammingjourney.enums;
 
+import pt.ulusofona.lp2.greatprogrammingjourney.config.GameConfig;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.abyss.Abyss;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.abyss.subtypes.*;
 
@@ -15,7 +16,7 @@ public enum AbyssSubType {
     BSOD(new BlueScreenOfDeath(7, "Blue Screen of Death", "bsod.png", null)),
     INFINITE_LOOP(new InfiniteLoop(8, "Ciclo infinito", "infinite-loop.png", ToolSubType.TEACHER_HELP.getInstance())),
     SEGMENTATION_FAULT(new SegmentationFault(9, "Segmentation Fault", "core-dumped.png", null)),
-    UNDOCUMENTED_CODE(new UndocumentedCode(10, "Projeto sem Documentação", "undocumented.png", ToolSubType.CHAT_GPT.getInstance()));
+    UNDOCUMENTED_CODE(new UndocumentedCode(10, "Projeto sem Documentação", "unknownPiece.png", ToolSubType.CHAT_GPT.getInstance()));
 
     private final Abyss instance;
 
@@ -49,6 +50,11 @@ public enum AbyssSubType {
     }
 
     public static Abyss createAbyss(int id) {
+
+        if (!GameConfig.HAS_NEW_ABYSS && id == UNDOCUMENTED_CODE.getId()) {
+            return null;
+        }
+
         AbyssSubType sub = fromId(id);
         return (sub == null) ? null : sub.getInstance();
     }

@@ -13,6 +13,7 @@ import pt.ulusofona.lp2.greatprogrammingjourney.ui.theme.ThemeLibrary;
 import pt.ulusofona.lp2.greatprogrammingjourney.utils.GameLogger;
 import pt.ulusofona.lp2.greatprogrammingjourney.utils.StringUtils;
 
+import javax.management.StringValueExp;
 import javax.swing.*;
 import java.io.*;
 import java.util.*;
@@ -261,7 +262,28 @@ public class Core {
     }
 
     public HashMap<String, String> customizeBoard() {
-        return ThemeLibrary.get(GameConfig.THEME);
+        HashMap<String, String> theme = new HashMap<>();
+
+        // Player images
+        theme.put("playerBlueImage", GameConfig.PLAYER_BLUE_IMAGE);
+        theme.put("playerBrownImage", GameConfig.PLAYER_BROWN_IMAGE);
+        theme.put("playerPurpleImage", GameConfig.PLAYER_PURPLE_IMAGE);
+        theme.put("playerGreenImage", GameConfig.PLAYER_GREEN_IMAGE);
+
+        // Board
+        theme.put("slotNumberColor", GameConfig.SLOT_NUMBER_COLOR);
+        theme.put("slotNumberFontSize", GameConfig.SLOT_NUMBER_FONT_SIZE + "");
+
+        theme.put("slotBackgroundColor", GameConfig.SLOT_BACKGROUND_COLOR);
+        theme.put("cellSpacing", GameConfig.CELL_SPACING + "");
+        theme.put("gridBackgroundColor", GameConfig.GRID_BACKGROUND_COLOR);
+        theme.put("toolbarBackgroundColor", GameConfig.TOOLBAR_BACKGROUND_COLOR);
+        theme.put("logoImage", GameConfig.LOGO);
+
+        // New abyss and tool
+        theme.put("hasNewAbyss", GameConfig.HAS_NEW_ABYSS + "");
+        theme.put("hasNewTool", GameConfig.HAS_NEW_TOOL + "");
+        return theme;
     }
 
     // =============================================== Helpers =========================================================

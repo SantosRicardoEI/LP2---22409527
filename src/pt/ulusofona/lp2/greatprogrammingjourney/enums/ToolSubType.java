@@ -1,5 +1,6 @@
 package pt.ulusofona.lp2.greatprogrammingjourney.enums;
 
+import pt.ulusofona.lp2.greatprogrammingjourney.config.GameConfig;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.tool.Tool;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.tool.subtypes.*;
 
@@ -12,7 +13,7 @@ public enum ToolSubType {
     EXCEPTION_HANDLING(new ExceptionHandling(3, "Tratamento de Excepções", "catch.png")),
     IDE(new IDE(4, "IDE", "IDE.png")),
     TEACHER_HELP(new TeacherHelp(5, "Ajuda do Professor", "ajuda-professor.png")),
-    CHAT_GPT(new ChatGPT(6, "Chat GPT", "unknownPiece"));
+    CHAT_GPT(new ChatGPT(6, "Chat GPT", "unknownPiece.png"));
 
 
     private final Tool instance;
@@ -39,6 +40,11 @@ public enum ToolSubType {
     }
 
     public static ToolSubType fromId(int id) {
+
+        if (!GameConfig.HAS_NEW_TOOL && id == CHAT_GPT.getId()) {
+            return null;
+        }
+
         for (ToolSubType t : values()) {
             if (t.getId() == id) {
                 return t;
@@ -53,6 +59,9 @@ public enum ToolSubType {
     }
 
     public static Tool createTool(ToolSubType type) {
+        if (!GameConfig.HAS_NEW_TOOL && type.getId() == CHAT_GPT.getId()) {
+            return null;
+        }
         return (type == null) ? null : type.getInstance();
     }
 }

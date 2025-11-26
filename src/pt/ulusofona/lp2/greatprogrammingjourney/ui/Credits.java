@@ -32,10 +32,9 @@ public final class Credits {
         private int charIdx = 0;
         private boolean cursorOn = true;
 
-        ThemeType themeType = GameConfig.THEME;
-        private Color textColor = ThemeLibrary.getCreditsTextColor(themeType);
-        private Color borderColor = ThemeLibrary.getCreditsBorderColor(themeType);
-        private Color backgroundColor = ThemeLibrary.getCreditsBackgroundColor(themeType);
+        private Color textColor = Color.decode(GameConfig.CREDITS_TEXT_COLOR);
+        private Color borderColor = Color.decode(GameConfig.CREDITS_BORDER_COLOR);
+        private Color backgroundColor = Color.decode(GameConfig.CREDITS_BACKGROUND_COLOR);
 
 
         AnimatedTerminal(List<String> content) {
