@@ -39,7 +39,7 @@ public enum ToolSubType {
 
     public static ToolSubType fromId(int id) {
 
-        if (!GameConfig.HAS_NEW_TOOL && id == CHAT_GPT.getId()) {
+        if (!GameConfig.ENABLE_TOOL_CHAT_GPT && id == CHAT_GPT.getId()) {
             return null;
         }
 

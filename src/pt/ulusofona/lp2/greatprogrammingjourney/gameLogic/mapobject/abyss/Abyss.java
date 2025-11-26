@@ -24,39 +24,20 @@ public abstract class Abyss extends MapObject {
 
     @Override
     public final String interact(Player player, Board board, MoveHistory moveHistory) {
-        boolean usedTool = counter != null && player.hasTool(counter);
+        Tool chatGPT = ToolSubType.getTool(ToolSubType.CHAT_GPT.getId());
 
-        if (usedTool) {
-            player.useTool(counter);
-        } else {
-            if (GameConfig.HAS_NEW_TOOL) {
-                Tool chatGPT = ToolSubType.getTool(ToolSubType.CHAT_GPT.getId());
-                if (player.hasTool(chatGPT)) {
-                    double r = Math.random();
+        if (this.counter != null) {
 
-                    if (r < 0.5) {
-                        return name + " anulado por ChatGPT";
-                    }
-
-                    if (r < 0.75) {
-                        applyAbyssEffects(player, board, moveHistory);
-                        if (!player.isStuck()) {
-                            board.movePlayerBySteps(player, -1);
-                        }
-                        return "ChatGPT confundiu ainda mais o programador no abismo " + name + " (recuou 1 casa)";
-                    }
-
-                    applyAbyssEffects(player, board, moveHistory);
-                    if (!player.isStuck()) {
-                        board.movePlayerBySteps(player, 1);
-                    }
-                    return "ChatGPT reduziu o efeito do abismo " + name + " (avançou 1 casa)";
-                }
+            if (player.hasTool(counter)) {
+                player.useTool(counter);
+                return counteredMessage(counter);
+            } else if (player.hasTool(chatGPT) && GameConfig.ENABLE_TOOL_CHAT_GPT) {
+                player.useTool(chatGPT);
+                return counteredMessage(chatGPT);
             }
-
-            applyAbyssEffects(player, board, moveHistory);
         }
-        return usedTool ? counteredMessage() : effectMessage();
+        applyAbyssEffects(player, board, moveHistory);
+        return effectMessage();
     }
 
     @Override
@@ -64,8 +45,8 @@ public abstract class Abyss extends MapObject {
         return "0:" + id;
     }
 
-    public final String counteredMessage() {
-        return name + " anulado por " + counter.getName();
+    public final String counteredMessage(Tool tCounter) {
+        return name + " anulado por " + tCounter.getName();
     }
 
     public abstract String effectMessage();

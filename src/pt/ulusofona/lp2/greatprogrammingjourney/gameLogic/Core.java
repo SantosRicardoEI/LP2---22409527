@@ -279,8 +279,8 @@ public class Core {
         theme.put("logoImage", GameConfig.LOGO);
 
         // New abyss and tool
-        theme.put("hasNewAbyss", GameConfig.HAS_NEW_ABYSS + "");
-        theme.put("hasNewTool", GameConfig.HAS_NEW_TOOL + "");
+        theme.put("hasNewAbyss", GameConfig.ENABLE_ABYYS_NONAMEYET + "");
+        theme.put("hasNewTool", GameConfig.ENABLE_TOOL_CHAT_GPT + "");
         return theme;
     }
 

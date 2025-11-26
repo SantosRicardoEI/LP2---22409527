@@ -18,8 +18,8 @@ public class GameConfig {
     public static final int INITIAL_POSITION = 1;
     public static final TurnOrder TURN_ORDER = TurnOrder.ASCENDING;
     public static final boolean ENABLE_BOUNCE = true;
-    public static final boolean HAS_NEW_TOOL = false;
-    public static final boolean HAS_NEW_ABYSS = false;
+    public static final boolean ENABLE_TOOL_CHAT_GPT = false;
+    public static final boolean ENABLE_ABYYS_NONAMEYET = false;
 
     // Colors
     public static final String WHITE = "#FFFFFF";
@@ -53,12 +53,12 @@ public class GameConfig {
     public static final String PLAYER_PURPLE_IMAGE = "purpleP.png";
 
     public static final String SLOT_NUMBER_COLOR = WHITE;
-    public static final int SLOT_NUMBER_FONT_SIZE = 16;
+    public static final int SLOT_NUMBER_FONT_SIZE = 18;
 
     public static final String SLOT_BACKGROUND_COLOR= NEON_BG;
     public static final int CELL_SPACING = 4;
-    public static final String GRID_BACKGROUND_COLOR = TERMINAL_GREEN;
-    public static final String TOOLBAR_BACKGROUND_COLOR = TERMINAL_DARK1;
+    public static final String GRID_BACKGROUND_COLOR = BLACK;
+    public static final String TOOLBAR_BACKGROUND_COLOR = GRAY_BG;
     public static final String LOGO = "logo2.png";
 
     // Credits
