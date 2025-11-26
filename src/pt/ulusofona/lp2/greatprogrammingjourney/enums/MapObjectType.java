@@ -20,9 +20,29 @@ public enum MapObjectType {
 
     public static MapObject createMapObject(int typeID, int subTypeID) {
         MapObjectType type = fromID(typeID);
-        return (type == null) ? null : switch (type) {
-            case ABYSS -> AbyssSubType.fromId(subTypeID).getInstance();
-            case TOOL  -> ToolSubType.fromId(subTypeID).getInstance();
-        };
+        if (type == null) {
+            return null;
+        }
+
+        switch (type) {
+            case ABYSS: {
+                AbyssSubType st = AbyssSubType.fromId(subTypeID);
+                if (st == null) {
+                    return null;
+                }
+                return st.getInstance();
+            }
+
+            case TOOL: {
+                ToolSubType st = ToolSubType.fromId(subTypeID);
+                if (st == null) {
+                    return null;
+                }
+                return st.getInstance();
+            }
+
+            default:
+                return null;
+        }
     }
 }

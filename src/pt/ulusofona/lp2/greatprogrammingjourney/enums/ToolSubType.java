@@ -13,7 +13,7 @@ public enum ToolSubType {
     EXCEPTION_HANDLING(new ExceptionHandling(3, "Tratamento de Excepções", "catch.png")),
     IDE(new IDE(4, "IDE", "IDE.png")),
     TEACHER_HELP(new TeacherHelp(5, "Ajuda do Professor", "ajuda-professor.png")),
-    CHAT_GPT(new ChatGPT(6, "Chat GPT", "unknownPiece.png"));
+    CHAT_GPT(new ChatGPT(6, "Chat GPT", "chatgpt.png"));
 
 
     private final Tool instance;
