@@ -29,7 +29,7 @@ public abstract class Abyss extends MapObject {
         if (usedTool) {
             player.useTool(counter);
         } else {
-            if (GameConfig.HAS_NEW_ABYSS && GameConfig.HAS_NEW_TOOL) {
+            if (GameConfig.HAS_NEW_TOOL) {
                 Tool chatGPT = ToolSubType.getTool(ToolSubType.CHAT_GPT.getId());
                 if (player.hasTool(chatGPT)) {
                     double r = Math.random();

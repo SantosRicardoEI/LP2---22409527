@@ -1,8 +1,6 @@
-package pt.ulusofona.lp2.greatprogrammingjourney.ui;
+package pt.ulusofona.lp2.greatprogrammingjourney;
 
 import pt.ulusofona.lp2.greatprogrammingjourney.config.GameConfig;
-import pt.ulusofona.lp2.greatprogrammingjourney.ui.theme.ThemeLibrary;
-import pt.ulusofona.lp2.greatprogrammingjourney.ui.theme.ThemeType;
 
 import javax.swing.*;
 import java.awt.*;

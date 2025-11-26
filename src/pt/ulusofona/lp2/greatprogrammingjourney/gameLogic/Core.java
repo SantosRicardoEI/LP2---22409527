@@ -8,12 +8,10 @@ import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.gamepersistence.Loaded
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.MapObject;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.movehistory.MoveHistory;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.player.Player;
-import pt.ulusofona.lp2.greatprogrammingjourney.ui.Credits;
-import pt.ulusofona.lp2.greatprogrammingjourney.ui.theme.ThemeLibrary;
+import pt.ulusofona.lp2.greatprogrammingjourney.Credits;
 import pt.ulusofona.lp2.greatprogrammingjourney.utils.GameLogger;
 import pt.ulusofona.lp2.greatprogrammingjourney.utils.StringUtils;
 
-import javax.management.StringValueExp;
 import javax.swing.*;
 import java.io.*;
 import java.util.*;
@@ -287,7 +285,6 @@ public class Core {
     }
 
     // =============================================== Helpers =========================================================
-
 
     private Player safeGetPlayer(int id) {
         return (board == null) ? null : board.getPlayer(id);
