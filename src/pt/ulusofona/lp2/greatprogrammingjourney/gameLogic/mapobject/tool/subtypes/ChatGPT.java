@@ -2,9 +2,9 @@ package pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.tool.subtyp
 
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.tool.Tool;
 
-public class ExceptionHandling extends Tool {
+public class ChatGPT extends Tool {
 
-    public ExceptionHandling(int id, String name, String png) {
+    public ChatGPT(int id, String name, String png) {
         super(id, name, png);
     }
 }

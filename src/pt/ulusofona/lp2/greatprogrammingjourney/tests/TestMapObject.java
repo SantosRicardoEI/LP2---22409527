@@ -665,7 +665,7 @@ public class TestMapObject {
     @Test
     public void Test_Abyss_PNGs() {
         for (AbyssSubType a : AbyssSubType.values()) {
-            Abyss abyss = AbyssSubType.createAbyss(a);
+            Abyss abyss = a.getInstance();
             assertNotNull("Abyss should not be null for subtype " + a, abyss);
 
             String expected = a.getImage();

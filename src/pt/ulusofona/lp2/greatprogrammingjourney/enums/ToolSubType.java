@@ -5,33 +5,37 @@ import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.tool.subtype
 
 public enum ToolSubType {
 
-    INHERITANCE(0, "Herança", "inheritance.png"),
-    FUNCTIONAL_PROGRAMMING(1, "Programação Funcional", "functional.png"),
-    UNIT_TESTS(2, "Testes Unitários", "unit-tests.png"),
-    EXCEPTION_HANDLING(3, "Tratamento de Excepções", "catch.png"),
-    IDE(4, "IDE", "IDE.png"),
-    TEACHER_HELP(5, "Ajuda do Professor", "ajuda-professor.png");
 
-    private final int id;
-    private final String name;
-    private final String image;
+    INHERITANCE(new Inheritance(0, "Herança", "inheritance.png")),
+    FUNCTIONAL_PROGRAMMING(new FunctionalProgramming(1, "Programação Funcional", "functional.png")),
+    UNIT_TESTS(new UnitTests(2, "Testes Unitários", "unit-tests.png")),
+    EXCEPTION_HANDLING(new ExceptionHandling(3, "Tratamento de Excepções", "catch.png")),
+    IDE(new IDE(4, "IDE", "IDE.png")),
+    TEACHER_HELP(new TeacherHelp(5, "Ajuda do Professor", "ajuda-professor.png")),
+    CHAT_GPT(new ChatGPT(6, "Chat GPT", "unknownPiece"));
 
-    ToolSubType(int id, String name, String icon) {
-        this.id = id;
-        this.name = name;
-        this.image = icon;
+
+    private final Tool instance;
+
+
+    ToolSubType(Tool instance) {
+        this.instance = instance;
     }
 
     public int getId() {
-        return id;
+        return instance.getId();
     }
 
     public String getName() {
-        return name;
+        return instance.getName();
     }
 
     public String getImage() {
-        return image;
+        return instance.getPng();
+    }
+
+    public Tool getInstance() {
+        return instance;
     }
 
     public static ToolSubType fromId(int id) {
@@ -43,20 +47,12 @@ public enum ToolSubType {
         return null;
     }
 
-
     public static Tool createTool(int toolID) {
         ToolSubType subType = fromId(toolID);
         return createTool(subType);
     }
 
-    public static Tool createTool(ToolSubType subType) {
-        return (subType == null) ? null : switch (subType) {
-            case TEACHER_HELP -> new TeacherHelp();
-            case EXCEPTION_HANDLING -> new ExceptionHandling();
-            case IDE -> new IDE();
-            case FUNCTIONAL_PROGRAMMING -> new FunctionalProgramming();
-            case INHERITANCE -> new Inheritance();
-            case UNIT_TESTS -> new UnitTests();
-        };
+    public static Tool createTool(ToolSubType type) {
+        return (type == null) ? null : type.getInstance();
     }
 }
