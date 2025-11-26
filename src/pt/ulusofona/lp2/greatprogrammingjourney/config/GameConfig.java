@@ -24,27 +24,8 @@ public class GameConfig {
     // Colors
     public static final String WHITE = "#FFFFFF";
     public static final String BLACK = "#000000";
-    public static final String DARK_GRAY = "#2E2E2E";
-    public static final String GRAY_BG = "#1C1C1C";
-
-    public static final String RETRO_GREEN = "#00FF00";
-    public static final String RETRO_BG = "#001100";
-
-    public static final String OCEAN_DEEP = "#005F73";
-    public static final String OCEAN_LIGHT = "#0A9396";
-    public static final String OCEAN_DARK = "#001219";
-
-    public static final String NEON_MAGENTA = "#FF00FF";
-    public static final String NEON_BG = "#111111";
-
-    public static final String DESERT_BROWN = "#4E342E";
-    public static final String DESERT_SAND = "#F4A261";
-    public static final String DESERT_GOLD = "#E9C46A";
-    public static final String DESERT_RED = "#E76F51";
-
-    public static final String TERMINAL_GREEN = "#00FFB4";
-    public static final String TERMINAL_DARK1 = "#001A16";
-    public static final String TERMINAL_DARK2 = "#00211C";
+    public static final String GRAY1 = "#1C1C1C";
+    public static final String GRAY2 = "#111111";
 
     // Theme
     public static final String PLAYER_BLUE_IMAGE = "blueP.png";
@@ -55,18 +36,16 @@ public class GameConfig {
     public static final String SLOT_NUMBER_COLOR = WHITE;
     public static final int SLOT_NUMBER_FONT_SIZE = 18;
 
-    public static final String SLOT_BACKGROUND_COLOR= NEON_BG;
+    public static final String SLOT_BACKGROUND_COLOR= GRAY2;
     public static final int CELL_SPACING = 4;
     public static final String GRID_BACKGROUND_COLOR = BLACK;
-    public static final String TOOLBAR_BACKGROUND_COLOR = GRAY_BG;
-    public static final String LOGO = "logo2.png";
+    public static final String TOOLBAR_BACKGROUND_COLOR = GRAY1;
+    public static final String LOGO = "logo3.png";
 
     // Credits
     public static final String CREDITS_TEXT_COLOR = WHITE;
-    public static final String CREDITS_BORDER_COLOR = GRAY_BG;
+    public static final String CREDITS_BORDER_COLOR = WHITE;
     public static final String CREDITS_BACKGROUND_COLOR = BLACK;
-
-
 
     // Log settings
     public static final boolean DEBUG_MODE = true;
@@ -74,7 +53,6 @@ public class GameConfig {
     public static final String INFO_COLOR = "\u001B[37m";
     public static final String WARNING_COLOR = "\u001B[33m";
     public static final String ERROR_COLOR = "\u001B[31m";
-
 
     // Save & Load settings
     public static final String BOARD_SECTION = "BOARD";

@@ -21,38 +21,20 @@ public enum ToolSubType {
         this.instance = instance;
     }
 
-    public int getId() {
-        return instance.getId();
-    }
-
-    public String getName() {
-        return instance.getName();
-    }
-
-    public String getImage() {
-        return instance.getPng();
-    }
-
     public Tool getInstance() {
         return instance;
     }
 
-    public static ToolSubType fromId(int id) {
-
-        if (!GameConfig.ENABLE_TOOL_CHAT_GPT && id == CHAT_GPT.getId()) {
+    public static Tool getToolByID(int id) {
+        if (!GameConfig.ENABLE_TOOL_CHAT_GPT && id == CHAT_GPT.getInstance().getId()) {
             return null;
         }
 
-        for (ToolSubType t : values()) {
-            if (t.getId() == id) {
-                return t;
+        for (ToolSubType toolType : values()) {
+            if (toolType.getInstance().getId() == id) {
+                return toolType.getInstance();
             }
         }
         return null;
-    }
-
-    public static Tool getTool(int toolID) {
-        ToolSubType subType = fromId(toolID);
-        return (subType == null) ? null : subType.getInstance();
     }
 }

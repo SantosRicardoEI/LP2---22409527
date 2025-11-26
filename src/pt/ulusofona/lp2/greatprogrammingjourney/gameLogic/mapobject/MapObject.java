@@ -17,20 +17,6 @@ public abstract class MapObject {
         this.png = png;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        MapObject i = (MapObject) o;
-        return id == i.id;
-    }
-
-    @Override
-    public int hashCode() {
-        return Integer.hashCode(id);
-    }
-
     public abstract String interact(Player player, Board board, MoveHistory moveHistory);
 
     public int getId() {

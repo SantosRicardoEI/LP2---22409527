@@ -200,7 +200,7 @@ public class Parser {
         int typeID = parseID(parts[0].trim());
         int subType = parseID(parts[1].trim());
 
-        MapObject mapObject = MapObjectType.createMapObject(typeID, subType);
+        MapObject mapObject = MapObjectType.getMapObject(typeID, subType);
         if (mapObject == null) {
             throw new IllegalArgumentException();
         }

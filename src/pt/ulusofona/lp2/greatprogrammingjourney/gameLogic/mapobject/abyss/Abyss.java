@@ -24,7 +24,7 @@ public abstract class Abyss extends MapObject {
 
     @Override
     public final String interact(Player player, Board board, MoveHistory moveHistory) {
-        Tool chatGPT = ToolSubType.getTool(ToolSubType.CHAT_GPT.getId());
+        Tool chatGPT = ToolSubType.CHAT_GPT.getInstance();
 
         if (this.counter != null) {
 
