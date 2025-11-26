@@ -50,18 +50,24 @@ public enum ToolSubType {
                 return t;
             }
         }
+
         return null;
     }
 
     public static Tool createTool(int toolID) {
         ToolSubType subType = fromId(toolID);
-        return createTool(subType);
+        return (subType == null) ? null : subType.getInstance();
     }
 
     public static Tool createTool(ToolSubType type) {
-        if (!GameConfig.HAS_NEW_TOOL && type.getId() == CHAT_GPT.getId()) {
+        if (type == null) {
             return null;
         }
-        return (type == null) ? null : type.getInstance();
+
+        if (!GameConfig.HAS_NEW_TOOL && type == CHAT_GPT) {
+            return null;
+        }
+
+        return type.getInstance();
     }
 }
