@@ -15,9 +15,7 @@ public enum ToolSubType {
     TEACHER_HELP(new TeacherHelp(5, "Ajuda do Professor", "ajuda-professor.png")),
     CHAT_GPT(new ChatGPT(6, "Chat GPT", "chatgpt.png"));
 
-
     private final Tool instance;
-
 
     ToolSubType(Tool instance) {
         this.instance = instance;
@@ -50,24 +48,11 @@ public enum ToolSubType {
                 return t;
             }
         }
-
         return null;
     }
 
-    public static Tool createTool(int toolID) {
+    public static Tool getTool(int toolID) {
         ToolSubType subType = fromId(toolID);
         return (subType == null) ? null : subType.getInstance();
-    }
-
-    public static Tool createTool(ToolSubType type) {
-        if (type == null) {
-            return null;
-        }
-
-        if (!GameConfig.HAS_NEW_TOOL && type == CHAT_GPT) {
-            return null;
-        }
-
-        return type.getInstance();
     }
 }

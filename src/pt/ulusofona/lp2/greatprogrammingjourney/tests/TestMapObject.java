@@ -558,56 +558,56 @@ public class TestMapObject {
     @Test
     public void Test_AbyssToString_All() {
 
-        Abyss a0 = AbyssSubType.createAbyss(0);
+        Abyss a0 = AbyssSubType.getAbyss(0);
         assertEquals("0:0", a0.toString());
 
-        Abyss a1 = AbyssSubType.createAbyss(1);
+        Abyss a1 = AbyssSubType.getAbyss(1);
         assertEquals("0:1", a1.toString());
 
-        Abyss a2 = AbyssSubType.createAbyss(2);
+        Abyss a2 = AbyssSubType.getAbyss(2);
         assertEquals("0:2", a2.toString());
 
-        Abyss a3 = AbyssSubType.createAbyss(3);
+        Abyss a3 = AbyssSubType.getAbyss(3);
         assertEquals("0:3", a3.toString());
 
-        Abyss a4 = AbyssSubType.createAbyss(4);
+        Abyss a4 = AbyssSubType.getAbyss(4);
         assertEquals("0:4", a4.toString());
 
-        Abyss a5 = AbyssSubType.createAbyss(5);
+        Abyss a5 = AbyssSubType.getAbyss(5);
         assertEquals("0:5", a5.toString());
 
-        Abyss a6 = AbyssSubType.createAbyss(6);
+        Abyss a6 = AbyssSubType.getAbyss(6);
         assertEquals("0:6", a6.toString());
 
-        Abyss a7 = AbyssSubType.createAbyss(7);
+        Abyss a7 = AbyssSubType.getAbyss(7);
         assertEquals("0:7", a7.toString());
 
-        Abyss a8 = AbyssSubType.createAbyss(8);
+        Abyss a8 = AbyssSubType.getAbyss(8);
         assertEquals("0:8", a8.toString());
 
-        Abyss a9 = AbyssSubType.createAbyss(9);
+        Abyss a9 = AbyssSubType.getAbyss(9);
         assertEquals("0:9", a9.toString());
     }
 
     @Test
     public void Test_ToolToString_All() {
 
-        Tool t0 = ToolSubType.createTool(0);
+        Tool t0 = ToolSubType.getTool(0);
         assertEquals("1:0", t0.toString());
 
-        Tool t1 = ToolSubType.createTool(1);
+        Tool t1 = ToolSubType.getTool(1);
         assertEquals("1:1", t1.toString());
 
-        Tool t2 = ToolSubType.createTool(2);
+        Tool t2 = ToolSubType.getTool(2);
         assertEquals("1:2", t2.toString());
 
-        Tool t3 = ToolSubType.createTool(3);
+        Tool t3 = ToolSubType.getTool(3);
         assertEquals("1:3", t3.toString());
 
-        Tool t4 = ToolSubType.createTool(4);
+        Tool t4 = ToolSubType.getTool(4);
         assertEquals("1:4", t4.toString());
 
-        Tool t5 = ToolSubType.createTool(5);
+        Tool t5 = ToolSubType.getTool(5);
         assertEquals("1:5", t5.toString());
     }
 
@@ -621,7 +621,7 @@ public class TestMapObject {
 
             assertTrue("Player should start with no tools", player.getTools().isEmpty());
 
-            Tool tool = ToolSubType.createTool(subType);
+            Tool tool = ToolSubType.getTool(subType.getId());
             assertNotNull("Tool should be created for subtype " + subType, tool);
 
             String msg = tool.interact(player, null, null);
@@ -648,7 +648,7 @@ public class TestMapObject {
     @Test
     public void Test_Tool_PNGs() {
         for (ToolSubType t : ToolSubType.values()) {
-            Tool tool = ToolSubType.createTool(t);
+            Tool tool = ToolSubType.getTool(t.getId());
             assertNotNull("Tool should not be null for subtype " + t, tool);
 
             String expected = t.getImage();

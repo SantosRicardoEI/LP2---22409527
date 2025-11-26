@@ -186,7 +186,7 @@ public final class GamePersistence {
                     continue;
                 }
                 int subType = Parser.parseInt(s);
-                Tool tool = ToolSubType.createTool(subType);
+                Tool tool = ToolSubType.getTool(subType);
                 player.addTool(tool);
             }
         }

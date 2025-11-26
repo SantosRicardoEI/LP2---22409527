@@ -6,17 +6,17 @@ import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.abyss.subtyp
 
 public enum AbyssSubType {
 
-    SYNTAX_ERROR(new SyntaxError(0, "Erro de sintaxe", "syntax.png", ToolSubType.IDE.getInstance())),
-    LOGIC_ERROR(new LogicError(1, "Erro de Lógica", "logic.png", ToolSubType.UNIT_TESTS.getInstance())),
-    EXCEPTION(new ExceptionA(2, "Exception", "exception.png", ToolSubType.EXCEPTION_HANDLING.getInstance())),
-    FILE_NOT_FOUND(new FileNotFound(3, "File Not Found Exeption", "file-not-found-exception.png", ToolSubType.EXCEPTION_HANDLING.getInstance())),
+    SYNTAX_ERROR(new SyntaxError(0, "Erro de sintaxe", "syntax.png", ToolSubType.getTool(ToolSubType.IDE.getId()))),
+    LOGIC_ERROR(new LogicError(1, "Erro de Lógica", "logic.png", ToolSubType.getTool(ToolSubType.UNIT_TESTS.getId()))),
+    EXCEPTION(new ExceptionA(2, "Exception", "exception.png", ToolSubType.getTool(ToolSubType.EXCEPTION_HANDLING.getId()))),
+    FILE_NOT_FOUND(new FileNotFound(3, "File Not Found Exeption", "file-not-found-exception.png", ToolSubType.getTool(ToolSubType.EXCEPTION_HANDLING.getId()))),
     CRASH(new Crash(4, "Crash", "crash.png", null)),
-    DUPLICATED_CODE(new CodeDuplication(5, "Código Duplicado", "duplicated-code.png", ToolSubType.INHERITANCE.getInstance())),
-    SECONDARY_EFFECTS(new SecondaryEffects(6, "Efeitos Secundários", "secondary-effects.png", ToolSubType.FUNCTIONAL_PROGRAMMING.getInstance())),
+    DUPLICATED_CODE(new CodeDuplication(5, "Código Duplicado", "duplicated-code.png", ToolSubType.getTool(ToolSubType.INHERITANCE.getId()))),
+    SECONDARY_EFFECTS(new SecondaryEffects(6, "Efeitos Secundários", "secondary-effects.png", ToolSubType.getTool(ToolSubType.FUNCTIONAL_PROGRAMMING.getId()))),
     BSOD(new BlueScreenOfDeath(7, "Blue Screen of Death", "bsod.png", null)),
-    INFINITE_LOOP(new InfiniteLoop(8, "Ciclo infinito", "infinite-loop.png", ToolSubType.TEACHER_HELP.getInstance())),
+    INFINITE_LOOP(new InfiniteLoop(8, "Ciclo infinito", "infinite-loop.png", ToolSubType.getTool(ToolSubType.TEACHER_HELP.getId()))),
     SEGMENTATION_FAULT(new SegmentationFault(9, "Segmentation Fault", "core-dumped.png", null)),
-    UNDOCUMENTED_CODE(new UndocumentedCode(10, "Projeto sem Documentação", "unknownPiece.png", ToolSubType.CHAT_GPT.getInstance()));
+    UNDOCUMENTED_CODE(new UndocumentedCode(10, "Projeto sem Documentação", "unknownPiece.png", ToolSubType.getTool(ToolSubType.CHAT_GPT.getId())));
 
     private final Abyss instance;
 
@@ -54,12 +54,9 @@ public enum AbyssSubType {
         return null;
     }
 
-    public static Abyss createAbyss(int id) {
+    public static Abyss getAbyss(int id) {
         AbyssSubType sub = fromId(id);
-        if (sub == null) {
-            return null;
-        }
-        return sub.getInstance();
+        return (sub == null) ? null : sub.getInstance();
     }
 
 }

@@ -1,5 +1,6 @@
 package pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.abyss;
 
+import pt.ulusofona.lp2.greatprogrammingjourney.config.GameConfig;
 import pt.ulusofona.lp2.greatprogrammingjourney.enums.ToolSubType;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.board.Board;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.MapObject;
@@ -28,29 +29,29 @@ public abstract class Abyss extends MapObject {
         if (usedTool) {
             player.useTool(counter);
         } else {
+            if (GameConfig.HAS_NEW_ABYSS && GameConfig.HAS_NEW_TOOL) {
+                Tool chatGPT = ToolSubType.getTool(ToolSubType.CHAT_GPT.getId());
+                if (player.hasTool(chatGPT)) {
+                    double r = Math.random();
 
+                    if (r < 0.5) {
+                        return name + " anulado por ChatGPT";
+                    }
 
-            Tool chatGPT = ToolSubType.CHAT_GPT.getInstance();
-            if (player.hasTool(chatGPT)) {
-                double r = Math.random();
+                    if (r < 0.75) {
+                        applyAbyssEffects(player, board, moveHistory);
+                        if (!player.isStuck()) {
+                            board.movePlayerBySteps(player, -1);
+                        }
+                        return "ChatGPT confundiu ainda mais o programador no abismo " + name + " (recuou 1 casa)";
+                    }
 
-                if (r < 0.5) {
-                    return name + " anulado por ChatGPT";
-                }
-
-                if (r < 0.75) {
                     applyAbyssEffects(player, board, moveHistory);
                     if (!player.isStuck()) {
-                        board.movePlayerBySteps(player, -1);
+                        board.movePlayerBySteps(player, 1);
                     }
-                    return "ChatGPT confundiu ainda mais o programador no abismo " + name + " (recuou 1 casa)";
+                    return "ChatGPT reduziu o efeito do abismo " + name + " (avançou 1 casa)";
                 }
-
-                applyAbyssEffects(player, board, moveHistory);
-                if (!player.isStuck()) {
-                    board.movePlayerBySteps(player, 1);
-                }
-                return "ChatGPT reduziu o efeito do abismo " + name + " (avançou 1 casa)";
             }
 
             applyAbyssEffects(player, board, moveHistory);
