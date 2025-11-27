@@ -24,11 +24,9 @@ public class UndocumentedCode extends Abyss {
         int lastPosition = moveHistory.getPosition(player,0);
         int thisPosition = board.getPlayerPosition(player);
 
-        // Se a posiçao anterior é esta, é porque já foi aplicado o abismo, so dou update ate o efeito terminar
-        // Para evitar aplicar o efeito varias vezes
         if (thisPosition == lastPosition ) {
             player.updateEffects();
-            // Caso contrario aplico o efeito
+
         } else {
             int lastRoll = moveHistory.getRoll(player, 0);
             int turnsToPass = Math.max(1, lastRoll / 2);

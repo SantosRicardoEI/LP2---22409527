@@ -16,7 +16,7 @@ public enum AbyssSubType {
     BSOD(new BlueScreenOfDeath(7, "Blue Screen of Death", "bsod.png", null)),
     INFINITE_LOOP(new InfiniteLoop(8, "Ciclo infinito", "infinite-loop.png", ToolSubType.getToolByID(ToolSubType.TEACHER_HELP.getInstance().getId()))),
     SEGMENTATION_FAULT(new SegmentationFault(9, "Segmentation Fault", "core-dumped.png", null)),
-    UNDOCUMENTED_CODE(new UndocumentedCode(10, "Projeto sem Documentação", "unknownPiece.png", ToolSubType.getToolByID(ToolSubType.CHAT_GPT.getInstance().getId())));
+    UNDOCUMENTED_CODE(new UndocumentedCode(10, "Projeto sem Documentação", "undocumented-code.png", ToolSubType.getToolByID(ToolSubType.CHAT_GPT.getInstance().getId())));
 
     private final Abyss instance;
 

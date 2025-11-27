@@ -18,10 +18,16 @@ public class InfiniteLoop extends Abyss {
     }
 
 
+    //TODO
+    // Acrescente o last e actul para ver se era o problema
     @Override
     public void applyAbyssEffects(Player player, Board board, MoveHistory moveHistory) {
-        player.lock(true);
+        int lastPosition = moveHistory.getPosition(player, 0);
         int thisPosition = board.getPlayerPosition(player);
+
+        if (thisPosition != lastPosition) {
+            player.lock(true);
+        }
         for (Player p : board.getPlayersAt(thisPosition)) {
             if (!p.equals(player)) {
                 p.lock(false);
