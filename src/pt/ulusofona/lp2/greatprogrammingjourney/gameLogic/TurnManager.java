@@ -27,6 +27,11 @@ public final class TurnManager {
         this.turnCount = turnCount;
     }
 
+    public void reset() {
+        currentID = -1;
+        turnCount = 0;
+    }
+
     public int getCurrentID() {
         return currentID;
     }
@@ -37,7 +42,7 @@ public final class TurnManager {
 
     public void advanceTurn(List<Player> activePlayers) {
         if (turnCount == 0) {
-            currentID = getMinimumPlayerId(activePlayers);
+            currentID = getFirstPlayerId(activePlayers, TURN_ORDER);
         } else {
             currentID = getNextPlayerId(activePlayers, TURN_ORDER);
         }

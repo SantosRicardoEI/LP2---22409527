@@ -55,6 +55,7 @@ public class Core {
         }
 
         moveHistory.reset();
+        turnManager.reset();
         turnManager.advanceTurn(activePlayers());
         LOG.info("createInitialBoard: board created and initialized — starting game...");
         return true;
