@@ -2,7 +2,6 @@ package pt.ulusofona.lp2.greatprogrammingjourney.gameLogic;
 
 import pt.ulusofona.lp2.greatprogrammingjourney.InvalidFileException;
 import pt.ulusofona.lp2.greatprogrammingjourney.config.GameConfig;
-import pt.ulusofona.lp2.greatprogrammingjourney.enums.PlayerState;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.board.Board;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.gamepersistence.GamePersistence;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.gamepersistence.LoadedGame;
@@ -162,14 +161,8 @@ public class Core {
 
         int oldPos = getPlayerPosition(p);
 
-        if (p.isStuck()) {
-            LOG.info("moveCurrentPlayer: player " + p.getName() + " is stuck and cannot move this turn");
-            moveHistory.addRecord(p.getId(), oldPos, oldPos, nrSpaces);
-            return false;
-        }
-
-        if (p.isConfused()) {
-            LOG.info("moveCurrentPlayer: player " + p.getName() + " is confused and cannot move for " + p.getEffectCounter() + " turn(s)" );
+        if (p.isStuck() || p.isConfused()) {
+            LOG.info("moveCurrentPlayer: player " + p.getName() + " is stuck or confused and cannot move this turn");
             moveHistory.addRecord(p.getId(), oldPos, oldPos, nrSpaces);
             return false;
         }
@@ -190,7 +183,6 @@ public class Core {
         return true;
     }
 
-    // Original
     public String reactToAbyssOrTool() {
         if (board == null) {
             LOG.error("reactToAbyssOrTool: board is null");
@@ -287,7 +279,7 @@ public class Core {
         theme.put("logoImage", GameConfig.LOGO);
 
         // New abyss and tool
-        theme.put("hasNewAbyss", GameConfig.ENABLE_ABYYS_NONAMEYET + "");
+        theme.put("hasNewAbyss", GameConfig.ENABLE_ABYYS_UNDOCUMENTED_CODE + "");
         theme.put("hasNewTool", GameConfig.ENABLE_TOOL_CHAT_GPT + "");
         return theme;
     }

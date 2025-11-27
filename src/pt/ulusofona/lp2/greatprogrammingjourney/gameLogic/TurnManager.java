@@ -37,7 +37,7 @@ public final class TurnManager {
 
     public void advanceTurn(List<Player> activePlayers) {
         if (turnCount == 0) {
-            currentID = getFirstPlayerId(activePlayers, TURN_ORDER);
+            currentID = getMinimumPlayerId(activePlayers);
         } else {
             currentID = getNextPlayerId(activePlayers, TURN_ORDER);
         }

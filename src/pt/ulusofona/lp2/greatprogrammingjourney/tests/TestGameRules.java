@@ -11,19 +11,19 @@ public class TestGameRules {
     // ======================================= Player Count ============================================================
 
     @Test
-    public void Test_validatePlayerCount_TooFew() {
+    public void test_validatePlayerCount_TooFew() {
         boolean ok = GameRules.validatePlayerCount(GameConfig.MIN_PLAYERS - 1);
         assertFalse(ok);
     }
 
     @Test
-    public void Test_validatePlayerCount_TooMany() {
+    public void test_validatePlayerCount_TooMany() {
         boolean ok = GameRules.validatePlayerCount(GameConfig.MAX_PLAYERS + 1);
         assertFalse(ok);
     }
 
     @Test
-    public void Test_validatePlayerCount_Valid() {
+    public void test_validatePlayerCount_Valid() {
         assertTrue(GameRules.validatePlayerCount(GameConfig.MIN_PLAYERS));
         assertTrue(GameRules.validatePlayerCount(GameConfig.MAX_PLAYERS));
     }
@@ -31,7 +31,7 @@ public class TestGameRules {
     // ========================================= World Size ============================================================
 
     @Test
-    public void Test_validateWorldSize_TooSmall() {
+    public void test_validateWorldSize_TooSmall() {
         int multiplier = GameConfig.BOARD_SIZE_MULTIPLIER;
         int playerCount = 3;
         int minSize = multiplier * playerCount;
@@ -41,7 +41,7 @@ public class TestGameRules {
     }
 
     @Test
-    public void Test_validateWorldSize_Valid() {
+    public void test_validateWorldSize_Valid() {
         int multiplier = GameConfig.BOARD_SIZE_MULTIPLIER;
         int playerCount = 3;
         int minSize = multiplier * playerCount;
@@ -53,19 +53,19 @@ public class TestGameRules {
     // ============================================= Dice ==============================================================
 
     @Test
-    public void Test_validateDice_BelowMin() {
+    public void test_validateDice_BelowMin() {
         boolean ok = GameRules.validateDice(GameConfig.MIN_DICE - 1);
         assertFalse(ok);
     }
 
     @Test
-    public void Test_validateDice_AboveMax() {
+    public void test_validateDice_AboveMax() {
         boolean ok = GameRules.validateDice(GameConfig.MAX_DICE + 1);
         assertFalse(ok);
     }
 
     @Test
-    public void Test_validateDice_Valid() {
+    public void test_validateDice_Valid() {
         assertTrue(GameRules.validateDice(GameConfig.MIN_DICE));
         assertTrue(GameRules.validateDice(GameConfig.MAX_DICE));
     }

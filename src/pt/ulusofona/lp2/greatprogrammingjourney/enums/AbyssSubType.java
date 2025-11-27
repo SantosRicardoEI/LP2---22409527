@@ -29,7 +29,7 @@ public enum AbyssSubType {
     }
 
     public static Abyss getAbyssByID(int id) {
-        if (!GameConfig.ENABLE_ABYYS_NONAMEYET && id == UNDOCUMENTED_CODE.getInstance().getId()) {
+        if (!GameConfig.ENABLE_ABYYS_UNDOCUMENTED_CODE && id == UNDOCUMENTED_CODE.getInstance().getId()) {
             return null;
         }
 

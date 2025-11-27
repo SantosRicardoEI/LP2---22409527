@@ -42,7 +42,7 @@ public class TestMapObject {
     }
 
     @Test
-    public void Test_BSOD() throws Exception {
+    public void test_BSOD() throws Exception {
         int playerTestedID;
         boolean moveOk;
 
@@ -61,7 +61,7 @@ public class TestMapObject {
     }
 
     @Test
-    public void Test_CodeDuplication() throws Exception {
+    public void test_CodeDuplication() throws Exception {
         int playerTestedID;
         boolean moveOk;
         String state;
@@ -123,7 +123,7 @@ public class TestMapObject {
     }
 
     @Test
-    public void Test_Crash() throws Exception {
+    public void test_Crash() throws Exception {
         int playerTestedID;
         boolean moveOk;
 
@@ -151,7 +151,7 @@ public class TestMapObject {
     }
 
     @Test
-    public void Test_ExceptionA() throws Exception {
+    public void test_ExceptionA() throws Exception {
         int playerTestedID;
         boolean moveOk;
         int initialPos;
@@ -207,7 +207,7 @@ public class TestMapObject {
     }
 
     @Test
-    public void Test_FileNotFound() throws Exception {
+    public void test_FileNotFound() throws Exception {
         int playerTestedID;
         boolean moveOk;
         int initialPos;
@@ -264,7 +264,7 @@ public class TestMapObject {
     }
 
     @Test
-    public void Test_LogicError() throws Exception {
+    public void test_LogicError() throws Exception {
         int playerTestedID;
         boolean moveOk;
         int initialPos;
@@ -321,7 +321,7 @@ public class TestMapObject {
     }
 
     @Test
-    public void Test_SecondaryEffects() throws Exception {
+    public void test_SecondaryEffects() throws Exception {
         int playerTestedID;
         boolean moveOk;
         String msg;
@@ -378,7 +378,7 @@ public class TestMapObject {
     }
 
     @Test
-    public void Test_SegmentationFault() throws Exception {
+    public void test_SegmentationFault() throws Exception {
         int playerA;
         int playerB;
         boolean moveOk;
@@ -420,7 +420,7 @@ public class TestMapObject {
     }
 
     @Test
-    public void Test_SyntaxError() throws Exception {
+    public void test_SyntaxError() throws Exception {
 
         int playerID;
         boolean moveOk;
@@ -474,7 +474,7 @@ public class TestMapObject {
     }
 
     @Test
-    public void Test_InfiniteLoop() throws Exception {
+    public void test_InfiniteLoop() throws Exception {
         int playerA;
         int playerB;
         boolean moveOk;
@@ -556,7 +556,7 @@ public class TestMapObject {
     }
 
     @Test
-    public void Test_AbyssToString_All() {
+    public void test_AbyssToString_All() {
 
         Abyss a0 = AbyssSubType.getAbyssByID(0);
         assertEquals("0:0", a0.toString());
@@ -590,7 +590,7 @@ public class TestMapObject {
     }
 
     @Test
-    public void Test_ToolToString_All() {
+    public void test_ToolToString_All() {
 
         Tool t0 = ToolSubType.getToolByID(0);
         assertEquals("1:0", t0.toString());

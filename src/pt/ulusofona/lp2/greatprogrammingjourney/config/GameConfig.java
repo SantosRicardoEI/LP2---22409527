@@ -18,8 +18,10 @@ public class GameConfig {
     public static final int INITIAL_POSITION = 1;
     public static final TurnOrder TURN_ORDER = TurnOrder.ASCENDING;
     public static final boolean ENABLE_BOUNCE = true;
+
+    // Extras
     public static final boolean ENABLE_TOOL_CHAT_GPT = false;
-    public static final boolean ENABLE_ABYYS_NONAMEYET = false;
+    public static final boolean ENABLE_ABYYS_UNDOCUMENTED_CODE = false;
 
     // Colors
     public static final String WHITE = "#FFFFFF";
