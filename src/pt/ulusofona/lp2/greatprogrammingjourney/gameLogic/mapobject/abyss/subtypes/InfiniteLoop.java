@@ -19,7 +19,13 @@ public class InfiniteLoop extends Abyss {
 
 
     //TODO
-    // Acrescente o last e actul para ver se era o problema
+    // Ainda nao passa no drop, move está a devolver false
+    // Player deveria ter-se movido e nao moveu:
+    // - player deveria estar stuck = false e estava true:
+    //      - Player deveria ter sido libertado e não foi
+    //
+
+    // Se o player chegou a esta casa, fica preso e liberta todos os outros
     @Override
     public void applyAbyssEffects(Player player, Board board, MoveHistory moveHistory) {
         int lastPosition = moveHistory.getPosition(player, 0);

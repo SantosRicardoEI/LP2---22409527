@@ -107,9 +107,9 @@ public class Player implements Comparable<Player> {
     }
 
     public void lock(boolean stuck) {
-        if (stuck && state == PlayerState.IN_GAME) {
+        if (stuck) {
             state = PlayerState.STUCK;
-        } else if (!stuck && state == PlayerState.STUCK) {
+        } else {
             state = PlayerState.IN_GAME;
         }
     }
