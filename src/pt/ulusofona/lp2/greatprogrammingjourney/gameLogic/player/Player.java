@@ -3,6 +3,7 @@ package pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.player;
 import pt.ulusofona.lp2.greatprogrammingjourney.enums.PlayerColor;
 import pt.ulusofona.lp2.greatprogrammingjourney.enums.PlayerState;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.tool.Tool;
+import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.player.effect.PlayerEffect;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -16,7 +17,8 @@ public class Player implements Comparable<Player> {
     private final ArrayList<String> languages;
     private final PlayerColor color;
     private PlayerState state;
-    private HashSet<Tool> tools;
+    private final HashSet<Tool> tools;
+    private PlayerEffect effect;
 
     // ========================================== Constructor ==========================================================
 
@@ -30,7 +32,7 @@ public class Player implements Comparable<Player> {
     }
 
     public Player(int id, String name, ArrayList<String> languages, PlayerColor color, PlayerState state) {
-        this(id,name,languages,color);
+        this(id, name, languages, color);
         this.state = state;
     }
 
@@ -67,18 +69,38 @@ public class Player implements Comparable<Player> {
 
     // ============================== Public Methods ================================================================
 
-    public boolean isStuck() {
-        return state == PlayerState.STUCK;
+    public void updateEffects() {
+        if (effect == null) {
+            return;
+        }
+
+        state = effect.run();
+
+        if (!effect.isActive()) {
+            effect = null;
+        }
+    }
+
+    public void setEffect(PlayerEffect effect) {
+        this.effect = effect;
+        this.state = effect.getStateToApply();
     }
 
     public boolean isAlive() {
         return state != PlayerState.DEFEATED;
     }
 
+    public boolean isStuck() {
+        return state == PlayerState.STUCK;
+    }
+
+    public boolean isConfused() {
+        return state == PlayerState.CONFUSED;
+    }
+
     public boolean hasTool(Tool tool) {
         return tool != null && tools.contains(tool);
     }
-
 
     public void defeat() {
         state = PlayerState.DEFEATED;
@@ -88,6 +110,14 @@ public class Player implements Comparable<Player> {
         if (stuck && state == PlayerState.IN_GAME) {
             state = PlayerState.STUCK;
         } else if (!stuck && state == PlayerState.STUCK) {
+            state = PlayerState.IN_GAME;
+        }
+    }
+
+    public void confused(boolean confused) {
+        if (confused) {
+            state = PlayerState.CONFUSED;
+        } else {
             state = PlayerState.IN_GAME;
         }
     }
@@ -145,5 +175,12 @@ public class Player implements Comparable<Player> {
         }
 
         return sb.toString();
+    }
+
+    public int getEffectCounter() {
+        if (effect != null) {
+            return effect.getTurnCounter();
+        }
+        return 0;
     }
 }

@@ -1,10 +1,12 @@
 package pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.abyss.subtypes;
 
+import pt.ulusofona.lp2.greatprogrammingjourney.enums.PlayerState;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.board.Board;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.abyss.Abyss;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.tool.Tool;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.movehistory.MoveHistory;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.player.Player;
+import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.player.effect.PlayerEffect;
 
 public class UndocumentedCode extends Abyss {
 
@@ -14,11 +16,24 @@ public class UndocumentedCode extends Abyss {
 
     @Override
     public String effectMessage() {
-        return "Projeto não documentado! O programador está preso durante um turno.";
+        return "Projeto não documentado! O programador está confuso e precisa de alguns turnos....";
     }
 
     @Override
     public void applyAbyssEffects(Player player, Board board, MoveHistory moveHistory) {
-        //TODO
+        int lastPosition = moveHistory.getPosition(player,0);
+        int thisPosition = board.getPlayerPosition(player);
+
+        // Se a posiçao anterior é esta, é porque já foi aplicado o abismo, so dou update ate o efeito terminar
+        // Para evitar aplicar o efeito varias vezes
+        if (thisPosition == lastPosition ) {
+            player.updateEffects();
+            // Caso contrario aplico o efeito
+        } else {
+            int lastRoll = moveHistory.getRoll(player, 0);
+            int turnsToPass = Math.max(1, lastRoll / 2);
+            player.setEffect(new PlayerEffect(PlayerState.CONFUSED, turnsToPass));
+        }
+
     }
 }

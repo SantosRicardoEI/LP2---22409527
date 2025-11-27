@@ -631,5 +631,17 @@ public class TestMapObject {
         assertNull("fromID(100) should return null for MapObjectType", type);
     }
 
+    @Test
+    public void test_getAbyssFromID_invalid() {
+        Abyss abyss = AbyssSubType.getAbyssByID(100);
+        assertNull("fromID(100) should return null for getToolFromID", abyss);
+    }
+
+    @Test
+    public void test_getToolFromID_invalid() {
+        Tool tool = ToolSubType.getToolByID(100);
+        assertNull("fromID(100) should return null for getToolFromID", tool);
+    }
+
 
 }

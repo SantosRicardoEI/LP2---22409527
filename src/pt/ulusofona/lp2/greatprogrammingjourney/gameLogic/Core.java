@@ -2,6 +2,7 @@ package pt.ulusofona.lp2.greatprogrammingjourney.gameLogic;
 
 import pt.ulusofona.lp2.greatprogrammingjourney.InvalidFileException;
 import pt.ulusofona.lp2.greatprogrammingjourney.config.GameConfig;
+import pt.ulusofona.lp2.greatprogrammingjourney.enums.PlayerState;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.board.Board;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.gamepersistence.GamePersistence;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.gamepersistence.LoadedGame;
@@ -158,7 +159,21 @@ public class Core {
             return false;
         }
 
+
         int oldPos = getPlayerPosition(p);
+
+        if (p.isStuck()) {
+            LOG.info("moveCurrentPlayer: player " + p.getName() + " is stuck and cannot move this turn");
+            moveHistory.addRecord(p.getId(), oldPos, oldPos, nrSpaces);
+            return false;
+        }
+
+        if (p.isConfused()) {
+            LOG.info("moveCurrentPlayer: player " + p.getName() + " is confused and cannot move for " + p.getEffectCounter() + " turn(s)" );
+            moveHistory.addRecord(p.getId(), oldPos, oldPos, nrSpaces);
+            return false;
+        }
+
         String firstLanguage = p.getLanguages().get(0);
         if (Objects.equals(firstLanguage, "Assembly") && nrSpaces > 2) {
             moveHistory.addRecord(p.getId(), oldPos, oldPos, nrSpaces);
@@ -170,14 +185,7 @@ public class Core {
             return false;
         }
 
-        if (p.isStuck()) {
-            LOG.info("moveCurrentPlayer: player " + p.getName() + " is stuck and cannot move this turn");
-            moveHistory.addRecord(p.getId(), oldPos, oldPos, nrSpaces);
-            return false;
-        }
-
         int newPos = board.movePlayerBySteps(p, nrSpaces);
-
         moveHistory.addRecord(p.getId(), oldPos, newPos, nrSpaces);
         return true;
     }
