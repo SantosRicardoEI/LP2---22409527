@@ -15,11 +15,11 @@ public class GameConfig {
     public static final int SLOT_SIZE = MAX_PLAYERS;
     public static final int BOARD_OFFSET = 1;
     public static final int INITIAL_POSITION = 1;
-    public static final boolean ENABLE_BOUNCE = true;
+    public static boolean ENABLE_BOUNCE = true;
 
     // Extras
-    public static final boolean ENABLE_TOOL_CHAT_GPT = false;
-    public static final boolean ENABLE_ABYYS_UNDOCUMENTED_CODE = false;
+    public static boolean ENABLE_TOOL_CHAT_GPT = false;
+    public static boolean ENABLE_ABYYS_UNDOCUMENTED_CODE = false;
 
     // Colors
     public static final String WHITE = "#FFFFFF";

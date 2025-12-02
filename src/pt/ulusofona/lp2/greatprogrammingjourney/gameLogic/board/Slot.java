@@ -45,21 +45,12 @@ final class Slot {
     }
 
     boolean addPlayer(Player player) {
-        if (player == null) {
-            LOG.error("addPlayer: " + "player null" + " for slot=" + number);
-            return false;
+        if (player != null && !(players.size() >= GameConfig.SLOT_SIZE) && !hasPlayer(player)) {
+            players.add(player);
+            return true;
         }
-        if (players.size() >= GameConfig.SLOT_SIZE) {
-            LOG.warn("addPlayer: slot=" + number + " is full");
-            return false;
-        }
-        if (hasPlayer(player)) {
-            LOG.warn("addPlayer: player id=" + player.getId() + " already present in slot=" + number);
-            return false;
-        }
-
-        players.add(player);
-        return true;
+        LOG.error("addPlayer: " + "error adding player" + " for slot=" + number);
+        return false;
     }
 
     void setMapObject(MapObject mapObject) {
@@ -67,15 +58,10 @@ final class Slot {
     }
 
     void removePlayer(Player player) {
-        if (player == null) {
-            LOG.error("removePlayer: " + "player null" + " for slot=" + number);
-            return;
-        }
-        if (!players.remove(player)) {
-            LOG.warn("removePlayer: player id=" + player.getId() + " not found in slot=" + number);
+        if (player != null) {
+            players.remove(player);
         }
     }
-
 
     boolean hasPlayer(Player player) {
         for (Player p : players) {

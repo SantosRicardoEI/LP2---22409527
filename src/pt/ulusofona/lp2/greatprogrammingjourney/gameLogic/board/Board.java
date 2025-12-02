@@ -191,17 +191,10 @@ public class Board {
     }
 
     private void removePlayer(Player player, int position) {
-        if (player == null) {
-            LOG.error("removePlayer: " + "player is null");
-            return;
+        if (player != null && !(position < 1 || position > getSize())) {
+            slots[position].removePlayer(player);
+            LOG.error("removePlayer: " + "player is null or slot is invalid");
         }
-
-        if (position < 1 || position > getSize()) {
-            LOG.error("removePlayer: " + "invalid slot");
-            return;
-        }
-
-        slots[position].removePlayer(player);
     }
 
     private int calculateNewPosition(int oldPos, int steps) {

@@ -16,10 +16,6 @@ public class PlayerEffect {
         start(turnDuration);
     }
 
-    public String getName() {
-        return name;
-    }
-
     public boolean isActive() {
         return active;
     }
