@@ -713,12 +713,6 @@ public class TestMapObject {
         int player3 = 3;
         int player4 = 4;
 
-        /*
-        Cenario:
-        - 4 jogadores (ids de 1 a 4) (estado inicial de todoa "Em Jogo");
-        - Abismo ciclo infinito na casa 10;
-        - jogadores 1 e 4 têm a ferramenta correta;
-         */
         loadScenario("AbyssCounter_Infinite_Loop_TestTool");
 
         // Verifico o estado inicial
@@ -848,7 +842,7 @@ public class TestMapObject {
         assertEquals(10,getPosition(player3));
         assertEquals("Preso", getState(player3));
 
-        // Movo o jogador 4 para casa antes do abismo
+        // Movo o jogador 4
         assertEquals(player4,core.getCurrentPlayerId());
         assertTrue(core.moveCurrentPlayer(3));
         core.reactToAbyssOrTool();

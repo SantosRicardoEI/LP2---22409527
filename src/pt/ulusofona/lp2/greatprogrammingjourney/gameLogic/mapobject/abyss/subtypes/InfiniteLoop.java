@@ -17,12 +17,6 @@ public class InfiniteLoop extends Abyss {
         return "Ciclo infinito! O programador ficou preso e libertou os restantes.";
     }
 
-    @Override
-    protected void onCountered(Player player, Board board, MoveHistory moveHistory) {
-        player.stuck(false);
-    }
-
-
     //TODO
     // Ainda nao passa no drop, move está a devolver false
     // Player deveria ter-se movido e nao moveu:
