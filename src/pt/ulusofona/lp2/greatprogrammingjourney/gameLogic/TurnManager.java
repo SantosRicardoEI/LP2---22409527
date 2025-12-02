@@ -1,13 +1,10 @@
 package pt.ulusofona.lp2.greatprogrammingjourney.gameLogic;
 
-import pt.ulusofona.lp2.greatprogrammingjourney.enums.TurnOrder;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.player.Player;
 import pt.ulusofona.lp2.greatprogrammingjourney.utils.GameLogger;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static pt.ulusofona.lp2.greatprogrammingjourney.config.GameConfig.TURN_ORDER;
 
 
 public final class TurnManager {
@@ -21,8 +18,8 @@ public final class TurnManager {
     // ==================================== Constructor ================================================================
 
     public TurnManager(List<Player> players) {
-        currentID = getFirstPlayerId(players, TURN_ORDER);
-        turnCount = 0;
+        currentID = getFirstPlayerId(players);
+        turnCount = 1;
     }
 
     public TurnManager(int currentID, int turnCount) {
@@ -39,60 +36,41 @@ public final class TurnManager {
     }
 
     public void advanceTurn(List<Player> players) {
-        currentID = getNextPlayerId(players, TURN_ORDER);
+        currentID = getNextPlayerId(players);
         turnCount++;
     }
 
     // ============================== Helper Methods ===================================================================
 
-    private int getFirstPlayerId(List<Player> players, TurnOrder order) {
+    private int getFirstPlayerId(List<Player> players) {
         if (players == null || players.isEmpty()) {
             throw new IllegalArgumentException("getFirstPlayerId: players list is null or empty");
         }
-        TurnOrder ord = (order == null) ? TurnOrder.ASCENDING : order;
 
-        return switch (ord) {
-            case ASCENDING -> getMinimumPlayerId(players);
-            case DESCENDING -> getMaximumPlayerId(players);
-        };
+        int firstId = getMinimumPlayerId(players);
+        if (firstId == -1) {
+            throw new IllegalStateException("getFirstPlayerId: no active players available");
+        }
+
+        return firstId;
     }
 
-    private int getNextPlayerId(List<Player> players, TurnOrder order) {
+
+    private int getNextPlayerId(List<Player> players) {
         if (players == null || players.isEmpty()) {
             throw new IllegalArgumentException("getNextPlayerId: players list is null or empty");
         }
 
-        if (order == null) {
-            order = TurnOrder.ASCENDING;
-        }
-
-        int nextId = -1;
-
-        switch (order) {
-            case ASCENDING:
-                nextId = getMinimumPlayerId(players, currentID);
-                if (nextId == -1) {
-                    nextId = getMinimumPlayerId(players);
-                }
-                break;
-
-            case DESCENDING:
-                nextId = getMaximumPlayerId(players, currentID);
-                if (nextId == -1) {
-                    nextId = getMaximumPlayerId(players);
-                }
-                break;
-
-            default:
-                LOG.warn("getNextPlayerId: unsupported order type " + order);
+        int nextId = getMinimumPlayerId(players, currentID);
+        if (nextId == -1) {
+            nextId = getMinimumPlayerId(players);
         }
 
         if (nextId == -1) {
-            LOG.warn("getNextPlayerId: could not resolve next ID (" + order + ")");
-        } else {
-            LOG.info("Next turn ID (" + order + "): " + nextId);
+            throw new IllegalStateException("getNextPlayerId: no active players to select as next");
         }
 
+        LOG.info("Next turn ID: " + nextId);
         return nextId;
     }
 
@@ -101,9 +79,6 @@ public final class TurnManager {
     }
 
     private int getMinimumPlayerId(List<Player> players, int greaterThan) {
-        if (players == null || players.isEmpty()) {
-            return -1;
-        }
 
         List<Player> activePlayers = activePlayers(players);
 
@@ -120,29 +95,6 @@ public final class TurnManager {
         return (minimum == Integer.MAX_VALUE) ? -1 : minimum;
     }
 
-    private int getMaximumPlayerId(List<Player> players) {
-        return getMaximumPlayerId(players, Integer.MAX_VALUE);
-    }
-
-    private int getMaximumPlayerId(List<Player> players, int smallerThan) {
-        if (players == null || players.isEmpty()) {
-            return -1;
-        }
-
-        List<Player> activePlayers = activePlayers(players);
-
-        int maximum = -1;
-        for (Player player : activePlayers) {
-            if (player == null) {
-                continue;
-            }
-            int pid = player.getId();
-            if (pid < smallerThan && pid > maximum) {
-                maximum = pid;
-            }
-        }
-        return maximum;
-    }
 
     private List<Player> activePlayers(List<Player> players) {
         List<Player> result = new ArrayList<>();

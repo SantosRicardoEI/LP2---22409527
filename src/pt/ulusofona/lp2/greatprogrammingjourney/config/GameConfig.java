@@ -1,6 +1,5 @@
 package pt.ulusofona.lp2.greatprogrammingjourney.config;
 
-import pt.ulusofona.lp2.greatprogrammingjourney.enums.TurnOrder;
 
 public class GameConfig {
 
@@ -16,7 +15,6 @@ public class GameConfig {
     public static final int SLOT_SIZE = MAX_PLAYERS;
     public static final int BOARD_OFFSET = 1;
     public static final int INITIAL_POSITION = 1;
-    public static final TurnOrder TURN_ORDER = TurnOrder.ASCENDING;
     public static final boolean ENABLE_BOUNCE = true;
 
     // Extras
