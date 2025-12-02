@@ -27,9 +27,9 @@ public abstract class Abyss extends MapObject {
         Tool chatGPT = ToolSubType.CHAT_GPT.getInstance();
 
         if (this.counter != null) {
-
             if (player.hasTool(counter)) {
                 player.useTool(counter);
+                onCountered(player, board, moveHistory);
                 return counteredMessage(counter);
             } else if (player.hasTool(chatGPT) && GameConfig.ENABLE_TOOL_CHAT_GPT) {
                 player.useTool(chatGPT);
@@ -38,6 +38,9 @@ public abstract class Abyss extends MapObject {
         }
         applyAbyssEffects(player, board, moveHistory);
         return effectMessage();
+    }
+
+    protected void onCountered(Player player, Board board, MoveHistory moveHistory) {
     }
 
     @Override

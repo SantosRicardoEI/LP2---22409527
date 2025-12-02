@@ -162,6 +162,14 @@ public class Core {
 
         int oldPos = getPlayerPosition(p);
 
+
+        //TODO
+        // "moveCurrentPlayer() devolveu false erradamente" em "test_018_InfiniteLoopVsTool"
+        // Player estaria stuck = true e nao seria suposto?
+        // - Tool ok (Teachers Help)
+        // Se o player atual foi libertado foi no react anterior, aqui ja deveria chegar stuck = false,
+        // nunca será libertado durante este metodo.
+
         if (p.isStuck() || p.isConfused()) {
             LOG.info("moveCurrentPlayer: player " + p.getName() + " is stuck or confused and cannot move this turn");
             moveHistory.addRecord(p.getId(), oldPos, oldPos, nrSpaces);

@@ -1,0 +1,29 @@
+[BOARD]
+BOARD_SIZE=79
+CURRENT_PLAYER_ID=1
+TURN_COUNT=5
+
+[PLAYERS]
+PLAYER=1|1|Junior Developer|Java|BLUE|IN_GAME
+PLAYER=10|2|Senior Developer|C++|BROWN|STUCK
+PLAYER=10|3|STUCK Developer|LISP|PURPLE|STUCK
+PLAYER=10|4|Confused Developer|Nao sabe programar|GREEN|STUCK
+
+[MAP_OBJECTS]
+# Each MAP_OBJECT line follows the format:
+# MAP_OBJECT=position|type(id)
+# Example:
+# MAP_OBJECT=7|0:3
+# (Example above: object of type 0 with id 3 placed at position 7)
+
+MAP_OBJECT=10|0:8
+
+[MOVES]
+# Each MOVE line follows the format:
+# MOVE=playerID|fromPosition|toPosition|diceValue
+# Example:
+# MOVE=2|5|8|3
+# (Example above: player 2 moved from position 5 to 8 using dice value 3)
+
+# MOVER 6 + 3 o player ID=1
+

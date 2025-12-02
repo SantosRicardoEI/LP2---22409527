@@ -106,7 +106,7 @@ public class Player implements Comparable<Player> {
         state = PlayerState.DEFEATED;
     }
 
-    public void lock(boolean stuck) {
+    public void stuck(boolean stuck) {
         if (stuck) {
             state = PlayerState.STUCK;
         } else {
