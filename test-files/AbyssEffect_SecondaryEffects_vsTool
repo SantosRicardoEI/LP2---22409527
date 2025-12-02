@@ -1,15 +1,15 @@
 [BOARD]
-BOARD_SIZE=20
+BOARD_SIZE=30
 CURRENT_PLAYER_ID=1
-TURN_COUNT=1
+TURN_COUNT=0
 
 [PLAYERS]
-# jogador 1 com "Programação Funcional" (id 1), jogador 2 sem ferramentas
-PLAYER=1|1|Junior Developer|Java|BLUE|IN_GAME|1
-PLAYER=1|2|Senior Developer|C|RED|IN_GAME
+PLAYER=1|1|Junior Developer|Java|BLUE|IN_GAME
 
 [MAP_OBJECTS]
-MAP_OBJECT=5|0:6
+# Tool FUNCTIONAL_PROGRAMMING (id 1) na casa 3
+MAP_OBJECT=3|1:1
+# Abyss SECONDARY_EFFECTS (id 6) na casa 7
+MAP_OBJECT=7|0:6
 
 [MOVES]
-# mesmo padrão de movimentos do cenário anterior

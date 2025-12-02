@@ -1,15 +1,13 @@
 [BOARD]
 BOARD_SIZE=20
 CURRENT_PLAYER_ID=1
-TURN_COUNT=1
+TURN_COUNT=0
 
 [PLAYERS]
-# começas na casa 1
 PLAYER=1|1|Junior Developer|Java|BLUE|IN_GAME
 
 [MAP_OBJECTS]
-# abismo na casa 5 (id 3 = FILE_NOT_FOUND)
-MAP_OBJECT=5|0:3
+# Abyss FILE_NOT_FOUND (id 3) na casa 6
+MAP_OBJECT=6|0:3
 
 [MOVES]
-# no teste usas moveCurrentPlayer(4) (1 -> 5)

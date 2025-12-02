@@ -1,14 +1,13 @@
 [BOARD]
 BOARD_SIZE=20
 CURRENT_PLAYER_ID=1
-TURN_COUNT=1
+TURN_COUNT=0
 
 [PLAYERS]
 PLAYER=5|1|Junior Developer|Java|BLUE|IN_GAME
 
 [MAP_OBJECTS]
-# id 4 = CRASH
-MAP_OBJECT=7|0:4
+# Abyss CRASH (id 4) na casa 8
+MAP_OBJECT=8|0:4
 
 [MOVES]
-# escolhe no teste um dado que leve 5 -> 7 (por ex. 2)

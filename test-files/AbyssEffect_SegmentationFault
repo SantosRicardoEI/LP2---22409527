@@ -1,14 +1,14 @@
 [BOARD]
-BOARD_SIZE=20
+BOARD_SIZE=30
 CURRENT_PLAYER_ID=1
-TURN_COUNT=1
+TURN_COUNT=0
 
 [PLAYERS]
-PLAYER=1|1|Junior Developer|Java|BLUE|IN_GAME
+PLAYER=1|1|Junior Dev 1|Java|BLUE|IN_GAME
+PLAYER=1|2|Junior Dev 2|C++|GREEN|IN_GAME
 
 [MAP_OBJECTS]
-# id 9 = SEGMENTATION_FAULT
-MAP_OBJECT=5|0:9
+# Abyss SEGMENTATION_FAULT (id 9) na casa 4
+MAP_OBJECT=4|0:9
 
 [MOVES]
-# escolhe no teste um dado que leve 1 -> 5 (por ex. 4)

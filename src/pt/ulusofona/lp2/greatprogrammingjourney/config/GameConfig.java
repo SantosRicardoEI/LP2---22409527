@@ -17,8 +17,8 @@ public class GameConfig {
     public static final int INITIAL_POSITION = 1;
 
     // Extras
-    public static final boolean ENABLE_TOOL_CHAT_GPT = false;
-    public static final boolean ENABLE_ABYYS_UNDOCUMENTED_CODE = false;
+    public static final boolean ENABLE_TOOL_CHAT_GPT = true;
+    public static final boolean ENABLE_ABYYS_UNDOCUMENTED_CODE = true;
 
     // Colors
     public static final String WHITE = "#FFFFFF";

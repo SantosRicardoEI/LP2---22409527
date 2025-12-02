@@ -1,16 +1,13 @@
 [BOARD]
-BOARD_SIZE=20
+BOARD_SIZE=30
 CURRENT_PLAYER_ID=1
-TURN_COUNT=1
+TURN_COUNT=0
 
 [PLAYERS]
-# dois jogadores, ambos na posição 1
 PLAYER=1|1|Junior Developer|Java|BLUE|IN_GAME
-PLAYER=1|2|Senior Developer|C|RED|IN_GAME
 
 [MAP_OBJECTS]
-# id 6 = SECONDARY_EFFECTS
-MAP_OBJECT=5|0:6
+# Abyss SECONDARY_EFFECTS (id 6) na casa 7
+MAP_OBJECT=7|0:6
 
 [MOVES]
-# pensado para usares o mesmo valor de dado para ambos (por ex. 4) para os juntar na casa 5

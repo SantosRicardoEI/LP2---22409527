@@ -44,7 +44,7 @@ public class TestAbysses {
 
     // ========================= Test Counters ====================
 
-    /*
+
     @Test
     public void testAbyssCountersCorrectTools() {
         Abyss syntax = AbyssSubType.SYNTAX_ERROR.getInstance();
@@ -60,7 +60,6 @@ public class TestAbysses {
         Tool exceptionHandling = ToolSubType.EXCEPTION_HANDLING.getInstance();
         Tool inheritance = ToolSubType.INHERITANCE.getInstance();
         Tool fp = ToolSubType.FUNCTIONAL_PROGRAMMING.getInstance();
-        Tool teacherHelp = ToolSubType.TEACHER_HELP.getInstance();
 
         assertSame(ide, syntax.getCounter());
         assertSame(unitTests, logic.getCounter());
@@ -68,8 +67,306 @@ public class TestAbysses {
         assertSame(exceptionHandling, fileNotFound.getCounter());
         assertSame(inheritance, duplicated.getCounter());
         assertSame(fp, secondary.getCounter());
-        assertSame(teacherHelp, infiniteLoop.getCounter());
+        assertSame(fp, infiniteLoop.getCounter());
     }
+
+    // ========================= Test Abyss ====================
+
+    @Test
+    public void test_syntax_error_sem_tool() throws Exception {
+        loadScenario("AbyssEffect_SyntaxError");
+        int player = 1;
+
+        // Começa na posição 1
+        assertEquals(1, getPosition(player));
+
+        // Anda 2 -> cai na casa 3 (abismo)
+        assertEquals(player, core.getCurrentPlayerId());
+        assertTrue(core.moveCurrentPlayer(2)); // 1 -> 3
+        core.reactToAbyssOrTool();
+
+        // Abismo recua 1 casa: 3 -> 2
+        assertEquals(2, getPosition(player));
+    }
+
+    @Test
+    public void test_syntax_error_com_tool() throws Exception {
+        loadScenario("AbyssEffect_SyntaxError_vsTool");
+        int player = 1;
+
+        // Começa na posição 1
+        assertEquals(1, getPosition(player));
+
+        // 1ª jogada: apanha a tool IDE na casa 3
+        assertEquals(player, core.getCurrentPlayerId());
+        assertTrue(core.moveCurrentPlayer(2)); // 1 -> 3
+        core.reactToAbyssOrTool();
+        assertEquals(3, getPosition(player));
+
+        // 2ª jogada: cai no abismo na casa 5, mas tem counter
+        assertEquals(player, core.getCurrentPlayerId());
+        assertTrue(core.moveCurrentPlayer(2)); // 3 -> 5
+        core.reactToAbyssOrTool();
+
+        // Mantém-se na casa 5
+        assertEquals(5, getPosition(player));
+    }
+
+    @Test
+    public void test_logic_error_sem_tool() throws Exception {
+        loadScenario("AbyssEffect_LogicError");
+        int player = 1;
+
+        assertEquals(1, getPosition(player));
+
+        // 1 -> 7, dado = 6
+        assertEquals(player, core.getCurrentPlayerId());
+        assertTrue(core.moveCurrentPlayer(6));
+        core.reactToAbyssOrTool();
+
+        // lastRoll = 6, recua 3 casas: 7 -> 4
+        assertEquals(4, getPosition(player));
+    }
+
+    @Test
+    public void test_logic_error_com_tool() throws Exception {
+        loadScenario("AbyssEffect_LogicError_vsTool");
+        int player = 1;
+
+        assertEquals(1, getPosition(player));
+
+        // 1ª jogada: apanha UNIT_TESTS na casa 3
+        assertEquals(player, core.getCurrentPlayerId());
+        assertTrue(core.moveCurrentPlayer(2)); // 1 -> 3
+        core.reactToAbyssOrTool();
+        assertEquals(3, getPosition(player));
+
+        // 2ª jogada: cai no abismo na casa 7, mas tem counter
+        assertEquals(player, core.getCurrentPlayerId());
+        assertTrue(core.moveCurrentPlayer(4)); // 3 -> 7
+        core.reactToAbyssOrTool();
+
+        // Não recua, fica na casa 7
+        assertEquals(7, getPosition(player));
+    }
+
+    @Test
+    public void test_exception_sem_tool() throws Exception {
+        loadScenario("AbyssEffect_Exception");
+        int player = 1;
+
+        assertEquals(1, getPosition(player));
+
+        // 1 -> 5
+        assertEquals(player, core.getCurrentPlayerId());
+        assertTrue(core.moveCurrentPlayer(4));
+        core.reactToAbyssOrTool();
+
+        // Recua 2 casas: 5 -> 3
+        assertEquals(3, getPosition(player));
+    }
+
+    @Test
+    public void test_exception_com_tool() throws Exception {
+        loadScenario("AbyssEffect_Exception_vsTool");
+        int player = 1;
+
+        assertEquals(1, getPosition(player));
+
+        // 1ª jogada: apanha EXCEPTION_HANDLING na casa 3
+        assertEquals(player, core.getCurrentPlayerId());
+        assertTrue(core.moveCurrentPlayer(2)); // 1 -> 3
+        core.reactToAbyssOrTool();
+        assertEquals(3, getPosition(player));
+
+        // 2ª jogada: cai no abismo na casa 5, mas tem counter
+        assertEquals(player, core.getCurrentPlayerId());
+        assertTrue(core.moveCurrentPlayer(2)); // 3 -> 5
+        core.reactToAbyssOrTool();
+
+        // Fica na casa 5
+        assertEquals(5, getPosition(player));
+    }
+
+    @Test
+    public void test_file_not_found_sem_tool() throws Exception {
+        loadScenario("AbyssEffect_FileNotFound");
+        int player = 1;
+
+        assertEquals(1, getPosition(player));
+
+        // 1 -> 6
+        assertEquals(player, core.getCurrentPlayerId());
+        assertTrue(core.moveCurrentPlayer(5));
+        core.reactToAbyssOrTool();
+
+        // Recua 3 casas: 6 -> 3
+        assertEquals(3, getPosition(player));
+    }
+
+    @Test
+    public void test_file_not_found_com_tool() throws Exception {
+        loadScenario("AbyssEffect_FileNotFound_vsTool");
+        int player = 1;
+
+        assertEquals(1, getPosition(player));
+
+        // 1ª jogada: apanha EXCEPTION_HANDLING na casa 3
+        assertEquals(player, core.getCurrentPlayerId());
+        assertTrue(core.moveCurrentPlayer(2)); // 1 -> 3
+        core.reactToAbyssOrTool();
+        assertEquals(3, getPosition(player));
+
+        // 2ª jogada: cai no abismo na casa 6, mas tem counter
+        assertEquals(player, core.getCurrentPlayerId());
+        assertTrue(core.moveCurrentPlayer(3)); // 3 -> 6
+        core.reactToAbyssOrTool();
+
+        // Mantém-se na casa 6
+        assertEquals(6, getPosition(player));
+    }
+
+    @Test
+    public void test_crash_envia_para_inicio() throws Exception {
+        loadScenario("AbyssEffect_Crash");
+        int player = 1;
+
+        // Começa, por exemplo, na casa 5 (definido no save)
+        assertEquals(5, getPosition(player));
+
+        // 5 -> 8 (casa com CRASH)
+        assertEquals(player, core.getCurrentPlayerId());
+        assertTrue(core.moveCurrentPlayer(3));
+        core.reactToAbyssOrTool();
+
+        // Vai para o início (casa 1)
+        assertEquals(1, getPosition(player));
+    }
+
+    @Test
+    public void test_duplicated_code_sem_tool() throws Exception {
+        loadScenario("AbyssEffect_DuplicatedCode");
+        int player = 1;
+
+        assertEquals(1, getPosition(player));
+
+        // 1 -> 5 (casa com abismo)
+        assertEquals(player, core.getCurrentPlayerId());
+        assertTrue(core.moveCurrentPlayer(4));
+        core.reactToAbyssOrTool();
+
+        // Volta para a posição anterior (1)
+        assertEquals(1, getPosition(player));
+    }
+
+    @Test
+    public void test_duplicated_code_com_tool() throws Exception {
+        loadScenario("AbyssEffect_DuplicatedCode_vsTool");
+        int player = 1;
+
+        assertEquals(1, getPosition(player));
+
+        // 1ª jogada: apanha INHERITANCE na casa 3
+        assertEquals(player, core.getCurrentPlayerId());
+        assertTrue(core.moveCurrentPlayer(2)); // 1 -> 3
+        core.reactToAbyssOrTool();
+        assertEquals(3, getPosition(player));
+
+        // 2ª jogada: cai no abismo na casa 5, mas tem counter
+        assertEquals(player, core.getCurrentPlayerId());
+        assertTrue(core.moveCurrentPlayer(2)); // 3 -> 5
+        core.reactToAbyssOrTool();
+
+        // Fica na casa 5
+        assertEquals(5, getPosition(player));
+    }
+
+    @Test
+    public void test_secondary_effects_sem_tool() throws Exception {
+        loadScenario("AbyssEffect_SecondaryEffects");
+        int player = 1;
+
+        assertEquals(1, getPosition(player));
+
+        // Jogada 1: 1 -> 3
+        assertEquals(player, core.getCurrentPlayerId());
+        assertTrue(core.moveCurrentPlayer(2));
+        core.reactToAbyssOrTool();
+        assertEquals(3, getPosition(player));
+
+        // Jogada 2: 3 -> 5
+        assertEquals(player, core.getCurrentPlayerId());
+        assertTrue(core.moveCurrentPlayer(2));
+        core.reactToAbyssOrTool();
+        assertEquals(5, getPosition(player));
+
+        // Jogada 3: 5 -> 7 (abismo SECONDARY_EFFECTS)
+        assertEquals(player, core.getCurrentPlayerId());
+        assertTrue(core.moveCurrentPlayer(2));
+        core.reactToAbyssOrTool();
+
+        // Volta para posição de duas jogadas atrás: 3
+        assertEquals(3, getPosition(player));
+    }
+
+    @Test
+    public void test_secondary_effects_com_tool() throws Exception {
+        loadScenario("AbyssEffect_SecondaryEffects_vsTool");
+        int player = 1;
+
+        assertEquals(1, getPosition(player));
+
+        // Jogada 1: apanha FUNCTIONAL_PROGRAMMING na casa 3
+        assertEquals(player, core.getCurrentPlayerId());
+        assertTrue(core.moveCurrentPlayer(2)); // 1 -> 3
+        core.reactToAbyssOrTool();
+        assertEquals(3, getPosition(player));
+
+        // Jogada 2: 3 -> 5
+        assertEquals(player, core.getCurrentPlayerId());
+        assertTrue(core.moveCurrentPlayer(2));
+        core.reactToAbyssOrTool();
+        assertEquals(5, getPosition(player));
+
+        // Jogada 3: 5 -> 7 (abismo), mas com counter
+        assertEquals(player, core.getCurrentPlayerId());
+        assertTrue(core.moveCurrentPlayer(2));
+        core.reactToAbyssOrTool();
+
+        // Mantém-se na casa 7
+        assertEquals(7, getPosition(player));
+    }
+
+    @Test
+    public void test_segmentation_fault() throws Exception {
+        loadScenario("AbyssEffect_SegmentationFault");
+        int player1 = 1;
+        int player2 = 2;
+
+        // Ambos começam na casa 1
+        assertEquals(1, getPosition(player1));
+        assertEquals(1, getPosition(player2));
+
+        // Jogador 1 cai sozinho no abismo na casa 4
+        assertEquals(player1, core.getCurrentPlayerId());
+        assertTrue(core.moveCurrentPlayer(3)); // 1 -> 4
+        core.reactToAbyssOrTool();
+
+        // Só ele está na casa, portanto não recua
+        assertEquals(4, getPosition(player1));
+        assertEquals(1, getPosition(player2));
+
+        // Jogador 2 também vai para a casa 4
+        assertEquals(player2, core.getCurrentPlayerId());
+        assertTrue(core.moveCurrentPlayer(3)); // 1 -> 4
+        core.reactToAbyssOrTool();
+
+        // Agora há 2 jogadores na casa, ambos recuam 3 casas: 4 -> 1
+        assertEquals(1, getPosition(player1));
+        assertEquals(1, getPosition(player2));
+    }
+
+
 
     // ========================= BSOD ====================
 
@@ -91,282 +388,6 @@ public class TestAbysses {
         assertEquals("Derrotado", getState(playerId));
     }
 
-    // ========================= SYNTAX_ERROR ====================
-
-    @Test
-    public void test_syntax_error_effect() throws Exception {
-        loadScenario("AbyssEffect_SyntaxError");
-
-        int playerId = 1;
-        int posBefore = getPosition(playerId);
-        String stateBefore = getState(playerId);
-
-        assertEquals(playerId, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(2));
-        core.reactToAbyssOrTool();
-
-        int posAfter = getPosition(playerId);
-        String stateAfter = getState(playerId);
-
-        assertTrue(posAfter != posBefore || !stateAfter.equals(stateBefore));
-    }
-
-    @Test
-    public void test_syntax_error_vsTool() throws Exception {
-        loadScenario("AbyssEffect_SyntaxError_vsTool");
-
-        int playerId = 1;
-        int posBefore = getPosition(playerId);
-        assertTrue(getTools(playerId).contains("IDE"));
-
-        assertEquals(playerId, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(2));
-        core.reactToAbyssOrTool();
-
-        int posAfter = getPosition(playerId);
-        String stateAfter = getState(playerId);
-
-        assertEquals("Em Jogo", stateAfter);
-        assertTrue(posAfter > posBefore);
-        assertEquals("", getTools(playerId));
-    }
-
-    // ========================= LOGIC_ERROR ====================
-
-    @Test
-    public void test_logic_error_effect() throws Exception {
-        loadScenario("AbyssEffect_LogicError");
-
-        int playerId = 1;
-        int posBefore = getPosition(playerId);
-        String stateBefore = getState(playerId);
-
-        assertEquals(playerId, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(2));
-        core.reactToAbyssOrTool();
-
-        int posAfter = getPosition(playerId);
-        String stateAfter = getState(playerId);
-
-        assertTrue(posAfter != posBefore || !stateAfter.equals(stateBefore));
-    }
-
-    @Test
-    public void test_logic_error_vsTool() throws Exception {
-        loadScenario("AbyssEffect_LogicError_vsTool");
-
-        int playerId = 1;
-        int posBefore = getPosition(playerId);
-        assertTrue(getTools(playerId).contains("Testes Unitários"));
-
-        assertEquals(playerId, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(2));
-        core.reactToAbyssOrTool();
-
-        int posAfter = getPosition(playerId);
-        String stateAfter = getState(playerId);
-
-        assertEquals("Em Jogo", stateAfter);
-        assertTrue(posAfter > posBefore);
-        assertEquals("", getTools(playerId));
-    }
-
-    // ========================= EXCEPTION ====================
-
-    @Test
-    public void test_exception_effect() throws Exception {
-        loadScenario("AbyssEffect_Exception");
-
-        int playerId = 1;
-        int posBefore = getPosition(playerId);
-        String stateBefore = getState(playerId);
-
-        assertEquals(playerId, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(2));
-        core.reactToAbyssOrTool();
-
-        int posAfter = getPosition(playerId);
-        String stateAfter = getState(playerId);
-
-        assertTrue(posAfter != posBefore || !stateAfter.equals(stateBefore));
-    }
-
-    @Test
-    public void test_exception_vsTool() throws Exception {
-        loadScenario("AbyssEffect_Exception_vsTool");
-
-        int playerId = 1;
-        int posBefore = getPosition(playerId);
-        assertTrue(getTools(playerId).contains("Tratamento de Excepções"));
-
-        assertEquals(playerId, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(2));
-        core.reactToAbyssOrTool();
-
-        int posAfter = getPosition(playerId);
-        String stateAfter = getState(playerId);
-
-        assertEquals("Em Jogo", stateAfter);
-        assertTrue(posAfter > posBefore);
-        assertEquals("", getTools(playerId));
-    }
-
-    // ========================= FILE_NOT_FOUND ====================
-
-    @Test
-    public void test_file_not_found_effect() throws Exception {
-        loadScenario("AbyssEffect_FileNotFound");
-
-        int playerId = 1;
-        int posBefore = getPosition(playerId);
-
-        assertEquals(playerId, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(4));
-        core.reactToAbyssOrTool();
-
-        int posAfter = getPosition(playerId);
-        String stateAfter = getState(playerId);
-
-        assertEquals("Em Jogo", stateAfter);
-        assertTrue(posAfter < posBefore + 4);
-    }
-
-    @Test
-    public void test_file_not_found_vsTool() throws Exception {
-        loadScenario("AbyssEffect_FileNotFound_vsTool");
-
-        int playerId = 1;
-        int posBefore = getPosition(playerId);
-        assertTrue(getTools(playerId).contains("Tratamento de Excepções"));
-
-        assertEquals(playerId, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(4));
-        core.reactToAbyssOrTool();
-
-        int posAfter = getPosition(playerId);
-        String stateAfter = getState(playerId);
-
-        assertEquals("Em Jogo", stateAfter);
-        assertEquals(posBefore + 4, posAfter);
-        assertEquals("", getTools(playerId));
-    }
-
-    // ========================= CRASH ====================
-
-    @Test
-    public void test_crash_effect() throws Exception {
-        loadScenario("AbyssEffect_Crash");
-
-        int playerId = 1;
-
-        assertEquals("Em Jogo", getState(playerId));
-
-        assertEquals(playerId, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(2));
-        core.reactToAbyssOrTool();
-
-        assertEquals("Derrotado", getState(playerId));
-    }
-
-    // ========================= DUPLICATED_CODE ====================
-
-    @Test
-    public void test_duplicated_code_effect() throws Exception {
-        loadScenario("AbyssEffect_DuplicatedCode");
-
-        int playerId = 1;
-        int posBefore = getPosition(playerId);
-
-        assertEquals(playerId, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(4));
-        core.reactToAbyssOrTool();
-
-        int posAfter = getPosition(playerId);
-        assertTrue(posAfter != posBefore);
-    }
-
-    @Test
-    public void test_duplicated_code_vsTool() throws Exception {
-        loadScenario("AbyssEffect_DuplicatedCode_vsTool");
-
-        int playerId = 1;
-        int posBefore = getPosition(playerId);
-        assertTrue(getTools(playerId).contains("Herança"));
-
-        assertEquals(playerId, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(4));
-        core.reactToAbyssOrTool();
-
-        int posAfter = getPosition(playerId);
-        assertEquals("Em Jogo", getState(playerId));
-        assertTrue(posAfter > posBefore);
-        assertEquals("", getTools(playerId));
-    }
-
-    // ========================= SECONDARY_EFFECTS ====================
-
-    @Test
-    public void test_secondary_effects_effect() throws Exception {
-        loadScenario("AbyssEffect_SecondaryEffects");
-
-        int p1 = 1;
-        int p2 = 2;
-
-        assertEquals(p1, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(4));
-        core.reactToAbyssOrTool();
-
-        assertEquals(p2, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(4));
-        core.reactToAbyssOrTool();
-
-        int pos1 = getPosition(p1);
-        int pos2 = getPosition(p2);
-
-        assertEquals(pos1, pos2);
-    }
-
-    @Test
-    public void test_secondary_effects_vsTool() throws Exception {
-        loadScenario("AbyssEffect_SecondaryEffects_vsTool");
-
-        int p1 = 1;
-        int p2 = 2;
-
-        assertTrue(getTools(p1).contains("Programação Funcional"));
-
-        assertEquals(p1, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(4));
-        core.reactToAbyssOrTool();
-
-        assertEquals(p2, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(4));
-        core.reactToAbyssOrTool();
-
-        int pos1 = getPosition(p1);
-        int pos2 = getPosition(p2);
-
-        assertNotEquals(pos1, pos2);
-    }
-
-    // ========================= SEGMENTATION_FAULT ====================
-
-    @Test
-    public void test_segmentation_fault_effect() throws Exception {
-        loadScenario("AbyssEffect_SegmentationFault");
-
-        int playerId = 1;
-        int posBefore = getPosition(playerId);
-
-        assertEquals(playerId, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(4));
-        core.reactToAbyssOrTool();
-
-        int posAfter = getPosition(playerId);
-        assertTrue(posAfter != posBefore);
-    }
-
-     */
 
 
 // ========================= INFINITE_LOOP ====================

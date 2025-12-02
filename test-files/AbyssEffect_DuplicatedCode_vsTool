@@ -1,14 +1,15 @@
 [BOARD]
 BOARD_SIZE=20
 CURRENT_PLAYER_ID=1
-TURN_COUNT=1
+TURN_COUNT=0
 
 [PLAYERS]
-# tool "Herança" tem id 0
-PLAYER=1|1|Junior Developer|Java|BLUE|IN_GAME|0
+PLAYER=1|1|Junior Developer|Java|BLUE|IN_GAME
 
 [MAP_OBJECTS]
+# Tool INHERITANCE (id 0) na casa 3
+MAP_OBJECT=3|1:0
+# Abyss DUPLICATED_CODE (id 5) na casa 5
 MAP_OBJECT=5|0:5
 
 [MOVES]
-# mesmo valor de dado que no cenário sem tool (por ex. 4)
