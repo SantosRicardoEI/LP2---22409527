@@ -15,10 +15,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestBoardAndSlots {
 
-    @BeforeEach
-    public void resetConfig() {
-        GameConfig.ENABLE_BOUNCE = true;
-    }
 
     // --------------------- Helpers ---------------------
 
@@ -132,28 +128,14 @@ public class TestBoardAndSlots {
         Player p = makePlayer(1, PlayerColor.BLUE);
         assertTrue(b.placePlayer(p, 4));
 
-        boolean oldBounce = GameConfig.ENABLE_BOUNCE;
-        GameConfig.ENABLE_BOUNCE = true;
-        try {
-            int pos = b.movePlayerBySteps(p, 3);
-            assertEquals(3, pos);
-            assertEquals(3, b.getPlayerPosition(p));
-        } finally {
-            GameConfig.ENABLE_BOUNCE = oldBounce;
-        }
+        int pos = b.movePlayerBySteps(p, 3);
+        assertEquals(3, pos);
+        assertEquals(3, b.getPlayerPosition(p));
 
         Board b2 = new Board(5);
         Player p2 = makePlayer(2, PlayerColor.RED);
         assertTrue(b2.placePlayer(p2, 4));
 
-        GameConfig.ENABLE_BOUNCE = false;
-        try {
-            int pos2 = b2.movePlayerBySteps(p2, 3);
-            assertEquals(5, pos2);
-            assertEquals(5, b2.getPlayerPosition(p2));
-        } finally {
-            GameConfig.ENABLE_BOUNCE = oldBounce;
-        }
     }
 
     @Test
@@ -441,7 +423,7 @@ public class TestBoardAndSlots {
         langs.add("Java");
 
         Player p1 = new Player(1, "Alice", langs, PlayerColor.BLUE);
-        Player p2 = new Player(2, "Bob",   langs, PlayerColor.RED);
+        Player p2 = new Player(2, "Bob", langs, PlayerColor.RED);
 
         assertTrue(board.placePlayer(p1, 3));
         assertTrue(board.placePlayer(p2, 3));

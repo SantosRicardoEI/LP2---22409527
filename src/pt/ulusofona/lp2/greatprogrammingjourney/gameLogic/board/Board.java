@@ -202,11 +202,8 @@ public class Board {
         int target = oldPos + steps;
 
         if (target > size) {
-            if (ENABLE_BOUNCE) {
-                target = size - (target - size);
-            } else {
-                target = size;
-            }
+            target = size - (target - size);
+
         }
 
         return Math.max(1, target);

@@ -1,6 +1,5 @@
 package pt.ulusofona.lp2.greatprogrammingjourney.tests;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pt.ulusofona.lp2.greatprogrammingjourney.config.GameConfig;
 import pt.ulusofona.lp2.greatprogrammingjourney.enums.MapObjectType;
@@ -9,12 +8,6 @@ import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.MapObject;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestMapObjectEnums {
-
-    @BeforeEach
-    public void resetConfig() {
-        GameConfig.ENABLE_TOOL_CHAT_GPT = true;
-        GameConfig.ENABLE_ABYYS_UNDOCUMENTED_CODE = true;
-    }
 
     @Test
     public void testFromIDValidAndInvalid() {
@@ -28,8 +21,8 @@ public class TestMapObjectEnums {
 
     @Test
     public void testGetMapObjectValidAbyss() {
-        GameConfig.ENABLE_ABYYS_UNDOCUMENTED_CODE = true;
-
+        // typeID = 0 -> ABYSS
+        // subTypeID = 0 -> SYNTAX_ERROR
         MapObject obj = MapObjectType.getMapObject(0, 0);
 
         assertNotNull(obj, "Abyss válido não deve ser null");
@@ -38,8 +31,8 @@ public class TestMapObjectEnums {
 
     @Test
     public void testGetMapObjectValidTool() {
-        GameConfig.ENABLE_TOOL_CHAT_GPT = true;
-
+        // typeID = 1 -> TOOL
+        // subTypeID = 0 -> INHERITANCE
         MapObject obj = MapObjectType.getMapObject(1, 0);
 
         assertNotNull(obj, "Tool válida não deve ser null");
@@ -47,57 +40,53 @@ public class TestMapObjectEnums {
     }
 
     @Test
-    public void testGetMapObjectUndocumentedAbyssDisabledAndEnabled() {
+    public void testGetMapObjectUndocumentedAbyssRespectsConfigFlag() {
         int undocumentedId = 10;
 
-        GameConfig.ENABLE_ABYYS_UNDOCUMENTED_CODE = false;
-        MapObject disabled = MapObjectType.getMapObject(0, undocumentedId);
-        assertNull(disabled,
-                "Quando ENABLE_ABYYS_UNDOCUMENTED_CODE é false, o abyss undocumented deve ser null");
+        MapObject obj = MapObjectType.getMapObject(0, undocumentedId);
 
-        GameConfig.ENABLE_ABYYS_UNDOCUMENTED_CODE = true;
-        MapObject enabled = MapObjectType.getMapObject(0, undocumentedId);
-        assertNotNull(enabled,
-                "Quando ENABLE_ABYYS_UNDOCUMENTED_CODE é true, o abyss undocumented deve ser criado");
-        assertEquals(undocumentedId, enabled.getId(),
-                "ID do abyss undocumented devolvido deve ser 10");
+        if (GameConfig.ENABLE_ABYYS_UNDOCUMENTED_CODE) {
+            assertNotNull(obj,
+                    "Com ENABLE_ABYYS_UNDOCUMENTED_CODE = true, o abyss undocumented deve existir");
+            assertEquals(undocumentedId, obj.getId(),
+                    "ID do abyss undocumented devolvido deve ser 10");
+        } else {
+            assertNull(obj,
+                    "Com ENABLE_ABYYS_UNDOCUMENTED_CODE = false, o abyss undocumented deve ser null");
+        }
     }
 
     @Test
-    public void testGetMapObjectChatGptToolDisabledAndEnabled() {
+    public void testGetMapObjectChatGptToolRespectsConfigFlag() {
         int chatGptId = 6;
 
-        GameConfig.ENABLE_TOOL_CHAT_GPT = false;
-        MapObject disabled = MapObjectType.getMapObject(1, chatGptId);
-        assertNull(disabled,
-                "Quando ENABLE_TOOL_CHAT_GPT é false, a tool ChatGPT deve ser null");
+        MapObject obj = MapObjectType.getMapObject(1, chatGptId);
 
-        GameConfig.ENABLE_TOOL_CHAT_GPT = true;
-        MapObject enabled = MapObjectType.getMapObject(1, chatGptId);
-        assertNotNull(enabled,
-                "Quando ENABLE_TOOL_CHAT_GPT é true, a tool ChatGPT deve ser criada");
-        assertEquals(chatGptId, enabled.getId(),
-                "ID da tool ChatGPT devolvida deve ser 6");
+        if (GameConfig.ENABLE_TOOL_CHAT_GPT) {
+            assertNotNull(obj,
+                    "Com ENABLE_TOOL_CHAT_GPT = true, a tool ChatGPT deve existir");
+            assertEquals(chatGptId, obj.getId(),
+                    "ID da tool ChatGPT devolvida deve ser 6");
+        } else {
+            assertNull(obj,
+                    "Com ENABLE_TOOL_CHAT_GPT = false, a tool ChatGPT deve ser null");
+        }
     }
 
     @Test
     public void testGetMapObjectUnknownAbyssIdReturnsNull() {
-        GameConfig.ENABLE_ABYYS_UNDOCUMENTED_CODE = true;
-
         MapObject obj = MapObjectType.getMapObject(0, 999);
 
         assertNull(obj,
-                "SubTypeId de abyss desconhecido deve devolver null (ramo final de AbyssSubType.getAbyssByID)");
+                "SubTypeId de abyss desconhecido deve devolver null");
     }
 
     @Test
     public void testGetMapObjectUnknownToolIdReturnsNull() {
-        GameConfig.ENABLE_TOOL_CHAT_GPT = true;
-
         MapObject obj = MapObjectType.getMapObject(1, 999);
 
         assertNull(obj,
-                "SubTypeId de tool desconhecido deve devolver null (ramo final de ToolSubType.getToolByID)");
+                "SubTypeId de tool desconhecido deve devolver null");
     }
 
     @Test
