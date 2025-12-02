@@ -1,6 +1,6 @@
 package pt.ulusofona.lp2.greatprogrammingjourney.tests;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import pt.ulusofona.lp2.greatprogrammingjourney.enums.PlayerColor;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.TurnManager;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.player.Player;
@@ -30,21 +30,21 @@ public class TestTurnManager {
     // ========================= Testes ===============================
 
     @Test
-    public void test_DefaultConstructor() {
+    public void testDefaultConstructor() {
         TurnManager tm = new TurnManager();
         assertEquals(0, tm.getCurrentID());
         assertEquals(0, tm.getTurnCount());
     }
 
     @Test
-    public void test_ConstructorWithValues() {
+    public void testConstructorWithValues() {
         TurnManager tm = new TurnManager(10, 5);
         assertEquals(10, tm.getCurrentID());
         assertEquals(5, tm.getTurnCount());
     }
 
     @Test
-    public void test_AdvanceTurn_FirstCall() {
+    public void testAdvanceTurnFirstCall() {
         List<Player> active = playersWithIds(10, 5, 20);
         TurnManager tm = new TurnManager();
 
@@ -55,7 +55,7 @@ public class TestTurnManager {
     }
 
     @Test
-    public void test_AdvanceTurn_SubsequentCalls() {
+    public void testAdvanceTurnSubsequentCalls() {
         List<Player> active = playersWithIds(10, 5, 20);
         TurnManager tm = new TurnManager();
 
@@ -72,20 +72,20 @@ public class TestTurnManager {
         assertEquals(5, tm.getCurrentID());
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void test_AdvanceTurn_EmptyList() {
+    @Test
+    public void testAdvanceTurnEmptyList() {
         TurnManager tm = new TurnManager();
         tm.advanceTurn(new ArrayList<>());
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void test_AdvanceTurn_NullList() {
+    @Test
+    public void testAdvanceTurnNullList() {
         TurnManager tm = new TurnManager();
         tm.advanceTurn(null);
     }
 
     @Test
-    public void test_AdvanceTurn_SinglePlayer() {
+    public void testAdvanceTurnSinglePlayer() {
         List<Player> active = playersWithIds(42);
         TurnManager tm = new TurnManager();
 
@@ -100,7 +100,7 @@ public class TestTurnManager {
     }
 
     @Test
-    public void test_AdvanceTurn_PlayerRemoved() {
+    public void testAdvanceTurnPlayerRemoved() {
         List<Player> active = playersWithIds(5, 10, 20);
         TurnManager tm = new TurnManager();
 
@@ -120,7 +120,7 @@ public class TestTurnManager {
     }
 
     @Test
-    public void test_DescendingLogicConceptual() {
+    public void testDescendingLogicConceptual() {
         List<Integer> ids = Arrays.asList(5, 10, 20);
         assertEquals(Arrays.asList(20, 10, 5, 20), Arrays.asList(20, 10, 5, 20));
     }

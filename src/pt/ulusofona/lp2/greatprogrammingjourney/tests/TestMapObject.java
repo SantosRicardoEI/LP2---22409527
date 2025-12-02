@@ -1,6 +1,7 @@
 package pt.ulusofona.lp2.greatprogrammingjourney.tests;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
 import pt.ulusofona.lp2.greatprogrammingjourney.enums.AbyssSubType;
 import pt.ulusofona.lp2.greatprogrammingjourney.enums.MapObjectType;
 import pt.ulusofona.lp2.greatprogrammingjourney.enums.ToolSubType;
