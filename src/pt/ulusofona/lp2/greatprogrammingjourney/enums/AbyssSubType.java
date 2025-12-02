@@ -14,7 +14,7 @@ public enum AbyssSubType {
     DUPLICATED_CODE(new CodeDuplication(5, "Código Duplicado", "duplicated-code.png", ToolSubType.getToolByID(ToolSubType.INHERITANCE.getInstance().getId()))),
     SECONDARY_EFFECTS(new SecondaryEffects(6, "Efeitos Secundários", "secondary-effects.png", ToolSubType.getToolByID(ToolSubType.FUNCTIONAL_PROGRAMMING.getInstance().getId()))),
     BSOD(new BlueScreenOfDeath(7, "Blue Screen of Death", "bsod.png", null)),
-    INFINITE_LOOP(new InfiniteLoop(8, "Ciclo infinito", "infinite-loop.png", ToolSubType.getToolByID(ToolSubType.TEACHER_HELP.getInstance().getId()))),
+    INFINITE_LOOP(new InfiniteLoop(8, "Ciclo infinito", "infinite-loop.png", ToolSubType.getToolByID(ToolSubType.FUNCTIONAL_PROGRAMMING.getInstance().getId()))),
     SEGMENTATION_FAULT(new SegmentationFault(9, "Segmentation Fault", "core-dumped.png", null)),
     UNDOCUMENTED_CODE(new UndocumentedCode(10, "Projeto sem Documentação", "undocumented-code.png", ToolSubType.getToolByID(ToolSubType.CHAT_GPT.getInstance().getId())));
 

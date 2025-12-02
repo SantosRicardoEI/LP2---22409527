@@ -7,8 +7,7 @@ TURN_COUNT=1
 PLAYER=5|1|Junior Developer|Java|BLUE|IN_GAME
 
 [MAP_OBJECTS]
-# id 4 = CRASH
-MAP_OBJECT=7|0:4
+MAP_OBJECT=7|0:2
 
 [MOVES]
-# escolhe no teste um dado que leve 5 -> 7 (por ex. 2)
+# pensado para lançamento que faça o player cair na casa 7

@@ -7,8 +7,8 @@ TURN_COUNT=1
 PLAYER=1|1|Junior Developer|Java|BLUE|IN_GAME
 
 [MAP_OBJECTS]
-# id 5 = DUPLICATED_CODE
-MAP_OBJECT=5|0:5
+# id 9 = SEGMENTATION_FAULT
+MAP_OBJECT=5|0:9
 
 [MOVES]
 # escolhe no teste um dado que leve 1 -> 5 (por ex. 4)

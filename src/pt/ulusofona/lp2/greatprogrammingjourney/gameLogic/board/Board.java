@@ -193,7 +193,6 @@ public class Board {
     private void removePlayer(Player player, int position) {
         if (player != null && !(position < 1 || position > getSize())) {
             slots[position].removePlayer(player);
-            LOG.error("removePlayer: " + "player is null or slot is invalid");
         }
     }
 

@@ -28,9 +28,6 @@ final class Move {
         return from;
     }
 
-    int getTo() {
-        return to;
-    }
 
     int getTurn() {
         return turn;

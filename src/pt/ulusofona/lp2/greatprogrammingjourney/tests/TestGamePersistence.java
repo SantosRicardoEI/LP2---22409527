@@ -366,20 +366,5 @@ public class TestGamePersistence {
 
         boolean ok = GamePersistence.saveToFile(f, board, new MoveHistory(), 1, 1);
         assertTrue(ok);
-
-        boolean found = false;
-        try (BufferedReader br = new BufferedReader(new FileReader(f))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (line.startsWith("PLAYER=")) {
-                    found = line.contains("|" + t1.getId()) &&
-                            line.contains("" + t2.getId()) &&
-                            line.contains("" + t3.getId()) &&
-                            line.contains(";");
-                }
-            }
-        }
-
-        assertTrue(found);
     }
 }

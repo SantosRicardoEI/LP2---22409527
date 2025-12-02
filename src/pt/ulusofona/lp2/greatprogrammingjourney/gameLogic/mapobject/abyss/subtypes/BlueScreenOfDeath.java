@@ -2,7 +2,6 @@ package pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.abyss.subty
 
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.board.Board;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.abyss.Abyss;
-import pt.ulusofona.lp2.greatprogrammingjourney.enums.AbyssSubType;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.tool.Tool;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.movehistory.MoveHistory;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.player.Player;

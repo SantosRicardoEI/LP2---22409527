@@ -1,13 +1,16 @@
 [BOARD]
-BOARD_SIZE=10
+BOARD_SIZE=20
 CURRENT_PLAYER_ID=1
 TURN_COUNT=1
 
 [PLAYERS]
-PLAYER=3|1|Tester|Java|BLUE|IN_GAME
+# dois jogadores, ambos na posição 1
+PLAYER=1|1|Junior Developer|Java|BLUE|IN_GAME
+PLAYER=1|2|Senior Developer|C|RED|IN_GAME
 
 [MAP_OBJECTS]
+# id 6 = SECONDARY_EFFECTS
 MAP_OBJECT=5|0:6
 
 [MOVES]
-MOVE=1|1|3|2
+# pensado para usares o mesmo valor de dado para ambos (por ex. 4) para os juntar na casa 5
