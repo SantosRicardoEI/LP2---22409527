@@ -4,6 +4,7 @@ import pt.ulusofona.lp2.greatprogrammingjourney.enums.TurnOrder;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.player.Player;
 import pt.ulusofona.lp2.greatprogrammingjourney.utils.GameLogger;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static pt.ulusofona.lp2.greatprogrammingjourney.config.GameConfig.TURN_ORDER;
@@ -19,17 +20,14 @@ public final class TurnManager {
 
     // ==================================== Constructor ================================================================
 
-    public TurnManager() {
+    public TurnManager(List<Player> players) {
+        currentID = getFirstPlayerId(players, TURN_ORDER);
+        turnCount = 0;
     }
 
     public TurnManager(int currentID, int turnCount) {
         this.currentID = currentID;
         this.turnCount = turnCount;
-    }
-
-    public void reset() {
-        currentID = -1;
-        turnCount = 0;
     }
 
     public int getCurrentID() {
@@ -40,12 +38,8 @@ public final class TurnManager {
         return turnCount;
     }
 
-    public void advanceTurn(List<Player> activePlayers) {
-        if (turnCount == 0) {
-            currentID = getFirstPlayerId(activePlayers, TURN_ORDER);
-        } else {
-            currentID = getNextPlayerId(activePlayers, TURN_ORDER);
-        }
+    public void advanceTurn(List<Player> players) {
+        currentID = getNextPlayerId(players, TURN_ORDER);
         turnCount++;
     }
 
@@ -111,8 +105,10 @@ public final class TurnManager {
             return -1;
         }
 
+        List<Player> activePlayers = activePlayers(players);
+
         int minimum = Integer.MAX_VALUE;
-        for (Player player : players) {
+        for (Player player : activePlayers) {
             if (player == null) {
                 continue;
             }
@@ -133,8 +129,10 @@ public final class TurnManager {
             return -1;
         }
 
+        List<Player> activePlayers = activePlayers(players);
+
         int maximum = -1;
-        for (Player player : players) {
+        for (Player player : activePlayers) {
             if (player == null) {
                 continue;
             }
@@ -144,5 +142,15 @@ public final class TurnManager {
             }
         }
         return maximum;
+    }
+
+    private List<Player> activePlayers(List<Player> players) {
+        List<Player> result = new ArrayList<>();
+        for (Player p : players) {
+            if (p.isAlive()) {
+                result.add(p);
+            }
+        }
+        return result;
     }
 }

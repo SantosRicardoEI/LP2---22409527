@@ -22,7 +22,7 @@ public class Core {
     // ============================== State ============================================================================
 
     private Board board;
-    private TurnManager turnManager = new TurnManager();
+    private TurnManager turnManager;
     private MoveHistory moveHistory = new MoveHistory();
     private static final GameLogger LOG = new GameLogger(Core.class);
 
@@ -55,8 +55,7 @@ public class Core {
         }
 
         moveHistory.reset();
-        turnManager.reset();
-        turnManager.advanceTurn(activePlayers());
+        turnManager = new TurnManager(getPlayers());
         LOG.info("createInitialBoard: board created and initialized — starting game...");
         return true;
     }
@@ -66,9 +65,9 @@ public class Core {
             return null;
         }
 
-        MapObject o = board.getMapObjectsAt(nrSquare);
-        if (o != null) {
-            return o.getPng();
+        MapObject mapObject = board.getMapObjectsAt(nrSquare);
+        if (mapObject != null) {
+            return mapObject.getPng();
         }
 
         return nrSquare == boardSize() ? "glory.png" : null;
@@ -195,7 +194,7 @@ public class Core {
     public String reactToAbyssOrTool() {
         if (board == null) {
             LOG.error("reactToAbyssOrTool: board is null");
-            turnManager.advanceTurn(activePlayers());
+            turnManager.advanceTurn(getPlayers());
             return null;
         }
 
@@ -203,11 +202,11 @@ public class Core {
         MapObject object = board.getMapObjectsAt(board.getPlayerPosition(p));
 
         if (object == null) {
-            turnManager.advanceTurn(activePlayers());
+            turnManager.advanceTurn(getPlayers());
             return null;
         }
 
-        turnManager.advanceTurn(activePlayers());
+        turnManager.advanceTurn(getPlayers());
         return object.interact(p, board, moveHistory);
     }
 
@@ -241,7 +240,7 @@ public class Core {
         }
 
         ArrayList<String[]> playersNameAndPosition = new ArrayList<>();
-        for (Player p : allPlayers()) {
+        for (Player p : getPlayers()) {
             int pos = getPlayerPosition(p);
             playersNameAndPosition.add(new String[]{p.getName(), String.valueOf(pos)});
         }
@@ -308,18 +307,8 @@ public class Core {
         return board.initialize(playerInfo, mapObjectsInfo);
     }
 
-    private List<Player> allPlayers() {
+    private List<Player> getPlayers() {
         return board.getPlayers();
-    }
-
-    private List<Player> activePlayers() {
-        List<Player> result = new ArrayList<>();
-        for (Player p : board.getPlayers()) {
-            if (p.isAlive()) {
-                result.add(p);
-            }
-        }
-        return result;
     }
 
     private int boardSize() {

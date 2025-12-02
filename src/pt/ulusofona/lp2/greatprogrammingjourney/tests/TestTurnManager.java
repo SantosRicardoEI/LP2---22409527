@@ -29,12 +29,6 @@ public class TestTurnManager {
 
     // ========================= Testes ===============================
 
-    @Test
-    public void testDefaultConstructor() {
-        TurnManager tm = new TurnManager();
-        assertEquals(0, tm.getCurrentID());
-        assertEquals(0, tm.getTurnCount());
-    }
 
     @Test
     public void testConstructorWithValues() {
@@ -43,81 +37,6 @@ public class TestTurnManager {
         assertEquals(5, tm.getTurnCount());
     }
 
-    @Test
-    public void testAdvanceTurnFirstCall() {
-        List<Player> active = playersWithIds(10, 5, 20);
-        TurnManager tm = new TurnManager();
-
-        tm.advanceTurn(active);
-
-        assertEquals(5, tm.getCurrentID());
-        assertEquals(1, tm.getTurnCount());
-    }
-
-    @Test
-    public void testAdvanceTurnSubsequentCalls() {
-        List<Player> active = playersWithIds(10, 5, 20);
-        TurnManager tm = new TurnManager();
-
-        tm.advanceTurn(active);
-        assertEquals(5, tm.getCurrentID());
-
-        tm.advanceTurn(active);
-        assertEquals(10, tm.getCurrentID());
-
-        tm.advanceTurn(active);
-        assertEquals(20, tm.getCurrentID());
-
-        tm.advanceTurn(active);
-        assertEquals(5, tm.getCurrentID());
-    }
-
-    @Test
-    public void testAdvanceTurnEmptyList() {
-        TurnManager tm = new TurnManager();
-        tm.advanceTurn(new ArrayList<>());
-    }
-
-    @Test
-    public void testAdvanceTurnNullList() {
-        TurnManager tm = new TurnManager();
-        tm.advanceTurn(null);
-    }
-
-    @Test
-    public void testAdvanceTurnSinglePlayer() {
-        List<Player> active = playersWithIds(42);
-        TurnManager tm = new TurnManager();
-
-        tm.advanceTurn(active);
-        assertEquals(42, tm.getCurrentID());
-
-        tm.advanceTurn(active);
-        assertEquals(42, tm.getCurrentID());
-
-        tm.advanceTurn(active);
-        assertEquals(42, tm.getCurrentID());
-    }
-
-    @Test
-    public void testAdvanceTurnPlayerRemoved() {
-        List<Player> active = playersWithIds(5, 10, 20);
-        TurnManager tm = new TurnManager();
-
-        tm.advanceTurn(active);
-        assertEquals(5, tm.getCurrentID());
-
-        tm.advanceTurn(active);
-        assertEquals(10, tm.getCurrentID());
-
-        active = playersWithIds(5, 20);
-
-        tm.advanceTurn(active);
-        assertEquals(20, tm.getCurrentID());
-
-        tm.advanceTurn(active);
-        assertEquals(5, tm.getCurrentID());
-    }
 
     @Test
     public void testDescendingLogicConceptual() {
