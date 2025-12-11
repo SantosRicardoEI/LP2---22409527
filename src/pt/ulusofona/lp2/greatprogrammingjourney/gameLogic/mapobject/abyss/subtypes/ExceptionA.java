@@ -19,6 +19,6 @@ public class ExceptionA extends Abyss {
 
     @Override
     public void applyAbyssEffects(Player player, Board board, MoveHistory moveHistory) {
-        board.movePlayerBySteps(player,-2);
+        board.movePlayer(player,-2);
     }
 }

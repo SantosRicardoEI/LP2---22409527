@@ -1,84 +1,320 @@
 package pt.ulusofona.lp2.greatprogrammingjourney;
 
-import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.Core;
+import pt.ulusofona.lp2.greatprogrammingjourney.config.GameConfig;
+import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.GameRules;
+import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.TurnManager;
+import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.board.Board;
+import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.gamepersistence.GamePersistence;
+import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.gamepersistence.LoadedGame;
+import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.MapObject;
+import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.movehistory.MoveHistory;
+import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.player.Player;
+import pt.ulusofona.lp2.greatprogrammingjourney.utils.Credits;
+import pt.ulusofona.lp2.greatprogrammingjourney.utils.GameLogger;
+import pt.ulusofona.lp2.greatprogrammingjourney.utils.StringUtils;
 
 import javax.swing.*;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.io.*;
+import java.util.*;
+
 
 public class GameManager {
 
     // ============================== State ============================================================================
 
-    private final Core core = new Core();
+    private Board board;
+    private TurnManager turnManager;
+    private MoveHistory moveHistory = new MoveHistory();
+    private static final GameLogger LOG = new GameLogger(GameManager.class);
 
-    // ============================== Public API =======================================================================
+    // ==================================== API Methods ================================================================
 
     public boolean createInitialBoard(String[][] playerInfo, int worldSize) {
-        return core.createInitialBoard(playerInfo, worldSize);
+        return createInitialBoard(playerInfo, worldSize, new String[0][0]);
+    }
+
+    public boolean createInitialBoard(String[][] playerInfo, int worldSize, String[][] mapObjects) {
+
+        if (playerInfo == null || playerInfo.length == 0) {
+            LOG.error("createInitialBoard: " + "invalid player info");
+            return false;
+        }
+
+        if (!GameRules.validatePlayerCount(playerInfo.length)) {
+            LOG.error("createInitialBoard: " + "invalid player count");
+            return false;
+        }
+
+        if (!GameRules.validateWorldSize(worldSize, playerInfo.length)) {
+            LOG.error("createInitialBoard: " + "invalid world size for player count " + playerInfo.length);
+            return false;
+        }
+
+        if (!initializeNewBoard(playerInfo, mapObjects, worldSize)) {
+            LOG.error("createInitialBoard: error initializing board");
+            return false;
+        }
+
+        moveHistory.reset();
+        turnManager = new TurnManager(getPlayers());
+        return true;
     }
 
     public String getImagePng(int nrSquare) {
-        return core.getImagePng(nrSquare);
+        if (board == null) {
+            throw new GameNotInitializedException();
+        }
+
+        MapObject mapObject = board.getMapObjectsAt(nrSquare);
+        if (mapObject != null) {
+            return mapObject.getPng();
+        }
+
+        return nrSquare == boardSize() ? "glory.png" : null;
     }
 
     public String[] getProgrammerInfo(int id) {
-        return core.getProgrammerInfo(id);
+        if (board == null) {
+            throw new GameNotInitializedException();
+        }
+        Player player = getPlayer(id);
+        if (player == null) {
+            return null;
+        }
+
+        return new String[]{
+                String.valueOf(player.getId()),
+                player.getName(),
+                player.joinLanguages(";", false),
+                player.getColor().toString(),
+                String.valueOf(getPlayerPosition(player)),
+                player.joinTools(";"),
+                player.getState().toString(),
+        };
     }
 
     public String getProgrammerInfoAsStr(int id) {
-        return core.getProgrammerInfoAsStr(id);
-    }
+        if (board == null) {
+            throw new GameNotInitializedException();
+        }
+        Player p = getPlayer(id);
+        if (p == null) {
+            return null;
+        }
 
-    public String[] getSlotInfo(int position) {
-        return core.getSlotInfo(position);
-    }
+        String name = p.getName();
+        String pos = String.valueOf(getPlayerPosition(p));
+        String tools = p.joinTools(",");
+        String state = p.getState().toString();
+        String langsStr = p.joinLanguages("; ", true);
 
-    public int getCurrentPlayerID() {
-        return core.getCurrentPlayerId();
-    }
-
-    public boolean moveCurrentPlayer(int nrSpaces) {
-        return core.moveCurrentPlayer(nrSpaces);
-    }
-
-    public boolean gameIsOver() {
-        return core.gameIsOver();
-    }
-
-    public ArrayList<String> getGameResults() {
-        return core.getGameResults();
-    }
-
-    public JPanel getAuthorsPanel() {
-        return core.getAuthorsPanel();
-    }
-
-    public HashMap<String, String> customizeBoard() {
-        return core.customizeBoard();
-    }
-
-    // ======================================================= Parte II ================================================
-
-    public boolean createInitialBoard(String[][] playerInfo, int worldSize, String[][] abyssesAndTools) {
-        return core.createInitialBoard(playerInfo,worldSize,abyssesAndTools);
+        return p.getId() + " | " + name + " | " + pos + " | " + tools + " | " + langsStr + " | " + state;
     }
 
     public String getProgrammersInfo() {
-        return core.getProgrammersInfo();
+        if (board == null) {
+            throw new GameNotInitializedException();
+        }
+
+        List<Player> jogadores = board.getPlayers();
+        jogadores.sort(Comparator.comparingInt(Player::getId));
+
+        StringBuilder sb = new StringBuilder();
+
+        for (Player p : jogadores) {
+            if (!p.isAlive()) {
+                continue;
+            }
+
+            if (sb.length() > 0) {
+                sb.append(" | ");
+            }
+            sb.append(p.getName()).append(" : ").append(p.joinTools(","));
+        }
+
+        return sb.toString();
+    }
+
+    public String[] getSlotInfo(int position) {
+        if (board == null) {
+            throw new GameNotInitializedException();
+        }
+        return board.getSlotInfo(position);
+    }
+
+    public int getCurrentPlayerID() {
+        if (turnManager == null) {
+            throw new GameNotInitializedException();
+        }
+        return turnManager.getCurrentID();
+    }
+
+    public boolean moveCurrentPlayer(int nrSpaces) {
+        if (board == null || turnManager == null) {
+            throw new GameNotInitializedException();
+        }
+        Player p = getPlayer(turnManager.getCurrentID());
+
+        if (p == null) {
+            throw new InvalidGameStateException("Current player not found");
+        }
+
+        if (!GameRules.validateDice(nrSpaces)) {
+            LOG.error("moveCurrentPlayer: " + "invalid dice value");
+            return false;
+        }
+
+
+        int oldPos = getPlayerPosition(p);
+
+        if (p.isStuck() || p.isConfused()) {
+            LOG.info("Player " + p.getName() + " is stuck or confused and cannot move this turn");
+            moveHistory.addRecord(p.getId(), oldPos, oldPos, nrSpaces);
+            return false;
+        }
+
+        String firstLanguage = p.getLanguages().get(0);
+        if (Objects.equals(firstLanguage, "Assembly") && nrSpaces > 2) {
+            moveHistory.addRecord(p.getId(), oldPos, oldPos, nrSpaces);
+            return false;
+        }
+
+        if (Objects.equals(firstLanguage, "C") && nrSpaces > 3) {
+            moveHistory.addRecord(p.getId(), oldPos, oldPos, nrSpaces);
+            return false;
+        }
+
+        int newPos = board.movePlayer(p, nrSpaces);
+        moveHistory.addRecord(p.getId(), oldPos, newPos, nrSpaces);
+        return true;
     }
 
     public String reactToAbyssOrTool() {
-        return core.reactToAbyssOrTool();
+        if (board == null) {
+            throw new GameNotInitializedException();
+        }
+
+        Player p = board.getPlayer(getCurrentPlayerID());
+        if (p == null) {
+            throw new InvalidGameStateException("Current player not found");
+        }
+        MapObject object = board.getMapObjectsAt(board.getPlayerPosition(p));
+
+        if (object == null) {
+            turnManager.advanceTurn(getPlayers());
+            return null;
+        }
+
+        turnManager.advanceTurn(getPlayers());
+        return object.interact(p, board, moveHistory);
+    }
+
+
+    public boolean gameIsOver() {
+        if (board == null) {
+            throw new GameNotInitializedException();
+        }
+
+        Player winner = board.getWinner();
+        if (winner == null) {
+            return false;
+        }
+
+        LOG.info("Game is Over. Winner: " + winner.getName());
+        return true;
+    }
+
+
+    public ArrayList<String> getGameResults() {
+        if (board == null) {
+            throw new GameNotInitializedException();
+        }
+
+        Player winner = board.getWinner();
+        if (winner == null) {
+            return new ArrayList<>();
+        }
+
+        ArrayList<String[]> playersNameAndPosition = new ArrayList<>();
+        for (Player p : getPlayers()) {
+            int pos = getPlayerPosition(p);
+            playersNameAndPosition.add(new String[]{p.getName(), String.valueOf(pos)});
+        }
+
+        return StringUtils.buildResultsString(
+                turnManager.getTurnCount(),
+                playersNameAndPosition
+        );
     }
 
     public void loadGame(File file) throws InvalidFileException, FileNotFoundException {
-        core.loadGame(file);
+        LoadedGame state = GamePersistence.loadFromFile(file);
+        this.board = state.board();
+        this.moveHistory = state.history();
+        this.turnManager = new TurnManager(state.currentPlayerID(), state.turnCount());
     }
 
+
     public boolean saveGame(File file) {
-        return core.saveGame(file);
+        if (board == null || turnManager == null) {
+            throw new GameNotInitializedException();
+        }
+        return GamePersistence.saveToFile(file, board, moveHistory, turnManager.getCurrentID(), turnManager.getTurnCount());
     }
+
+    public JPanel getAuthorsPanel() {
+        return Credits.buildPanel();
+    }
+
+    public HashMap<String, String> customizeBoard() {
+        HashMap<String, String> theme = new HashMap<>();
+
+        // Player images
+        theme.put("playerBlueImage", GameConfig.PLAYER_BLUE_IMAGE);
+        theme.put("playerBrownImage", GameConfig.PLAYER_BROWN_IMAGE);
+        theme.put("playerPurpleImage", GameConfig.PLAYER_PURPLE_IMAGE);
+        theme.put("playerGreenImage", GameConfig.PLAYER_GREEN_IMAGE);
+
+        // Board
+        theme.put("slotNumberColor", GameConfig.SLOT_NUMBER_COLOR);
+        theme.put("slotNumberFontSize", GameConfig.SLOT_NUMBER_FONT_SIZE + "");
+
+        theme.put("slotBackgroundColor", GameConfig.SLOT_BACKGROUND_COLOR);
+        theme.put("cellSpacing", GameConfig.CELL_SPACING + "");
+        theme.put("gridBackgroundColor", GameConfig.GRID_BACKGROUND_COLOR);
+        theme.put("toolbarBackgroundColor", GameConfig.TOOLBAR_BACKGROUND_COLOR);
+        theme.put("logoImage", GameConfig.LOGO);
+
+        // New abyss and tool
+        theme.put("hasNewAbyss", GameConfig.ENABLE_ABYYS_UNDOCUMENTED_CODE + "");
+        theme.put("hasNewTool", GameConfig.ENABLE_TOOL_CHAT_GPT + "");
+        return theme;
+    }
+
+    // =============================================== Helpers =========================================================
+
+    private Player getPlayer(int id) {
+        return board.getPlayer(id);
+    }
+
+    private int getPlayerPosition(Player p) {
+        return board.getPlayerPosition(p);
+    }
+
+    private boolean initializeNewBoard(String[][] playerInfo, String[][] mapObjectsInfo, int worldSize) {
+        board = new Board(worldSize);
+        return board.initialize(playerInfo, mapObjectsInfo);
+    }
+
+    private List<Player> getPlayers() {
+        return board.getPlayers();
+    }
+
+    private int boardSize() {
+        if (board == null) {
+            throw new GameNotInitializedException();
+        }
+        return board.getSize();
+    }
+
 }

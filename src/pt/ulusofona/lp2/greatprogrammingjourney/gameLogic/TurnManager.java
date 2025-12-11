@@ -52,6 +52,7 @@ public final class TurnManager {
             throw new IllegalStateException("getFirstPlayerId: no active players available");
         }
 
+        LOG.info("First turn ID: " + firstId);
         return firstId;
     }
 

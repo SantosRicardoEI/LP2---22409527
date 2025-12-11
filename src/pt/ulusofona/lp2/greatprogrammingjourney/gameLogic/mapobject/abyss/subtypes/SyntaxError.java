@@ -20,6 +20,6 @@ public class SyntaxError extends Abyss {
 
     @Override
     public void applyAbyssEffects(Player player, Board board, MoveHistory moveHistory) {
-        board.movePlayerBySteps(player,-1);
+        board.movePlayer(player,-1);
     }
 }

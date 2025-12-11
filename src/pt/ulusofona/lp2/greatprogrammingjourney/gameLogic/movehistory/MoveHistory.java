@@ -83,13 +83,12 @@ public final class MoveHistory {
     public void addRecord(int playerId, int from, int to, int dice) {
         int turn = moves.size() + 1;
         moves.add(new Move(playerId, from, to, dice, turn));
-        LOG.info("addRecord: turn=" + turn + ", playerId=" + playerId +
-                ", from=" + from + ", to=" + to + ", dice=" + dice);
+        LOG.info("Move record: turn: " + turn + ", player: " + playerId +
+                ", from: " + from + ", to: " + to + ", dice: " + dice);
     }
 
     public void reset() {
         moves.clear();
-        LOG.info("reset: move log reseted");
     }
 
     @Override

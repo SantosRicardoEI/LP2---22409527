@@ -5,6 +5,7 @@ import pt.ulusofona.lp2.greatprogrammingjourney.enums.ToolSubType;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.board.Board;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.MapObject;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.tool.Tool;
+import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.tool.subtypes.ChatGPT;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.movehistory.MoveHistory;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.player.Player;
 
@@ -17,23 +18,26 @@ public abstract class Abyss extends MapObject {
         this.counter = counter;
     }
 
-
     public Tool getCounter() {
         return counter;
     }
 
     @Override
     public final String interact(Player player, Board board, MoveHistory moveHistory) {
-        Tool chatGPT = ToolSubType.CHAT_GPT.getInstance();
+        ChatGPT chatGPT = (ChatGPT) ToolSubType.CHAT_GPT.getInstance();
 
         if (this.counter != null) {
 
             if (player.hasTool(counter)) {
                 player.useTool(counter);
                 return counteredMessage(counter);
+
             } else if (player.hasTool(chatGPT) && GameConfig.ENABLE_TOOL_CHAT_GPT) {
+
                 player.useTool(chatGPT);
-                return counteredMessage(chatGPT);
+                if (chatGPT.canHelp(this)) {
+                    return counteredMessage(chatGPT);
+                }
             }
         }
         applyAbyssEffects(player, board, moveHistory);

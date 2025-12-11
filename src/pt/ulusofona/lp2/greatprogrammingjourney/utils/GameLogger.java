@@ -46,8 +46,32 @@ public class GameLogger {
             default -> "";
         };
 
-        System.out.printf("%s[%s] [%s] %s%s%n",
-                color, level, className, message, RESET);
+        boolean showLocation = level.equals("WARN") || level.equals("ERROR");
+
+        if (showLocation) {
+            StackTraceElement[] stack = Thread.currentThread().getStackTrace();
+            StackTraceElement caller = stack[4];
+
+            System.out.printf(
+                    "%s[%s] [%s.%s:%d] %s%s%n",
+                    color,
+                    level,
+                    caller.getClassName(),
+                    caller.getMethodName(),
+                    caller.getLineNumber(),
+                    message,
+                    RESET
+            );
+        } else {
+            System.out.printf(
+                    "%s[%s] [%s] %s%s%n",
+                    color,
+                    level,
+                    className,
+                    message,
+                    RESET
+            );
+        }
 
         if (t != null) {
             System.out.print(color);

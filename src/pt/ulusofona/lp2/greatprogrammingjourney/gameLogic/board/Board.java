@@ -30,7 +30,7 @@ public class Board {
 
     // ======================================== Public Methods =========================================================
 
-    public int movePlayerBySteps(Player player, int steps) {
+    public int movePlayer(Player player, int steps) {
 
         if (player == null || getPlayerPosition(player) < 1) {
             LOG.error("movePlayer: " + "invalid player or player position");
@@ -47,15 +47,15 @@ public class Board {
             return oldPos;
         }
         if (oldPos + steps > getSize()) {
-            LOG.info("movePlayer: bounce to " + newPos);
+            LOG.info("Player " + player.getName() + " bounce to " + newPos);
         }
         return newPos;
     }
 
-    public void movePlayerTo(Player p, int newPos) {
+    public void changePlayerPosition(Player p, int newPos) {
         int current = getPlayerPosition(p);
         int delta = newPos - current;
-        movePlayerBySteps(p, delta);
+        movePlayer(p, delta);
     }
 
     public boolean placePlayer(Player player, int position) {
@@ -187,7 +187,6 @@ public class Board {
         for (int i = BOARD_OFFSET; i <= size; i++) {
             slots[i] = new Slot(i);
         }
-        LOG.info("createSlots: created " + size + " slots");
     }
 
     private void removePlayer(Player player, int position) {
@@ -214,8 +213,6 @@ public class Board {
             return false;
         }
 
-        LOG.info("initializePlayers: starting board population with " + playerInfo.length + " players");
-
         for (String[] info : playerInfo) {
             Player p;
             try {
@@ -230,19 +227,15 @@ public class Board {
                 return false;
             }
         }
-
-        LOG.info("initializePlayers: all players placed successfully");
         return true;
     }
 
     private boolean initializeMapObjects(String[][] mapObjects) {
 
         if (mapObjects == null || mapObjects.length == 0) {
-            LOG.info("initializeMapObjects: no objects to place");
+            LOG.info("No objects to place in this game");
             return true;
         }
-
-        LOG.info("initializeMapObjects: starting board population with " + mapObjects.length + " objects");
 
         for (String[] line : mapObjects) {
 
@@ -270,8 +263,6 @@ public class Board {
                 return false;
             }
         }
-
-        LOG.info("initializeMapObjects: all objects placed successfully");
         return true;
     }
 }

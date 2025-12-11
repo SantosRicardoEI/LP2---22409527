@@ -1,6 +1,5 @@
 package pt.ulusofona.lp2.greatprogrammingjourney.tests;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pt.ulusofona.lp2.greatprogrammingjourney.config.GameConfig;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.board.Board;
@@ -107,7 +106,7 @@ public class TestBoardAndSlots {
         Board b = new Board(5);
         Player p = makePlayer(1, PlayerColor.BLUE);
 
-        int res = b.movePlayerBySteps(p, 2);
+        int res = b.movePlayer(p, 2);
         assertEquals(-1, res);
     }
 
@@ -117,18 +116,18 @@ public class TestBoardAndSlots {
         Player p = makePlayer(1, PlayerColor.BLUE);
         assertTrue(b.placePlayer(p, 1));
 
-        int newPos = b.movePlayerBySteps(p, 3);
+        int newPos = b.movePlayer(p, 3);
         assertEquals(4, newPos);
         assertEquals(4, b.getPlayerPosition(p));
     }
 
     @Test
-    public void testMovePlayerByStepsBounceEnabledAndDisabled() {
+    public void testMovePlayerBounceEnabledAndDisabled() {
         Board b = new Board(5);
         Player p = makePlayer(1, PlayerColor.BLUE);
         assertTrue(b.placePlayer(p, 4));
 
-        int pos = b.movePlayerBySteps(p, 3);
+        int pos = b.movePlayer(p, 3);
         assertEquals(3, pos);
         assertEquals(3, b.getPlayerPosition(p));
 
@@ -139,18 +138,18 @@ public class TestBoardAndSlots {
     }
 
     @Test
-    public void testMovePlayerByStepsNegativeStepsClampTo1() {
+    public void testMovePlayerClampTo1() {
         Board b = new Board(10);
         Player p = makePlayer(1, PlayerColor.BLUE);
         assertTrue(b.placePlayer(p, 3));
 
-        int pos = b.movePlayerBySteps(p, -10);
+        int pos = b.movePlayer(p, -10);
         assertEquals(1, pos);
         assertEquals(1, b.getPlayerPosition(p));
     }
 
     @Test
-    public void testMovePlayerByStepsRollbackWhenPlaceFails() {
+    public void testMovePlayerRollbackWhenPlaceFails() {
         Board b = new Board(5);
 
         int fullSlot = 3;
@@ -162,18 +161,18 @@ public class TestBoardAndSlots {
         Player p = makePlayer(1, PlayerColor.BLUE);
         assertTrue(b.placePlayer(p, 1));
 
-        int newPos = b.movePlayerBySteps(p, 2);
+        int newPos = b.movePlayer(p, 2);
         assertEquals(1, newPos);
         assertEquals(1, b.getPlayerPosition(p));
     }
 
     @Test
-    public void testMovePlayerToUsesMoveBySteps() {
+    public void testMovePlayerToUsesChangeBySteps() {
         Board b = new Board(10);
         Player p = makePlayer(1, PlayerColor.BLUE);
         assertTrue(b.placePlayer(p, 2));
 
-        b.movePlayerTo(p, 7);
+        b.changePlayerPosition(p, 7);
         assertEquals(7, b.getPlayerPosition(p));
     }
 
@@ -302,7 +301,7 @@ public class TestBoardAndSlots {
         assertTrue(b.placePlayer(p1, 1));
         assertTrue(b.placePlayer(p2, 1));
 
-        b.movePlayerTo(p1, 5);
+        b.changePlayerPosition(p1, 5);
 
         Player winner = b.getWinner();
         assertNotNull(winner);

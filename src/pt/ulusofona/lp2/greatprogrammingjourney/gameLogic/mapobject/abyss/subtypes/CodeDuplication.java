@@ -20,6 +20,6 @@ public class CodeDuplication extends Abyss {
     @Override
     public void applyAbyssEffects(Player player, Board board, MoveHistory moveHistory) {
         int lastPosition = moveHistory.getPosition(player,0);
-        board.movePlayerTo(player,lastPosition);
+        board.changePlayerPosition(player,lastPosition);
     }
 }

@@ -31,7 +31,7 @@ public class SegmentationFault extends Abyss {
         }
 
         for (Player p : playersInThisSlot) {
-            board.movePlayerBySteps(p, -3);
+            board.movePlayer(p, -3);
         }
     }
 }

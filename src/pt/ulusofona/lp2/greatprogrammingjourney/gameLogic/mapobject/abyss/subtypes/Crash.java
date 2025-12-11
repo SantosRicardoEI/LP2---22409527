@@ -19,6 +19,6 @@ public class Crash extends Abyss {
 
     @Override
     public void applyAbyssEffects(Player player, Board board, MoveHistory moveHistory) {
-        board.movePlayerTo(player,1);
+        board.changePlayerPosition(player,1);
     }
 }

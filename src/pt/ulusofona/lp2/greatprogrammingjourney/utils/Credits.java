@@ -1,4 +1,4 @@
-package pt.ulusofona.lp2.greatprogrammingjourney;
+package pt.ulusofona.lp2.greatprogrammingjourney.utils;
 
 import pt.ulusofona.lp2.greatprogrammingjourney.config.GameConfig;
 

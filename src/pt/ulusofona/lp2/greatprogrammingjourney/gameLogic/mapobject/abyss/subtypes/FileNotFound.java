@@ -19,6 +19,6 @@ public class FileNotFound extends Abyss {
 
     @Override
     public void applyAbyssEffects(Player player, Board board, MoveHistory moveHistory) {
-        board.movePlayerBySteps(player,-3);
+        board.movePlayer(player,-3);
     }
 }

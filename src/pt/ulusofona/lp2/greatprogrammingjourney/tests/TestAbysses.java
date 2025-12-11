@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import pt.ulusofona.lp2.greatprogrammingjourney.enums.AbyssSubType;
 import pt.ulusofona.lp2.greatprogrammingjourney.enums.ToolSubType;
-import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.Core;
+import pt.ulusofona.lp2.greatprogrammingjourney.GameManager;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.abyss.Abyss;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.tool.Tool;
 
@@ -14,31 +14,31 @@ import static org.junit.Assert.*;
 
 public class TestAbysses {
 
-    private Core core;
+    private GameManager gameManager;
 
     private void loadScenario(String fileName) throws Exception {
-        core = new Core();
+        gameManager = new GameManager();
         File f = new File("test-files/" + fileName);
-        core.loadGame(f);
+        gameManager.loadGame(f);
     }
 
     private String getState(int playerId) {
-        String[] info = core.getProgrammerInfo(playerId);
+        String[] info = gameManager.getProgrammerInfo(playerId);
         return info[6];
     }
 
     private String getAbyssOnSlot(int nrSlot) {
-        String[] info = core.getSlotInfo(nrSlot);
+        String[] info = gameManager.getSlotInfo(nrSlot);
         return info[2];
     }
 
     private int getPosition(int playerId) {
-        String[] info = core.getProgrammerInfo(playerId);
+        String[] info = gameManager.getProgrammerInfo(playerId);
         return Integer.parseInt(info[4]);
     }
 
     private String getTools(int playerId) {
-        String[] info = core.getProgrammerInfo(playerId);
+        String[] info = gameManager.getProgrammerInfo(playerId);
         return info[5];
     }
 
@@ -81,9 +81,9 @@ public class TestAbysses {
         assertEquals(1, getPosition(player));
 
         // Anda 2 -> cai na casa 3 (abismo)
-        assertEquals(player, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(2)); // 1 -> 3
-        core.reactToAbyssOrTool();
+        assertEquals(player, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(2)); // 1 -> 3
+        gameManager.reactToAbyssOrTool();
 
         // Abismo recua 1 casa: 3 -> 2
         assertEquals(2, getPosition(player));
@@ -98,15 +98,15 @@ public class TestAbysses {
         assertEquals(1, getPosition(player));
 
         // 1ª jogada: apanha a tool IDE na casa 3
-        assertEquals(player, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(2)); // 1 -> 3
-        core.reactToAbyssOrTool();
+        assertEquals(player, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(2)); // 1 -> 3
+        gameManager.reactToAbyssOrTool();
         assertEquals(3, getPosition(player));
 
         // 2ª jogada: cai no abismo na casa 5, mas tem counter
-        assertEquals(player, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(2)); // 3 -> 5
-        core.reactToAbyssOrTool();
+        assertEquals(player, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(2)); // 3 -> 5
+        gameManager.reactToAbyssOrTool();
 
         // Mantém-se na casa 5
         assertEquals(5, getPosition(player));
@@ -120,9 +120,9 @@ public class TestAbysses {
         assertEquals(1, getPosition(player));
 
         // 1 -> 7, dado = 6
-        assertEquals(player, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(6));
-        core.reactToAbyssOrTool();
+        assertEquals(player, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(6));
+        gameManager.reactToAbyssOrTool();
 
         // lastRoll = 6, recua 3 casas: 7 -> 4
         assertEquals(4, getPosition(player));
@@ -136,15 +136,15 @@ public class TestAbysses {
         assertEquals(1, getPosition(player));
 
         // 1ª jogada: apanha UNIT_TESTS na casa 3
-        assertEquals(player, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(2)); // 1 -> 3
-        core.reactToAbyssOrTool();
+        assertEquals(player, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(2)); // 1 -> 3
+        gameManager.reactToAbyssOrTool();
         assertEquals(3, getPosition(player));
 
         // 2ª jogada: cai no abismo na casa 7, mas tem counter
-        assertEquals(player, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(4)); // 3 -> 7
-        core.reactToAbyssOrTool();
+        assertEquals(player, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(4)); // 3 -> 7
+        gameManager.reactToAbyssOrTool();
 
         // Não recua, fica na casa 7
         assertEquals(7, getPosition(player));
@@ -158,9 +158,9 @@ public class TestAbysses {
         assertEquals(1, getPosition(player));
 
         // 1 -> 5
-        assertEquals(player, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(4));
-        core.reactToAbyssOrTool();
+        assertEquals(player, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(4));
+        gameManager.reactToAbyssOrTool();
 
         // Recua 2 casas: 5 -> 3
         assertEquals(3, getPosition(player));
@@ -174,15 +174,15 @@ public class TestAbysses {
         assertEquals(1, getPosition(player));
 
         // 1ª jogada: apanha EXCEPTION_HANDLING na casa 3
-        assertEquals(player, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(2)); // 1 -> 3
-        core.reactToAbyssOrTool();
+        assertEquals(player, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(2)); // 1 -> 3
+        gameManager.reactToAbyssOrTool();
         assertEquals(3, getPosition(player));
 
         // 2ª jogada: cai no abismo na casa 5, mas tem counter
-        assertEquals(player, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(2)); // 3 -> 5
-        core.reactToAbyssOrTool();
+        assertEquals(player, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(2)); // 3 -> 5
+        gameManager.reactToAbyssOrTool();
 
         // Fica na casa 5
         assertEquals(5, getPosition(player));
@@ -196,9 +196,9 @@ public class TestAbysses {
         assertEquals(1, getPosition(player));
 
         // 1 -> 6
-        assertEquals(player, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(5));
-        core.reactToAbyssOrTool();
+        assertEquals(player, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(5));
+        gameManager.reactToAbyssOrTool();
 
         // Recua 3 casas: 6 -> 3
         assertEquals(3, getPosition(player));
@@ -212,15 +212,15 @@ public class TestAbysses {
         assertEquals(1, getPosition(player));
 
         // 1ª jogada: apanha EXCEPTION_HANDLING na casa 3
-        assertEquals(player, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(2)); // 1 -> 3
-        core.reactToAbyssOrTool();
+        assertEquals(player, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(2)); // 1 -> 3
+        gameManager.reactToAbyssOrTool();
         assertEquals(3, getPosition(player));
 
         // 2ª jogada: cai no abismo na casa 6, mas tem counter
-        assertEquals(player, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(3)); // 3 -> 6
-        core.reactToAbyssOrTool();
+        assertEquals(player, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(3)); // 3 -> 6
+        gameManager.reactToAbyssOrTool();
 
         // Mantém-se na casa 6
         assertEquals(6, getPosition(player));
@@ -235,9 +235,9 @@ public class TestAbysses {
         assertEquals(5, getPosition(player));
 
         // 5 -> 8 (casa com CRASH)
-        assertEquals(player, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(3));
-        core.reactToAbyssOrTool();
+        assertEquals(player, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(3));
+        gameManager.reactToAbyssOrTool();
 
         // Vai para o início (casa 1)
         assertEquals(1, getPosition(player));
@@ -251,9 +251,9 @@ public class TestAbysses {
         assertEquals(1, getPosition(player));
 
         // 1 -> 5 (casa com abismo)
-        assertEquals(player, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(4));
-        core.reactToAbyssOrTool();
+        assertEquals(player, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(4));
+        gameManager.reactToAbyssOrTool();
 
         // Volta para a posição anterior (1)
         assertEquals(1, getPosition(player));
@@ -267,15 +267,15 @@ public class TestAbysses {
         assertEquals(1, getPosition(player));
 
         // 1ª jogada: apanha INHERITANCE na casa 3
-        assertEquals(player, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(2)); // 1 -> 3
-        core.reactToAbyssOrTool();
+        assertEquals(player, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(2)); // 1 -> 3
+        gameManager.reactToAbyssOrTool();
         assertEquals(3, getPosition(player));
 
         // 2ª jogada: cai no abismo na casa 5, mas tem counter
-        assertEquals(player, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(2)); // 3 -> 5
-        core.reactToAbyssOrTool();
+        assertEquals(player, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(2)); // 3 -> 5
+        gameManager.reactToAbyssOrTool();
 
         // Fica na casa 5
         assertEquals(5, getPosition(player));
@@ -289,21 +289,21 @@ public class TestAbysses {
         assertEquals(1, getPosition(player));
 
         // Jogada 1: 1 -> 3
-        assertEquals(player, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(2));
-        core.reactToAbyssOrTool();
+        assertEquals(player, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(2));
+        gameManager.reactToAbyssOrTool();
         assertEquals(3, getPosition(player));
 
         // Jogada 2: 3 -> 5
-        assertEquals(player, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(2));
-        core.reactToAbyssOrTool();
+        assertEquals(player, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(2));
+        gameManager.reactToAbyssOrTool();
         assertEquals(5, getPosition(player));
 
         // Jogada 3: 5 -> 7 (abismo SECONDARY_EFFECTS)
-        assertEquals(player, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(2));
-        core.reactToAbyssOrTool();
+        assertEquals(player, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(2));
+        gameManager.reactToAbyssOrTool();
 
         // Volta para posição de duas jogadas atrás: 3
         assertEquals(3, getPosition(player));
@@ -317,21 +317,21 @@ public class TestAbysses {
         assertEquals(1, getPosition(player));
 
         // Jogada 1: apanha FUNCTIONAL_PROGRAMMING na casa 3
-        assertEquals(player, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(2)); // 1 -> 3
-        core.reactToAbyssOrTool();
+        assertEquals(player, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(2)); // 1 -> 3
+        gameManager.reactToAbyssOrTool();
         assertEquals(3, getPosition(player));
 
         // Jogada 2: 3 -> 5
-        assertEquals(player, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(2));
-        core.reactToAbyssOrTool();
+        assertEquals(player, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(2));
+        gameManager.reactToAbyssOrTool();
         assertEquals(5, getPosition(player));
 
         // Jogada 3: 5 -> 7 (abismo), mas com counter
-        assertEquals(player, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(2));
-        core.reactToAbyssOrTool();
+        assertEquals(player, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(2));
+        gameManager.reactToAbyssOrTool();
 
         // Mantém-se na casa 7
         assertEquals(7, getPosition(player));
@@ -348,18 +348,18 @@ public class TestAbysses {
         assertEquals(1, getPosition(player2));
 
         // Jogador 1 cai sozinho no abismo na casa 4
-        assertEquals(player1, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(3)); // 1 -> 4
-        core.reactToAbyssOrTool();
+        assertEquals(player1, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(3)); // 1 -> 4
+        gameManager.reactToAbyssOrTool();
 
         // Só ele está na casa, portanto não recua
         assertEquals(4, getPosition(player1));
         assertEquals(1, getPosition(player2));
 
         // Jogador 2 também vai para a casa 4
-        assertEquals(player2, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(3)); // 1 -> 4
-        core.reactToAbyssOrTool();
+        assertEquals(player2, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(3)); // 1 -> 4
+        gameManager.reactToAbyssOrTool();
 
         // Agora há 2 jogadores na casa, ambos recuam 3 casas: 4 -> 1
         assertEquals(1, getPosition(player1));
@@ -380,9 +380,9 @@ public class TestAbysses {
         assertEquals(5, getPosition(playerId));
         assertEquals("A:7", getAbyssOnSlot(7));
 
-        assertEquals(playerId, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(2));
-        core.reactToAbyssOrTool();
+        assertEquals(playerId, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(2));
+        gameManager.reactToAbyssOrTool();
 
         assertEquals(7, getPosition(playerId));
         assertEquals("Derrotado", getState(playerId));
@@ -414,36 +414,36 @@ public class TestAbysses {
         assertEquals("A:8", getAbyssOnSlot(10));
 
         // ====== Jogador 1 anda 6 casas (fica fora do abismo) ==================
-        assertEquals(player1, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(6));
-        core.reactToAbyssOrTool();
+        assertEquals(player1, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(6));
+        gameManager.reactToAbyssOrTool();
 
         assertEquals(7, getPosition(player1));
         assertEquals("Em Jogo", getState(player1));
 
         // ====== Jogadores 2, 3 e 4 continuam presos ===========================
-        assertEquals(player2, core.getCurrentPlayerId());
-        assertFalse(core.moveCurrentPlayer(1));
-        core.reactToAbyssOrTool();
+        assertEquals(player2, gameManager.getCurrentPlayerID());
+        assertFalse(gameManager.moveCurrentPlayer(1));
+        gameManager.reactToAbyssOrTool();
         assertEquals(10, getPosition(player2));
         assertEquals("Preso", getState(player2));
 
-        assertEquals(player3, core.getCurrentPlayerId());
-        assertFalse(core.moveCurrentPlayer(1));
-        core.reactToAbyssOrTool();
+        assertEquals(player3, gameManager.getCurrentPlayerID());
+        assertFalse(gameManager.moveCurrentPlayer(1));
+        gameManager.reactToAbyssOrTool();
         assertEquals(10, getPosition(player3));
         assertEquals("Preso", getState(player3));
 
-        assertEquals(player4, core.getCurrentPlayerId());
-        assertFalse(core.moveCurrentPlayer(1));
-        core.reactToAbyssOrTool();
+        assertEquals(player4, gameManager.getCurrentPlayerID());
+        assertFalse(gameManager.moveCurrentPlayer(1));
+        gameManager.reactToAbyssOrTool();
         assertEquals(10, getPosition(player4));
         assertEquals("Preso", getState(player4));
 
         // ====== Jogador 1 entra no abismo e prende-se, libertando os outros ===
-        assertEquals(player1, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(3));
-        core.reactToAbyssOrTool();
+        assertEquals(player1, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(3));
+        gameManager.reactToAbyssOrTool();
 
         assertEquals(10, getPosition(player1));
         assertEquals(10, getPosition(player2));
@@ -456,21 +456,21 @@ public class TestAbysses {
         assertEquals("Em Jogo", getState(player4));
 
         // ====== Agora só o jogador 1 está preso; 2,3,4 já se podem mover ======
-        assertEquals(player2, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(1));
-        core.reactToAbyssOrTool();
+        assertEquals(player2, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(1));
+        gameManager.reactToAbyssOrTool();
         assertNotEquals(10, getPosition(player2));
         assertEquals("Em Jogo", getState(player2));
 
-        assertEquals(player3, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(1));
-        core.reactToAbyssOrTool();
+        assertEquals(player3, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(1));
+        gameManager.reactToAbyssOrTool();
         assertNotEquals(10, getPosition(player3));
         assertEquals("Em Jogo", getState(player3));
 
-        assertEquals(player4, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(1));
-        core.reactToAbyssOrTool();
+        assertEquals(player4, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(1));
+        gameManager.reactToAbyssOrTool();
         assertNotEquals(10, getPosition(player4));
         assertEquals("Em Jogo", getState(player4));
     }
@@ -497,86 +497,86 @@ public class TestAbysses {
         // ======== Movo todos para a casa 5 ===================
 
         // Movo o jogador 1
-        assertEquals(player1, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(4));
-        core.reactToAbyssOrTool();
+        assertEquals(player1, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(4));
+        gameManager.reactToAbyssOrTool();
         assertEquals(5, getPosition(player1));
 
         // Movo o jogador 2
-        assertEquals(player2, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(4));
-        core.reactToAbyssOrTool();
+        assertEquals(player2, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(4));
+        gameManager.reactToAbyssOrTool();
         assertEquals(5, getPosition(player2));
 
         // Movo o jogador 3
-        assertEquals(player3, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(4));
-        core.reactToAbyssOrTool();
+        assertEquals(player3, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(4));
+        gameManager.reactToAbyssOrTool();
         assertEquals(5, getPosition(player3));
 
         // Movo o jogador 4
-        assertEquals(player4, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(4));
-        core.reactToAbyssOrTool();
+        assertEquals(player4, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(4));
+        gameManager.reactToAbyssOrTool();
         assertEquals(5, getPosition(player4));
 
         // ======== Movo 1 para o abismo e restantes para uma casa antes ==============
 
         // Movo o jogador 1 para o abismo e nao fica preso porque tem tool
-        assertEquals(player1, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(5));
-        core.reactToAbyssOrTool();
+        assertEquals(player1, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(5));
+        gameManager.reactToAbyssOrTool();
         assertEquals(10, getPosition(player1));
         assertEquals("Em Jogo", getState(player1));
 
         // Movo o jogador 2 para casa antes do abismo
-        assertEquals(player2, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(4));
-        core.reactToAbyssOrTool();
+        assertEquals(player2, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(4));
+        gameManager.reactToAbyssOrTool();
         assertEquals(9, getPosition(player2));
         assertEquals("Em Jogo", getState(player2));
 
         // Movo o jogador 3 para casa antes do abismo
-        assertEquals(player3, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(4));
-        core.reactToAbyssOrTool();
+        assertEquals(player3, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(4));
+        gameManager.reactToAbyssOrTool();
         assertEquals(9, getPosition(player3));
         assertEquals("Em Jogo", getState(player3));
 
         // Movo o jogador 4 para casa antes do abismo
-        assertEquals(player4, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(4));
-        core.reactToAbyssOrTool();
+        assertEquals(player4, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(4));
+        gameManager.reactToAbyssOrTool();
         assertEquals(9, getPosition(player4));
         assertEquals("Em Jogo", getState(player4));
 
         // ======== Movo todos 2, 3 e 4 para o abismo (1 sai) ===================
 
         // Movo o jogador 1 para fora do abismo
-        assertEquals(player1, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(2));
-        core.reactToAbyssOrTool();
+        assertEquals(player1, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(2));
+        gameManager.reactToAbyssOrTool();
         assertEquals(12, getPosition(player1));
         assertEquals("Em Jogo", getState(player1));
 
         // Movo o jogador 2 para o abismo (sem tool fica preso)
-        assertEquals(player2, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(1));
-        core.reactToAbyssOrTool();
+        assertEquals(player2, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(1));
+        gameManager.reactToAbyssOrTool();
         assertEquals(10, getPosition(player2));
         assertEquals("Preso", getState(player2));
 
         // Movo o jogador 3 para o abismo (sem tool fica preso, e liberta o jogador 2)
-        assertEquals(player3, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(1));
-        core.reactToAbyssOrTool();
+        assertEquals(player3, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(1));
+        gameManager.reactToAbyssOrTool();
         assertEquals(10, getPosition(player3));
         assertEquals("Preso", getState(player3));
 
         // Movo o jogador 4 o abismo (com tool nao fica preso)
-        assertEquals(player4, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(1));
-        core.reactToAbyssOrTool();
+        assertEquals(player4, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(1));
+        gameManager.reactToAbyssOrTool();
         assertEquals(10, getPosition(player4));
         assertEquals("Em Jogo", getState(player4));
 
@@ -590,30 +590,30 @@ public class TestAbysses {
         // ======== Movo todos, só o 3 está preso ===================
 
         // Movo o jogador 1
-        assertEquals(player1, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(1));
-        core.reactToAbyssOrTool();
+        assertEquals(player1, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(1));
+        gameManager.reactToAbyssOrTool();
         assertEquals(13, getPosition(player1));
         assertEquals("Em Jogo", getState(player1));
 
         // Movo o jogador 2
-        assertEquals(player2, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(3));
-        core.reactToAbyssOrTool();
+        assertEquals(player2, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(3));
+        gameManager.reactToAbyssOrTool();
         assertEquals(13, getPosition(player2));
         assertEquals("Em Jogo", getState(player2));
 
         // Movo o jogador 3
-        assertEquals(player3, core.getCurrentPlayerId());
-        assertFalse(core.moveCurrentPlayer(3));
-        core.reactToAbyssOrTool();
+        assertEquals(player3, gameManager.getCurrentPlayerID());
+        assertFalse(gameManager.moveCurrentPlayer(3));
+        gameManager.reactToAbyssOrTool();
         assertEquals(10, getPosition(player3));
         assertEquals("Preso", getState(player3));
 
         // Movo o jogador 4
-        assertEquals(player4, core.getCurrentPlayerId());
-        assertTrue(core.moveCurrentPlayer(3));
-        core.reactToAbyssOrTool();
+        assertEquals(player4, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(3));
+        gameManager.reactToAbyssOrTool();
         assertEquals(13, getPosition(player4));
         assertEquals("Em Jogo", getState(player4));
     }
