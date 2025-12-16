@@ -20,7 +20,7 @@ Demonstração do jogo a correr, incluindo:
 - novo abismo **Undocumented Code** e a ferramenta **ChatGPT**
 
 👉 **Vídeo demo:**  
-https://youtu.be/link
+https://youtu.be/m6JotbGwSIY
 ---
 
 ## 🕳️ Novo Abismo: Undocumented Code
@@ -81,6 +81,14 @@ Ferramenta especial que pode ajudar a lidar com problemas inesperados.
 - Introduz incerteza no jogo
 - É sempre consumido quando usado
 - Aumenta o fator estratégico
+
+---
+
+## Personalização do tabuleiro
+
+Personalização definida através do método `customizeBoard()` do `GameManager`:
+
+![Personalização do tabuleiro](personalizacao.png)
 
 ---
 

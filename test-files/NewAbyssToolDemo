@@ -1,0 +1,46 @@
+[BOARD]
+BOARD_SIZE=80
+CURRENT_PLAYER_ID=1
+TURN_COUNT=0
+
+[PLAYERS]
+PLAYER=1|1|Tester 1|Java|BLUE|IN_GAME
+PLAYER=1|2|Tester 2|Java|GREEN|IN_GAME
+
+[MAP_OBJECTS]
+MAP_OBJECT=5|0:10
+MAP_OBJECT=4|1:6
+MAP_OBJECT=6|0:1
+
+[MOVES]
+
+# Demo Undocumented
+
+# 1 Move 4 para cair no abismo (fica 4/2=2 turnos sem jogadr)
+# 2 Move 6
+
+# 1 Move random (falha - mostra confuso)
+# 2 Move random
+
+# 1 Move random (falha - mostra confuso)
+# 2 Move random
+
+# 1 Move random (funciona - mostra em jogo)
+
+
+# Demo Undocumented vs ChatGPT
+
+# 1 Move 3 para apanhar CHATGPT
+# 2 Move random
+
+# 1 Move 1 para cair no abismo e ter counter
+# 2 Move random
+
+# 1 Move random (normal nao foi afetado)
+# 2 Move random
+
+
+
+
+
+
