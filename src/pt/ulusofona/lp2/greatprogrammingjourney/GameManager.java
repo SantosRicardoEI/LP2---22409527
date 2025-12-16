@@ -11,7 +11,6 @@ import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.movehistory.MoveHistor
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.player.Player;
 import pt.ulusofona.lp2.greatprogrammingjourney.utils.Credits;
 import pt.ulusofona.lp2.greatprogrammingjourney.utils.GameLogger;
-import pt.ulusofona.lp2.greatprogrammingjourney.utils.StringUtils;
 
 import javax.swing.*;
 import java.io.*;
@@ -164,6 +163,10 @@ public class GameManager {
             return false;
         }
 
+        // Para usar a batota, que da o nrSpaces negativo
+        if (nrSpaces < 0) {
+            nrSpaces = nrSpaces * -1;
+        }
 
         int oldPos = getPlayerPosition(p);
 
@@ -235,16 +238,63 @@ public class GameManager {
             return new ArrayList<>();
         }
 
+        int turnCount = turnManager.getTurnCount();
+        if (turnCount < 0) {
+            throw new IllegalArgumentException("Turn count must be non-negative");
+        }
+
         ArrayList<String[]> playersNameAndPosition = new ArrayList<>();
         for (Player p : getPlayers()) {
             int pos = getPlayerPosition(p);
             playersNameAndPosition.add(new String[]{p.getName(), String.valueOf(pos)});
         }
 
-        return StringUtils.buildResultsString(
-                turnManager.getTurnCount(),
-                playersNameAndPosition
-        );
+        if (playersNameAndPosition.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        for (String[] info : playersNameAndPosition) {
+            if (info == null || info.length < 2 || info[0] == null || info[1] == null) {
+                throw new IllegalArgumentException("Invalid player info entry: missing name or position");
+            }
+        }
+
+        playersNameAndPosition.sort((a, b) -> {
+            try {
+                int posA = Integer.parseInt(a[1]);
+                int posB = Integer.parseInt(b[1]);
+
+                int cmp = Integer.compare(posB, posA); // desc
+
+                if (cmp != 0) {
+                    return cmp;
+                }
+
+                return a[0].compareToIgnoreCase(b[0]);
+            } catch (NumberFormatException e) {
+                return 0;
+            }
+        });
+
+        String winnerName = playersNameAndPosition.get(0)[0];
+
+        ArrayList<String> results = new ArrayList<>();
+        results.add("THE GREAT PROGRAMMING JOURNEY");
+        results.add("");
+        results.add("NR. DE TURNOS");
+        results.add(String.valueOf(turnCount));
+        results.add("");
+        results.add("VENCEDOR");
+        results.add(winnerName);
+        results.add("");
+        results.add("RESTANTES");
+
+        for (int i = 1; i < playersNameAndPosition.size(); i++) {
+            String[] info = playersNameAndPosition.get(i);
+            results.add(info[0] + " " + info[1]);
+        }
+
+        return results;
     }
 
     public void loadGame(File file) throws InvalidFileException, FileNotFoundException {

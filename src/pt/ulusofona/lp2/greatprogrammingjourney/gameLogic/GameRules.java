@@ -30,10 +30,8 @@ public final class GameRules {
     }
 
     public static boolean validateDice(int roll) {
-        if (roll < MIN_DICE || roll > MAX_DICE) {
-            return false;
-        }
-        return true;
+        int value = Math.abs(roll);
+        return value >= MIN_DICE && value <= MAX_DICE;
     }
 
 }
