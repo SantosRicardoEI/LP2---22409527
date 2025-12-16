@@ -6,21 +6,8 @@ public enum PlayerColor {
     GREEN,
     BROWN,
     RED,
-    GRAY,
-    ORANGE,
-    YELLOW,
-    CYAN,
-    PINK,
-    MAGENTA,
-    LIME,
-    WHITE,
-    BLACK,
-    OLIVE,
-    NAVY,
-    MAROON,
-    TEAL,
-    SILVER,
-    GOLD;
+    YELLOW
+    ;
 
     @Override
     public String toString() {

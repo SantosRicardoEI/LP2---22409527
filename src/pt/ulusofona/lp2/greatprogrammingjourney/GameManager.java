@@ -264,7 +264,7 @@ public class GameManager {
                 int posA = Integer.parseInt(a[1]);
                 int posB = Integer.parseInt(b[1]);
 
-                int cmp = Integer.compare(posB, posA); // desc
+                int cmp = Integer.compare(posB, posA);
 
                 if (cmp != 0) {
                     return cmp;

@@ -53,7 +53,7 @@ public class TestGamePersistence {
 
         Board board = new Board(10);
         Player p1 = makePlayer(1, "Alice", PlayerColor.BLUE);
-        Player p2 = makePlayer(2, "Bob", PlayerColor.RED);
+        Player p2 = makePlayer(2, "Bob", PlayerColor.BROWN);
 
         board.placePlayer(p1, 1);
         board.placePlayer(p2, 2);

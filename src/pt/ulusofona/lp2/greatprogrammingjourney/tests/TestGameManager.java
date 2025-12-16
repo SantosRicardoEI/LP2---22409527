@@ -3,13 +3,21 @@ package pt.ulusofona.lp2.greatprogrammingjourney.tests;
 import org.junit.jupiter.api.Test;
 import pt.ulusofona.lp2.greatprogrammingjourney.GameManager;
 import pt.ulusofona.lp2.greatprogrammingjourney.GameNotInitializedException;
+import pt.ulusofona.lp2.greatprogrammingjourney.InvalidGameStateException;
+import pt.ulusofona.lp2.greatprogrammingjourney.enums.PlayerColor;
+import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.TurnManager;
+import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.board.Board;
+import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.player.Player;
+import pt.ulusofona.lp2.greatprogrammingjourney.parser.Parser;
 import pt.ulusofona.lp2.greatprogrammingjourney.utils.Credits;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -244,13 +252,11 @@ public class TestGameManager {
         assertNotNull(results);
         assertFalse(results.isEmpty());
 
-        // Estrutura base
         assertEquals("THE GREAT PROGRAMMING JOURNEY", results.get(0));
         assertTrue(results.contains("NR. DE TURNOS"));
         assertTrue(results.contains("VENCEDOR"));
         assertTrue(results.contains("RESTANTES"));
 
-        // Vencedor deve ser um dos 4
         int idxWinner = results.indexOf("VENCEDOR");
         assertTrue(idxWinner >= 0 && idxWinner + 1 < results.size());
 
@@ -429,4 +435,188 @@ public class TestGameManager {
         g2.dispose();
     }
 
+    @Test
+    void test_boardSize_throws_when_board_null() throws Exception {
+        GameManager gm = new GameManager();
+
+        var m = GameManager.class.getDeclaredMethod("boardSize");
+        m.setAccessible(true);
+
+        assertThrows(GameNotInitializedException.class, () -> {
+            try { m.invoke(gm); }
+            catch (InvocationTargetException e) { throw (RuntimeException) e.getCause(); }
+        });
+    }
+
+    static void setField(Object target, String name, Object value) throws Exception {
+        var f = target.getClass().getDeclaredField(name);
+        f.setAccessible(true);
+        f.set(target, value);
+    }
+
+    static class BoardWithWinner extends Board {
+        private final Player winner;
+        private final ArrayList<Player> players;
+
+        BoardWithWinner(int size, Player winner, ArrayList<Player> players) {
+            super(size);
+            this.winner = winner;
+            this.players = players;
+        }
+
+        @Override public Player getWinner() { return winner; }
+        @Override public ArrayList<Player> getPlayers() { return players; }
+        @Override public int getPlayerPosition(Player p) { return 1; }
+    }
+
+    @Test
+    void test_getGameResults_throws_when_turnCount_negative() throws Exception {
+        GameManager gm = new GameManager();
+
+        Player p = new Player(1,"Alice",new ArrayList<>(), PlayerColor.BROWN);
+        ArrayList<Player> player1 = new ArrayList<>();
+        player1.add(p);
+        Board b = new BoardWithWinner(80, p, player1);
+
+        setField(gm, "board", b);
+        setField(gm, "turnManager", new TurnManager(1, -1));
+
+        assertThrows(IllegalArgumentException.class, gm::getGameResults);
+    }
+
+    static class BoardNullPlayer extends Board {
+        BoardNullPlayer(int size) { super(size); }
+        @Override public Player getPlayer(int id) { return null; }
+    }
+
+    @Test
+    void test_reactToAbyssOrTool_throws_when_current_player_not_found() throws Exception {
+        GameManager gm = new GameManager();
+
+        setField(gm, "board", new BoardNullPlayer(80));
+        setField(gm, "turnManager", new TurnManager(1, 0));
+
+        assertThrows(InvalidGameStateException.class, gm::reactToAbyssOrTool);
+    }
+
+    @Test
+    void test_moveCurrentPlayer_throws_when_current_player_not_found() throws Exception {
+        GameManager gm = new GameManager();
+
+        setField(gm, "board", new BoardNullPlayer(80));
+        setField(gm, "turnManager", new TurnManager(1, 0));
+
+        assertThrows(InvalidGameStateException.class, () -> gm.moveCurrentPlayer(1));
+    }
+
+    @Test
+    void test_getProgrammerInfoAsStr_returns_null_when_player_not_found() throws Exception {
+        GameManager gm = new GameManager();
+
+        setField(gm, "board", new BoardNullPlayer(80));
+
+        assertNull(gm.getProgrammerInfoAsStr(999));
+    }
+
+    @Test
+    void test_getImagePng_returns_png_when_slot_has_map_object() {
+        GameManager gm = new GameManager();
+
+        String[][] players = {
+                {"1","P1","Java","BLUE"},
+                {"2","P2","Java","BROWN"},
+                {"3","P3","Java","PURPLE"},
+                {"4","P4","Java","GREEN"},
+        };
+
+        String[][] mapObjects = {
+                {"1", "4", "3"}
+        };
+
+        assertTrue(gm.createInitialBoard(players, 80, mapObjects));
+
+        String png = gm.getImagePng(3);
+        assertNotNull(png);
+    }
+
+    private static ArrayList<Player> emptyPlayers() {
+        return new ArrayList<>();
+    }
+
+    @Test
+    void parsePlayer_throws_when_info_null() {
+        IllegalArgumentException ex = assertThrows(
+                IllegalArgumentException.class,
+                () -> Parser.parsePlayer(null, emptyPlayers())
+        );
+        assertEquals("Invalid player input line", ex.getMessage());
+    }
+
+    @Test
+    void parsePlayer_throws_when_info_length_invalid() {
+        IllegalArgumentException ex = assertThrows(
+                IllegalArgumentException.class,
+                () -> Parser.parsePlayer(new String[]{"1", "Ana"}, emptyPlayers()) // length 2
+        );
+        assertEquals("Invalid player input line", ex.getMessage());
+    }
+
+    @Test
+    void parsePlayer_throws_when_name_empty() {
+        IllegalArgumentException ex = assertThrows(
+                IllegalArgumentException.class,
+                () -> Parser.parsePlayer(new String[]{"1", "   ", "Java", "BLUE"}, emptyPlayers())
+        );
+        assertEquals("Empty name", ex.getMessage());
+    }
+
+    @Test
+    void parsePlayer_throws_when_languages_empty_or_invalid() {
+        IllegalArgumentException ex = assertThrows(
+                IllegalArgumentException.class,
+                () -> Parser.parsePlayer(new String[]{"1", "Ana", "   ;  ;   ", "BLUE"}, emptyPlayers())
+        );
+        assertEquals("Empty or invalid language list", ex.getMessage());
+    }
+
+    @Test
+    void parsePlayer_auto_assigns_color_when_missing() {
+        ArrayList<Player> players = emptyPlayers();
+
+        Player p = Parser.parsePlayer(new String[]{"1", "Ana", "Java;Kotlin"}, players);
+
+        assertNotNull(p);
+        assertNotNull(p.getColor());
+    }
+
+    @Test
+    void parsePlayer_throws_when_duplicate_id() {
+        ArrayList<Player> players = new ArrayList<>();
+
+        ArrayList<String> langs = new ArrayList<>(Arrays.asList("Java"));
+        players.add(new Player(1, "Existente", langs, PlayerColor.BLUE));
+
+        IllegalArgumentException ex = assertThrows(
+                IllegalArgumentException.class,
+                () -> Parser.parsePlayer(new String[]{"1", "Ana", "Java", "RED"}, players)
+        );
+
+        assertEquals("Duplicate id or color", ex.getMessage());
+    }
+
+    @Test
+    void parsePlayer_throws_when_duplicate_color() {
+        ArrayList<Player> players = new ArrayList<>();
+
+        ArrayList<String> langs = new ArrayList<>(Arrays.asList("Java"));
+        players.add(new Player(1, "Existente", langs, PlayerColor.BLUE));
+
+        IllegalArgumentException ex = assertThrows(
+                IllegalArgumentException.class,
+                () -> Parser.parsePlayer(new String[]{"2", "Ana", "Java", "BLUE"}, players)
+        );
+
+        assertEquals("Duplicate id or color", ex.getMessage());
+    }
 }
+
