@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import pt.ulusofona.lp2.greatprogrammingjourney.enums.AbyssSubType;
 import pt.ulusofona.lp2.greatprogrammingjourney.enums.ToolSubType;
 import pt.ulusofona.lp2.greatprogrammingjourney.GameManager;
+import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.MapObject;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.abyss.Abyss;
 import pt.ulusofona.lp2.greatprogrammingjourney.gameLogic.mapobject.tool.Tool;
 
@@ -37,13 +38,7 @@ public class TestAbysses {
         return Integer.parseInt(info[4]);
     }
 
-    private String getTools(int playerId) {
-        String[] info = gameManager.getProgrammerInfo(playerId);
-        return info[5];
-    }
-
     // ========================= Test Counters ====================
-
 
     @Test
     public void testAbyssCountersCorrectTools() {
@@ -367,7 +362,6 @@ public class TestAbysses {
     }
 
 
-
     // ========================= BSOD ====================
 
     @Test
@@ -387,7 +381,6 @@ public class TestAbysses {
         assertEquals(7, getPosition(playerId));
         assertEquals("Derrotado", getState(playerId));
     }
-
 
 
 // ========================= INFINITE_LOOP ====================
@@ -616,5 +609,119 @@ public class TestAbysses {
         gameManager.reactToAbyssOrTool();
         assertEquals(13, getPosition(player4));
         assertEquals("Em Jogo", getState(player4));
+    }
+
+    // ========================= UNDOCUMENTED_CODE ====================
+
+    @Test
+    public void test_undocumented_code_effect_sets_confused_and_then_updates_effect_when_stuck() throws Exception {
+        loadScenario("AbyssEffect_UndocumentedCode");
+
+        int player = 1;
+
+        assertEquals("Em Jogo", getState(player));
+        assertEquals(1, getPosition(player));
+
+        assertEquals(player, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(4));
+        gameManager.reactToAbyssOrTool();
+
+        assertEquals(5, getPosition(player));
+        assertEquals("Confuso", getState(player));
+
+        assertEquals(player, gameManager.getCurrentPlayerID());
+        assertFalse(gameManager.moveCurrentPlayer(1));
+        gameManager.reactToAbyssOrTool();
+
+        assertEquals(5, getPosition(player));
+        assertEquals("Confuso", getState(player));
+    }
+
+    @Test
+    public void test_undocumented_code_countered_by_chatgpt_tool() throws Exception {
+        loadScenario("AbyssEffect_UndocumentedCode_vsTool");
+
+        int player = 1;
+
+        assertEquals("Em Jogo", getState(player));
+        assertEquals(1, getPosition(player));
+
+        assertEquals(player, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(2));
+        gameManager.reactToAbyssOrTool();
+        assertEquals(3, getPosition(player));
+
+        assertTrue(gameManager.getProgrammerInfo(1)[5].contains("Chat GPT"));
+
+        assertEquals(player, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(2));
+        String msg = gameManager.reactToAbyssOrTool();
+
+        assertEquals(5, getPosition(player));
+        assertEquals("Em Jogo", getState(player));
+
+        assertNotNull(msg);
+        assertTrue(msg.contains("anulado por"));
+        assertTrue(msg.contains("Chat GPT"));
+    }
+
+    @Test
+    public void test_chatgpt_is_consumed_when_attempting_to_counter_abyss() throws Exception {
+        loadScenario("AbyssEffect_ChatGPT_AttemptCounter_SyntaxError");
+
+        int player = 1;
+
+        assertEquals(player, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(2));
+        gameManager.reactToAbyssOrTool();
+
+        String toolsAfterPickup = gameManager.getProgrammerInfo(player)[5];
+        assertTrue(toolsAfterPickup.contains("Chat GPT"));
+
+        assertEquals(player, gameManager.getCurrentPlayerID());
+        assertTrue(gameManager.moveCurrentPlayer(2));
+        gameManager.reactToAbyssOrTool();
+
+        String toolsAfterAbyss = gameManager.getProgrammerInfo(player)[5];
+        assertFalse(toolsAfterAbyss.contains("Chat GPT"));
+    }
+
+    @Test
+    public void test_chatgpt_may_counter_abyss_after_multiple_attempts() throws Exception {
+        boolean anulouPeloMenosUmaVez = false;
+
+        for (int i = 0; i < 30; i++) {
+            loadScenario("AbyssEffect_ChatGPT_AttemptCounter_SyntaxError");
+
+            int player = 1;
+
+            assertEquals(player, gameManager.getCurrentPlayerID());
+            assertTrue(gameManager.moveCurrentPlayer(2));
+            gameManager.reactToAbyssOrTool();
+
+            String toolsBefore = gameManager.getProgrammerInfo(player)[5];
+            assertTrue(toolsBefore.contains("Chat GPT"));
+
+            assertEquals(player, gameManager.getCurrentPlayerID());
+            assertTrue(gameManager.moveCurrentPlayer(2));
+            String result = gameManager.reactToAbyssOrTool();
+
+            String toolsAfter = gameManager.getProgrammerInfo(player)[5];
+            assertFalse(toolsAfter.contains("Chat GPT"));
+
+            if (result != null && result.contains("anulado por Chat GPT")) {
+                anulouPeloMenosUmaVez = true;
+                break;
+            }
+        }
+
+        assertTrue(
+                anulouPeloMenosUmaVez);
+    }
+
+    @Test
+    public void test_get_png_returns_value_from_constructor() {
+        Abyss bsod = AbyssSubType.getAbyssByID(7);
+        assertNotNull(bsod.getPng());
     }
 }
